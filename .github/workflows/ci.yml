@@ -12,7 +12,6 @@ on:
 permissions:
   contents: read
 
-# A new push supersedes whatever is still running for the same ref.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -22,12 +21,6 @@ env:
   DART_SASS_VERSION: 1.102.0
 
 jobs:
-  # The theme must build with zero warnings under Dart Sass, so that any new
-  # Hugo deprecation breaks CI instead of going unnoticed.
-  #
-  # The second matrix entry guards the libsass fallback in
-  # layouts/_partials/head.html: with no Dart Sass on PATH the theme must still
-  # build. It drops --panicOnWarning, since that path warns by design.
   build:
     name: Build exampleSite (${{ matrix.name }})
     runs-on: ubuntu-latest
@@ -44,8 +37,6 @@ jobs:
             dart-sass: false
             flags: ""
     steps:
-      # Checked out under a directory named after the theme so that
-      # `hugo --themesDir ../..` resolves the theme by name.
       - uses: actions/checkout@v7
         with:
           path: hello-friend-ng
@@ -73,10 +64,6 @@ jobs:
         working-directory: hello-friend-ng/exampleSite
         run: hugo --themesDir ../.. --gc ${{ matrix.flags }}
 
-  # This theme fell a long way behind on Hugo deprecations before anything
-  # noticed. Build against whatever Hugo and Dart Sass are newest once a week,
-  # so a new deprecation shows up as a failed scheduled run rather than at the
-  # next release. Runs only on a schedule or by hand, so it never blocks a PR.
   latest:
     name: Build exampleSite (latest Hugo, canary)
     runs-on: ubuntu-latest
