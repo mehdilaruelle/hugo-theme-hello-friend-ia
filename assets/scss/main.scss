@@ -1,21 +1,21 @@
-/* Must be loaded before everything else */
-@import "normalize";
-@import "prism";
-@import "flag-icons";
+// Must be loaded before everything else
+@use "normalize";
+@use "prism";
+@use "flag-icons";
 
-/* Main stuff */
-@import "variables";
-@import "mixins";
-@import "fonts";
-@import "buttons";
-/* Modules */
-@import "header";
-@import "logo";
-@import "menu";
-@import "main";
-@import "list";
-@import "single";
-@import "footer";
-@import "sharing-buttons";
-@import "tables";
-@import "404";
+// Main stuff
+@use "variables";
+@use "mixins";
+@use "fonts";
+@use "buttons";
+// Modules
+@use "header";
+@use "logo";
+@use "menu";
+@use "base";
+@use "list";
+@use "single";
+@use "footer";
+@use "sharing-buttons";
+@use "tables";
+@use "404" as *;
