@@ -1,3 +1,6 @@
-{{ if .Get "src" }}
-    <img src="{{ .Get "src" | safeURL }}" loading="lazy" decoding="async" {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
+{{ $src := .Get "src" }}
+{{ $img := "" }}
+{{ with .Page.Resources.GetMatch $src }}{{ $img = . }}{{ else }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end }}
+{{ if $src }}
+    <img src="{{ with $img }}{{ .RelPermalink }}{{ else }}{{ $src | safeURL }}{{ end }}" loading="lazy" decoding="async"{{ with $img }}{{ with .Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }}{{ end }} {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
 {{ end }}
