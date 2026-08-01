@@ -1,10 +1,7 @@
 baseURL = "https://example.com"
 title   = "Hello Friend NG"
-languageCode = "en-us"
-theme = "hello-friend-ng"
-
-PygmentsCodeFences = true
-PygmentsStyle = "monokai"
+locale  = "en-us"
+theme   = "hello-friend-ng"
 
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
 
@@ -23,10 +20,10 @@ enableRobotsTXT = true
 enableGitInfo   = false
 enableEmoji     = true
 enableMissingTranslationPlaceholders = false
-disableRSS     = false
-disableSitemap = false
-disable404     = false
 disableHugoGeneratorInject = false
+
+# Nothing is disabled here; use disableKinds to turn off page kinds, e.g.
+# disableKinds = ["rss", "sitemap", "404"]
 
 [pagination]
   disableAliases = false
@@ -45,9 +42,6 @@ disableHugoGeneratorInject = false
 
 [permalinks]
   posts = "/posts/:year/:month/:title/"
-
-[blackfriday]
-  hrefTargetBlank = true
 
 [taxonomies]
   tag      = "tags"

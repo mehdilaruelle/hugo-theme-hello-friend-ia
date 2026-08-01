@@ -35,4 +35,13 @@ Temporary Items
 .vscode
 
 # customize Headers whiteout touch git submodule.
-layouts/partials/extra-head.html
+layouts/_partials/extra-head.html
+
+# Hugo build output and caches
+public/
+**/resources/_gen/
+.hugo_build.lock
+hugo_stats.json
+
+# Node
+node_modules/
