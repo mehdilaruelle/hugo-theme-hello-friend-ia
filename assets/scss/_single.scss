@@ -235,3 +235,9 @@
     margin-right: 8px;
   }
 }
+
+#TableOfContents {
+  li:not(:has(> a)) {
+    list-style: none;
+  }
+}
