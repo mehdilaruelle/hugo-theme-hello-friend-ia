@@ -21,3 +21,13 @@ This setting will paginate your list views. Set to `0` to disable it. For more i
 - `true` — renders the current year, so it never goes stale
 - any value — rendered as given, for a fixed year or a range such as
   `"2019–2026"`
+
+## Mermaid diagrams
+
+Pages containing a ```mermaid code block load Mermaid from jsDelivr, pinned to
+the current major version. Pinning means a future Mermaid major cannot silently
+change how existing diagrams render; bump the version in
+`layouts/_partials/javascript.html` when you want to move to the next one.
+
+The library is fetched from a third party, so visitors to pages with diagrams
+resolve jsDelivr. Pages without a diagram request nothing.
