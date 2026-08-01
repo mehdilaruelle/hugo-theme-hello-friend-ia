@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HUGO_VERSION: 0.164.0
+  DART_SASS_VERSION: 1.102.0
+
+jobs:
+  # Primary job: the theme must build with zero warnings, so that any new Hugo
+  # deprecation breaks CI instead of going unnoticed.
+  build:
+    name: Build exampleSite (Dart Sass, no warnings allowed)
+    runs-on: ubuntu-latest
+    steps:
+      # Checked out under a directory named after the theme so that
+      # `hugo --themesDir ../..` resolves the theme by name.
+      - uses: actions/checkout@v4
+        with:
+          path: hello-friend-ng
+
+      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
+        run: |
+          curl -sSLf -o hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+      - name: Install Dart Sass ${{ env.DART_SASS_VERSION }}
+        run: |
+          curl -sSLf \
+            "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" \
+            | tar -xz
+          echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
+
+      - name: Show toolchain versions
+        run: |
+          hugo version
+          sass --version
+
+      - name: Build
+        working-directory: hello-friend-ng/exampleSite
+        run: hugo --themesDir ../.. --gc --panicOnWarning
+
+  # Guard the libsass fallback in layouts/_partials/head.html: without Dart Sass
+  # the theme must still build (with a deprecation warning, hence no
+  # --panicOnWarning here).
+  build-without-dart-sass:
+    name: Build exampleSite (libsass fallback)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: hello-friend-ng
+
+      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
+        run: |
+          curl -sSLf -o hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+      - name: Build without Dart Sass installed
+        working-directory: hello-friend-ng/exampleSite
+        run: hugo --themesDir ../.. --gc
