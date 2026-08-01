@@ -1,0 +1,79 @@
+name: Demo site
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.164.0
+  DART_SASS_VERSION: 1.102.0
+
+jobs:
+  build:
+    name: Build the demo site
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: hello-friend-ng
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
+        run: |
+          curl -sSLf -o hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+      - name: Install Dart Sass ${{ env.DART_SASS_VERSION }}
+        run: |
+          curl -sSLf \
+            "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" \
+            | tar -xz
+          echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
+
+      # Pages serves the site from a subpath, so baseURL has to carry it.
+      # --panicOnWarning keeps the published demo held to the same bar as CI.
+      - name: Build
+        working-directory: hello-friend-ng/exampleSite
+        run: |
+          hugo --themesDir ../.. --gc --minify --panicOnWarning \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Fail if the stylesheet did not make it into the output
+        working-directory: hello-friend-ng/exampleSite
+        run: |
+          if ! ls public/*.css >/dev/null 2>&1; then
+            echo "No stylesheet in the published output." >&2
+            exit 1
+          fi
+          grep -q 'rel="stylesheet"' public/index.html
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: hello-friend-ng/exampleSite/public
+
+  deploy:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
