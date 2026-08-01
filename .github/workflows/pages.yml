@@ -58,7 +58,11 @@ jobs:
             echo "No stylesheet in the published output." >&2
             exit 1
           fi
-          grep -q 'rel="stylesheet"' public/index.html
+          # --minify strips the quotes around attribute values, so accept both.
+          if ! grep -Eq 'rel="?stylesheet"?' public/index.html; then
+            echo "index.html does not reference a stylesheet." >&2
+            exit 1
+          fi
 
       - uses: actions/upload-pages-artifact@v5
         with:
