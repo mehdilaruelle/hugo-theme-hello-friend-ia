@@ -71,7 +71,9 @@ This is why the subject line matters beyond tidiness: it is what the next
 version number is read from. A bug fix labelled `chore` silently understates
 the release.
 
-Upstream tags carry no `v` prefix (`1.0.9`), and this fork keeps that.
+Tags on this fork carry a `v` prefix — `v2.0.0`, not `2.0.0`. Upstream tags do
+not (`1.0.9`), so the prefix also makes it unambiguous at a glance which of the
+two a tag belongs to.
 
 ## Before opening a pull request
 
