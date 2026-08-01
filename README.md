@@ -1,12 +1,18 @@
 # Hello Friend NG
 
-![Hello Friend NG](images/screenshot.png)
+**[See the theme live →](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)**
+
+[![Hello Friend NG](images/screenshot.png)](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)
 
 > **This is a fork.** All the credit for the theme goes to
 > [Djordje Atlialp (@rhazdon)](https://github.com/rhazdon), who wrote
 > [hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng).
 > This fork exists to keep the theme current with Hugo; upstream has not shipped
 > a change since November 2025. See [Differences from upstream](#differences-from-upstream).
+>
+> Fork maintained by [@mehdilaruelle](https://github.com/mehdilaruelle)
+> ([X](https://x.com/mehdilaruelle)). Report anything specific to this fork
+> here; anything about the theme itself belongs upstream.
 
 ## General informations
 
@@ -23,6 +29,9 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
   an automatic fallback to LibSass when Dart Sass is not installed.
 - Fixes two selectors that made inline code lose its styling entirely.
 - CI builds the exampleSite on every change and fails on any new deprecation.
+- The exampleSite is published as a
+  [live demo](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/) on
+  every push, so what you see is what the current code produces.
 
 ---
 

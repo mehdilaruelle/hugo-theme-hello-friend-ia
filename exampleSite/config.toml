@@ -259,12 +259,14 @@ disableHugoGeneratorInject = false
     subtitle  = "Hello Friend NG Theme"
 
 [menu]
+  # Menu order follows weight, the usual Hugo mechanism.
   [[menu.main]]
     identifier  = "about"
     name        = "About"
     url         = "about/"
+    weight      = 10
     hasChildren = true
-  
+
   [[menu.main]]
     identifier  = "me"
     name        = "About Me"
@@ -275,3 +277,4 @@ disableHugoGeneratorInject = false
     identifier = "posts"
     name       = "Posts"
     url        = "posts/"
+    weight     = 20

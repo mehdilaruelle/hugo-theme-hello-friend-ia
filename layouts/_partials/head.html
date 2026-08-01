@@ -42,6 +42,8 @@
   {{- with $css | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
   {{- end -}}
+{{- else -}}
+  {{- errorf "assets/scss/main.scss is missing, the site would be built without any stylesheet." -}}
 {{- end }}
 
 
