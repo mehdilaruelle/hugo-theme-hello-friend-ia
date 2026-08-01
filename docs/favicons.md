@@ -11,3 +11,5 @@ Use [RealFaviconGenerator](https://realfavicongenerator.net/) to generate these 
 - mstile-150x150.png
 - safari-pinned-tab.svg
 - site.webmanifest
+The theme links each of these only when the file is present in your site's
+`static` folder, so a site without them emits no broken links.
