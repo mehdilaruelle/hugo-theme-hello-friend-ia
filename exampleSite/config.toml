@@ -120,7 +120,7 @@ disableHugoGeneratorInject = false
   # If you want, you can easily override the default footer with your own content. 
   #
   [params.footer]
-    trademark = 2023
+    trademark = true
     rss = true
     copyright = true
     author = true
