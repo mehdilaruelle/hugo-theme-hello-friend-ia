@@ -14,9 +14,13 @@ Where to report what:
   [upstream](https://github.com/rhazdon/hugo-theme-hello-friend-ng/issues) too,
   so every user benefits rather than only those on this fork.
 
-## Commit messages
+## Pull request titles
 
-Subjects follow [Conventional Commits](https://www.conventionalcommits.org):
+Pull requests are squashed when merged, so the **title becomes the single
+commit on `master`** — it is the whole history of that change, and the version
+is read from it.
+
+Titles follow [Conventional Commits](https://www.conventionalcommits.org):
 
 ```
 type(optional scope)!: description
@@ -51,10 +55,18 @@ BREAKING CHANGE: names are lowercased before matching, so a custom svg.html
 override keyed on mixed case no longer matches.
 ```
 
-CI checks this on every pull request, and checks the **pull request title** as
-well: a squash merge takes the title as the subject that lands on `master`, so
-a well-formed set of commits behind a vague title still produces a vague
-history.
+CI checks the title on every pull request, and this is the only check that
+gates a merge.
+
+## Commits on a branch
+
+Commits pushed to a branch are squashed away on merge, so CI does not check
+them. Write them in the same form anyway: a branch whose subjects read
+`fix(menu): …`, `docs: …` is far easier to review commit by commit, and to
+reorder or drop a change from, than one reading `wip`, `wip 2`, `fix tests`.
+
+The rule of thumb: the branch is for whoever reviews the change, the title is
+for whoever reads the history a year later.
 
 ## Versioning
 
