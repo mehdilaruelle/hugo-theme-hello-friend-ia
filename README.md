@@ -11,6 +11,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 ## Table of Contents
 
 - [Features](#features)
+- [Requirements](#requirements)
 - [How to start](#how-to-start)
 - [How to configure](#how-to-configure)
 - [More](#more-things)
@@ -22,7 +23,6 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - [Social Icons](#social-icons)
 - [Known issues](#known-issues)
 - [How to edit the theme](#how-to-edit-the-theme)
-- [Changelog](CHANGELOG.md)
 - [Sponsoring](#sponsoring)
 - [Licence](#licence)
 
@@ -42,6 +42,26 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Support for [Commento](https://commento.io)
 - Support for [Plausible](https://plausible.io) (thanks to [@Joffcom](https://github.com/Joffcom))
 - Support for [utterances](https://utteranc.es/) comment system
+
+## Requirements
+
+- **Hugo extended**, version **0.158.0 or newer** (tested against 0.164.0). The
+  extended edition is required because the theme compiles SCSS.
+- **[Dart Sass](https://sass-lang.com/install/)** — recommended, but optional.
+
+Hugo has deprecated LibSass and will remove it in a future release, so the theme
+compiles its SCSS with Dart Sass, which Hugo does *not* bundle. Install it with
+one of:
+
+``` bash
+brew install sass/sass/sass          # macOS / Linuxbrew
+choco install sass                   # Windows
+snap install dart-sass               # Linux
+npm install -g sass-embedded         # any platform
+```
+
+If Dart Sass is not found, the theme automatically falls back to LibSass so the
+site still builds; Hugo then prints a deprecation warning until you install it.
 
 ## How to start
 
@@ -68,7 +88,7 @@ Note: There are more options to configure. Take a look into the `config.toml` in
 ``` toml
 baseurl      = "localhost"
 title        = "My Blog"
-languageCode = "en-us"
+locale       = "en-us"
 theme        = "hello-friend-ng"
 pagination.pagerSize     = 10
 
@@ -219,6 +239,24 @@ In case you'd like to actually have an empty taxonomy, you can do so by specifyi
 ## How to edit the theme
 
 Just edit it. You don't need any node stuff. ;)
+
+The theme follows the template layout introduced in Hugo 0.146, so when you
+override something in your own site, mind these locations:
+
+| What | Where |
+| --- | --- |
+| Partials | `layouts/_partials/` |
+| Shortcodes | `layouts/_shortcodes/` |
+| Markdown render hooks | `layouts/_markup/` |
+| Home page | `layouts/home.html` |
+| Single pages | `layouts/page.html` |
+| List pages (section, taxonomy, term) | `layouts/list.html` |
+| Base template | `layouts/baseof.html` |
+| Extra `<head>` tags | `layouts/_partials/extra-head.html` |
+
+Styles live in `assets/scss/`. They use the Sass module system (`@use`), so a
+partial that needs a variable or a mixin loads it explicitly, e.g.
+`@use "variables" as *;`.
 
 ## Sponsoring
 
