@@ -2,17 +2,17 @@
 
 - [amazon](https://simpleicons.org/?q=amazon)
 - [anilist](https://simpleicons.org/?q=anilist)
-- [box](https://simpleicons.org/?q=box)
-- bluesky
 - [behance](https://simpleicons.org/?q=behance)
 - [bitbucket](https://simpleicons.org/?q=bitbucket)
+- bluesky
+- [box](https://simpleicons.org/?q=box)
 - [buymeacoffee](https://simpleicons.org/?q=buymeacoffee)
 - case - generic briefcase icon for work based links
 - [chess](https://simpleicons.org/?q=chess)
 - [codeberg](https://simpleicons.org/?q=codeberg)
-- [codesandbox](https://simpleicons.org/?q=codesandbox)
 - [codechef](https://simpleicons.org/?q=codechef)
 - [codepen](https://simpleicons.org/?q=codepen)
+- [codesandbox](https://simpleicons.org/?q=codesandbox)
 - [csgo](https://simpleicons.org/?q=counterstrike)
 - [cyberdefenders](https://simpleicons.org/?q=cyberdefenders)
 - dev

@@ -22,7 +22,7 @@
 {{ end }}
 
 <!-- CSS -->
-{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" true -}}
+{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment -}}
 {{- $dartOpts := merge $opts (dict "transpiler" "dartsass") -}}
 {{- $scss := resources.Get "scss/main.scss" -}}
 {{- with $scss -}}
