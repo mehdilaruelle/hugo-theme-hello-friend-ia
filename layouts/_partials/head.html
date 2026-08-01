@@ -7,9 +7,14 @@
 <meta name="author" content="{{ if .Params.author }}{{ .Params.author }}{{ else }}{{ range .Site.Params.Author }}{{ . }} {{ end }}{{ end }}">
 <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.homeSubtitle }}{{ else }}{{ if .Params.Description }}{{ .Params.Description }}{{ else }}{{ .Summary | plainify }}{{ end }}{{ end }}" />
 <meta name="keywords" content="{{ .Site.Params.keywords }}{{ if .Params.tags }}{{ range .Params.tags }}, {{ . }}{{ end }}{{ end }}" />
-<meta name="robots" content="noodp" />
 <meta name="theme-color" content="{{ .Site.Params.themeColor }}" />
 <link rel="canonical" href="{{ .Permalink }}" />
+{{- if .IsTranslated }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+{{- range .Translations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+{{- end }}
+{{- end }}
 
 {{ block "title" . }}
     <title>
@@ -59,9 +64,7 @@
 {{ partial "schema.html" . }}
 {{ partial "twitter_cards.html" . }}
 
-{{ if isset .Site.Taxonomies "series" }}
-    {{ partial "opengraph.html" . }}
-{{ end }}
+{{ partial "opengraph.html" . }}
 
 {{ range .Params.categories }}
     <meta property="article:section" content="{{ . }}" />
