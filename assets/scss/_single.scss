@@ -235,3 +235,18 @@
     margin-right: 8px;
   }
 }
+
+// Hugo builds the table of contents from the heading levels it finds, and
+// inserts a placeholder <li> wherever a level is absent: an empty one when a
+// document skips a level, and one holding only a nested <ul> when the first
+// heading sits below tableOfContents.startLevel. Neither carries a link, but
+// both still draw a marker, which reads as a stray or doubled bullet.
+//
+// Drop the marker on any item without its own link, leaving real entries
+// untouched. Browsers without :has() ignore the rule and keep today's
+// behaviour.
+#TableOfContents {
+  li:not(:has(> a)) {
+    list-style: none;
+  }
+}
