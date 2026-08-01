@@ -2,14 +2,33 @@
 
 ![Hello Friend NG](images/screenshot.png)
 
+> **This is a fork.** All the credit for the theme goes to
+> [Djordje Atlialp (@rhazdon)](https://github.com/rhazdon), who wrote
+> [hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng).
+> This fork exists to keep the theme current with Hugo; upstream has not shipped
+> a change since November 2025. See [Differences from upstream](#differences-from-upstream).
+
 ## General informations
 
 This theme was highly inspired by the [hello-friend](https://github.com/panr/hugo-theme-hello-friend) and [hermit](https://github.com/Track3/hermit). A lot of kudos for their great work.
+
+## Differences from upstream
+
+- Builds warning-free on Hugo 0.164: `languageCode`, `.Site.Data`,
+  `.Site.LanguageCode` and the LibSass transpiler have all been migrated off
+  their deprecated forms.
+- Uses the template layout introduced in Hugo 0.146 (`layouts/_partials/`,
+  `_shortcodes/`, `_markup/`, `page.html`, `list.html`, `home.html`).
+- SCSS uses the Sass module system (`@use`) and compiles with Dart Sass, with
+  an automatic fallback to LibSass when Dart Sass is not installed.
+- Fixes two selectors that made inline code lose its styling entirely.
+- CI builds the exampleSite on every change and fails on any new deprecation.
 
 ---
 
 ## Table of Contents
 
+- [Differences from upstream](#differences-from-upstream)
 - [Features](#features)
 - [Requirements](#requirements)
 - [How to start](#how-to-start)
@@ -65,19 +84,24 @@ site still builds; Hugo then prints a deprecation warning until you install it.
 
 ## How to start
 
-You can download the theme manually by going to [https://github.com/rhazdon/hugo-theme-hello-friend-ng.git](https://github.com/rhazdon/hugo-theme-hello-friend-ng.git) and pasting it to `themes/hello-friend-ng` in your root directory.
+You can download the theme manually by going to [https://github.com/mehdilaruelle/hugo-theme-hello-friend-ng-ia](https://github.com/mehdilaruelle/hugo-theme-hello-friend-ng-ia) and pasting it to `themes/hello-friend-ng` in your root directory.
 
 You can also clone it directly to your Hugo folder:
 
 ``` bash
-git clone https://github.com/rhazdon/hugo-theme-hello-friend-ng.git themes/hello-friend-ng
+git clone https://github.com/mehdilaruelle/hugo-theme-hello-friend-ng-ia.git themes/hello-friend-ng
 ```
 
 If you don't want to make any radical changes, it's the best option, because you can get new updates when they are available. To do so, include it as a git submodule:
 
 ``` bash
-git submodule add https://github.com/rhazdon/hugo-theme-hello-friend-ng.git themes/hello-friend-ng
+git submodule add https://github.com/mehdilaruelle/hugo-theme-hello-friend-ng-ia.git themes/hello-friend-ng
 ```
+
+The directory name matters: keep it `hello-friend-ng`, since that is the value `theme` takes in your configuration.
+
+For the original, unforked theme, use
+[rhazdon/hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng) instead.
 
 ## How to configure
 
@@ -260,11 +284,13 @@ partial that needs a variable or a mixin loads it explicitly, e.g.
 
 ## Sponsoring
 
-If you like my work and if you think this project is worth to support it, just <br />
+The theme is Djordje Atlialp's work, so the coffee should go to him: <br />
 <a href="https://www.buymeacoffee.com/djordjeatlialp" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-green.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
 
 ## Licence
 
-Copyright © 2019-2025 Djordje Atlialp
+Original work Copyright © 2018 Track3, © 2019 panr <br />
+Modified work Copyright © 2019-2025 Djordje Atlialp <br />
+Modified work Copyright © 2026 mehdilaruelle
 
-The theme is released under the MIT License. Check the [original theme license](https://github.com/rhazdon/hugo-theme-hello-friend-ng/blob/master/LICENSE.md) for additional licensing information.
+The theme is released under the MIT License. See [LICENSE.md](LICENSE.md), and the [upstream license](https://github.com/rhazdon/hugo-theme-hello-friend-ng/blob/master/LICENSE.md) for additional licensing information.
