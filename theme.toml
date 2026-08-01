@@ -9,6 +9,7 @@ min_version = "0.158.0"
 [author]
   name = "mehdilaruelle"
   homepage = "https://github.com/mehdilaruelle"
+  twitter = "https://x.com/mehdilaruelle"
 
 # This theme is a fork of hello-friend-ng by Djordje Atlialp, which is itself
 # based on hello-friend by panr and hermit by Track3.

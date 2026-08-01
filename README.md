@@ -9,6 +9,10 @@
 > [hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng).
 > This fork exists to keep the theme current with Hugo; upstream has not shipped
 > a change since November 2025. See [Differences from upstream](#differences-from-upstream).
+>
+> Fork maintained by [@mehdilaruelle](https://github.com/mehdilaruelle)
+> ([X](https://x.com/mehdilaruelle)). Report anything specific to this fork
+> here; anything about the theme itself belongs upstream.
 
 ## General informations
 
