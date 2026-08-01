@@ -4,21 +4,45 @@ on:
   push:
     branches: [master]
   pull_request:
+  # Weekly canary against the newest Hugo, see the `latest` job below.
+  schedule:
+    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+# A new push supersedes whatever is still running for the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   HUGO_VERSION: 0.164.0
   DART_SASS_VERSION: 1.102.0
 
 jobs:
-  # Primary job: the theme must build with zero warnings, so that any new Hugo
-  # deprecation breaks CI instead of going unnoticed.
+  # The theme must build with zero warnings under Dart Sass, so that any new
+  # Hugo deprecation breaks CI instead of going unnoticed.
+  #
+  # The second matrix entry guards the libsass fallback in
+  # layouts/_partials/head.html: with no Dart Sass on PATH the theme must still
+  # build. It drops --panicOnWarning, since that path warns by design.
   build:
-    name: Build exampleSite (Dart Sass, no warnings allowed)
+    name: Build exampleSite (${{ matrix.name }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name != 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Dart Sass, no warnings allowed
+            dart-sass: true
+            flags: --panicOnWarning
+          - name: libsass fallback
+            dart-sass: false
+            flags: ""
     steps:
       # Checked out under a directory named after the theme so that
       # `hugo --themesDir ../..` resolves the theme by name.
@@ -33,9 +57,50 @@ jobs:
           sudo dpkg -i hugo.deb
 
       - name: Install Dart Sass ${{ env.DART_SASS_VERSION }}
+        if: matrix.dart-sass
         run: |
           curl -sSLf \
             "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" \
+            | tar -xz
+          echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
+
+      - name: Show toolchain versions
+        run: |
+          hugo version
+          command -v sass >/dev/null && sass --version || echo "Dart Sass: not installed (testing the fallback)"
+
+      - name: Build
+        working-directory: hello-friend-ng/exampleSite
+        run: hugo --themesDir ../.. --gc ${{ matrix.flags }}
+
+  # This theme fell a long way behind on Hugo deprecations before anything
+  # noticed. Build against whatever Hugo and Dart Sass are newest once a week,
+  # so a new deprecation shows up as a failed scheduled run rather than at the
+  # next release. Runs only on a schedule or by hand, so it never blocks a PR.
+  latest:
+    name: Build exampleSite (latest Hugo, canary)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: hello-friend-ng
+
+      - name: Resolve and install the newest Hugo and Dart Sass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          hugo_version="$(gh api repos/gohugoio/hugo/releases/latest --jq .tag_name | sed 's/^v//')"
+          sass_version="$(gh api repos/sass/dart-sass/releases/latest --jq .tag_name)"
+          echo "Hugo ${hugo_version}, Dart Sass ${sass_version}"
+
+          curl -sSLf -o hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${hugo_version}/hugo_extended_${hugo_version}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+          curl -sSLf \
+            "https://github.com/sass/dart-sass/releases/download/${sass_version}/dart-sass-${sass_version}-linux-x64.tar.gz" \
             | tar -xz
           echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
 
@@ -47,24 +112,3 @@ jobs:
       - name: Build
         working-directory: hello-friend-ng/exampleSite
         run: hugo --themesDir ../.. --gc --panicOnWarning
-
-  # Guard the libsass fallback in layouts/_partials/head.html: without Dart Sass
-  # the theme must still build (with a deprecation warning, hence no
-  # --panicOnWarning here).
-  build-without-dart-sass:
-    name: Build exampleSite (libsass fallback)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          path: hello-friend-ng
-
-      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
-        run: |
-          curl -sSLf -o hugo.deb \
-            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
-          sudo dpkg -i hugo.deb
-
-      - name: Build without Dart Sass installed
-        working-directory: hello-friend-ng/exampleSite
-        run: hugo --themesDir ../.. --gc
