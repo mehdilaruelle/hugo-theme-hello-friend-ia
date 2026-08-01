@@ -45,8 +45,6 @@ jobs:
             | tar -xz
           echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
 
-      # Pages serves the site from a subpath, so baseURL has to carry it.
-      # --panicOnWarning keeps the published demo held to the same bar as CI.
       - name: Build
         working-directory: hello-friend-ng/exampleSite
         run: |
