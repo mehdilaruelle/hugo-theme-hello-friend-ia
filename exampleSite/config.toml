@@ -240,14 +240,20 @@ disableHugoGeneratorInject = false
     url  = "https://www.stackoverflow.com/"
 
 [languages]
+  # Set locale per language: the root-level locale is only the default, so
+  # without these every feed would announce the same language.
   [languages.en]
-    weight    = 1
+    weight = 1
+    locale = "en-us"
+    label  = "English"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.en.params]
     subtitle  = "Hello Friend NG Theme"
 
   [languages.fr]
-    weight    = 2
+    weight = 2
+    locale = "fr-fr"
+    label  = "Français"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.fr.params]
     subtitle  = "Hello Friend NG Theme"
