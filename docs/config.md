@@ -13,3 +13,11 @@ paginate = 10
 ```
 
 This setting will paginate your list views. Set to `0` to disable it. For more information check (https://gohugo.io/templates/pagination/).
+
+## Footer copyright year
+
+`params.footer.trademark` accepts either:
+
+- `true` — renders the current year, so it never goes stale
+- any value — rendered as given, for a fixed year or a range such as
+  `"2019–2026"`
