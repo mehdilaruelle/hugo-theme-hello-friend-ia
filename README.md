@@ -1,6 +1,6 @@
 # Hello Friend NG
 
-![Hello Friend NG](https://dsh.re/d914c)
+![Hello Friend NG](images/screenshot.png)
 
 ## General informations
 
@@ -39,7 +39,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Builtin (enableable/disableable) multilanguage menu
 - Support for social icons
 - Support for sharing buttons
-- Support for [Commento](https://commento.io)
+- Support for [Commento](https://gitlab.com/commento/commento) (commento.io is gone; see also [Comentario](https://comentario.app), its maintained successor)
 - Support for [Plausible](https://plausible.io) (thanks to [@Joffcom](https://github.com/Joffcom))
 - Support for [utterances](https://utteranc.es/) comment system
 
