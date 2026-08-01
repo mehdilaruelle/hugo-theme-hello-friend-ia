@@ -22,7 +22,7 @@ jobs:
     steps:
       # Checked out under a directory named after the theme so that
       # `hugo --themesDir ../..` resolves the theme by name.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: hello-friend-ng
 
@@ -55,7 +55,7 @@ jobs:
     name: Build exampleSite (libsass fallback)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: hello-friend-ng
 
