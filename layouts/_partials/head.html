@@ -22,10 +22,27 @@
 {{ end }}
 
 <!-- CSS -->
-{{ $opts := dict "transpiler" "libsass" "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" true }}
-{{ with resources.Get "scss/main.scss" | toCSS $opts | minify | fingerprint }}
+{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" true -}}
+{{- $dartOpts := merge $opts (dict "transpiler" "dartsass") -}}
+{{- $scss := resources.Get "scss/main.scss" -}}
+{{- with $scss -}}
+  {{- $css := "" -}}
+  {{- /*
+    Prefer Dart Sass, and fall back to libsass when Dart Sass is not installed.
+    Resource transformations are lazy, so .Content is read inside try to force
+    the transpilation and surface any error here instead of at render time.
+  */ -}}
+  {{- $res := try (($scss | toCSS $dartOpts).Content) -}}
+  {{- with $res.Err -}}
+    {{- warnidf "sass-dartsass-unavailable" "%s" "Dart Sass is not available, falling back to the deprecated libsass transpiler which Hugo will remove in a future release. Install Dart Sass to fix this: https://gohugo.io/functions/css/sass/#dart-sass" -}}
+    {{- $css = $scss | toCSS (merge $opts (dict "transpiler" "libsass")) -}}
+  {{- else -}}
+    {{- $css = $scss | toCSS $dartOpts -}}
+  {{- end -}}
+  {{- with $css | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
-{{ end }}
+  {{- end -}}
+{{- end }}
 
 
 {{ range $val := $.Site.Params.customCSS }}
@@ -37,11 +54,11 @@
 <!-- Icons -->
 {{- partial "favicons.html" . }}
 
-{{ template "_internal/schema.html" . }}
-{{ template "_internal/twitter_cards.html" . }}
+{{ partial "schema.html" . }}
+{{ partial "twitter_cards.html" . }}
 
 {{ if isset .Site.Taxonomies "series" }}
-    {{ template "_internal/opengraph.html" . }}
+    {{ partial "opengraph.html" . }}
 {{ end }}
 
 {{ range .Params.categories }}
@@ -64,13 +81,13 @@
 {{ end }}
 
 <!-- Custom head tags -->
-{{- if templates.Exists "partials/extra-head.html" -}}
+{{- if templates.Exists "_partials/extra-head.html" -}}
     {{ partial "extra-head.html" . }}
 {{- end }}
 
 <!-- Google Analytics internal template -->
 {{- if .Site.Config.Services.GoogleAnalytics.ID }}
-    {{ template "_internal/google_analytics.html" . }}
+    {{ partial "google_analytics.html" . }}
 {{- end }}
 
 <!-- Plausible.io -->
