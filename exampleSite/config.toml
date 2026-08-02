@@ -62,7 +62,7 @@ disableHugoGeneratorInject = false
 
   # Home subtitle of the index page.
   #
-  homeSubtitle = "Hello Friend NG"
+  homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
 
   # Set a background for the homepage
   # backgroundImage = "assets/images/background.jpg"
