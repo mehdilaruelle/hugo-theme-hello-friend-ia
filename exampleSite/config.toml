@@ -75,6 +75,13 @@ disableHugoGeneratorInject = false
   #
   disableReadOtherPosts = false
 
+  # Default color scheme
+  #
+  # Unset, the theme follows the operating system preference. Set to "dark" or
+  # "light" to pick a side; a visitor using the toggle still overrides it.
+  #
+  # defaultTheme = "dark"
+
   # Enable theme toggle
   # 
   # This options enables the theme toggle for the theme. 

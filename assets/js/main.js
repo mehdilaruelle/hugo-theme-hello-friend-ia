@@ -9,6 +9,9 @@ const themeToggle = document.querySelector(".theme-toggle");
 const chosenTheme = window.localStorage && window.localStorage.getItem("theme");
 const chosenThemeIsDark = chosenTheme == "dark";
 const chosenThemeIsLight = chosenTheme == "light";
+// Rendered by the server from params.defaultTheme, read once before any
+// script changes it.
+const defaultTheme = document.documentElement.getAttribute("data-theme");
 
 // Detect the color scheme the operating system prefers.
 function detectOSColorTheme() {
@@ -16,6 +19,8 @@ function detectOSColorTheme() {
     document.documentElement.setAttribute("data-theme", "dark");
   } else if (chosenThemeIsLight) {
     document.documentElement.setAttribute("data-theme", "light");
+  } else if (defaultTheme) {
+    document.documentElement.setAttribute("data-theme", defaultTheme);
   } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     document.documentElement.setAttribute("data-theme", "dark");
   } else {
