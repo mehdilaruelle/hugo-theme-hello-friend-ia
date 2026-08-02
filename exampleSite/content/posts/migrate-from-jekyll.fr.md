@@ -36,7 +36,7 @@ le répertoire `static`.
 ## Créez votre configuration Hugo
 Hugo peut lire votre fichier de configuration au format JSON, YAML et TOML. Hugo
 supporte également les paramètres de configuration. Plus d'informations sur la
-[documentation de configuration Hugo](/overview/configuration/)
+[documentation de configuration Hugo](https://gohugo.io/getting-started/configuration/)
 
 ## Définiez votre répertoire de publication sur `_site`
 La valeur par défaut pour Jekyll est d'utiliser le répertoire `_site` pour
@@ -67,14 +67,14 @@ C'est la majeure partie du travail. La documentation est votre ami.
 Vous devriez vous référer à [la documentation des thèmes de Jekyll]
 (http://jekyllrb.com/docs/templates/) si vous devez vous rafraîchir la mémoire
 sur la façon dont vous avez construit votre blog et [les thèmes de Hugo]
-(/layout/templates/) pour apprendre la manière de faire sur Hugo.
+(https://gohugo.io/templates/) pour apprendre la manière de faire sur Hugo.
 
 Pour vous donner un point de référence, la conversion du thème pour
 [heyitsalex.net](http://heyitsalex.net/) ne m'a pris que quelques heures.
 
 ## Convertir les extensions Jekyll vers des shortcodes Hugo
 Jekyll support les [extensions](http://jekyllrb.com/docs/plugins/); Hugo lui a
-les [shortcodes](/doc/shortcodes/). C'est assez banal les porter.
+les [shortcodes](https://gohugo.io/content-management/shortcodes/). C'est assez banal les porter.
 
 ### Implémentation
 Comme exemple, j'utilise une extension pour avoir un [`image_tag`](https://githu

@@ -68,7 +68,7 @@ Accès au paramètre de la page "bar"
 Chaque modèle go a une structure (objet) mis à sa disposition. Avec Hugo, à
 chaque modèle est passé soit une page, soit une structure de nœud, suivant quel
 type de page vous rendez. Plus de détails sont disponibles sur la page des
-[variables](/layout/variables).
+[variables](https://gohugo.io/methods/page/).
 
 Une variable est accessible par son nom.
 
@@ -85,7 +85,7 @@ Les variables peuvent également être définies et appelées.
 Go templace est livré avec quelques fonctions qui fournissent des
 fonctionnalités basiques. Le système de Go template fourni également un
 mécanisme permettant aux applications d'étendre les fonctions disponible. Les
-[fonctions de modèle Hugo](/layout/functions) fourni quelques fonctionnalités
+[fonctions de modèle Hugo](https://gohugo.io/functions/) fourni quelques fonctionnalités
 supplémentaires que nous espérons qu'elles seront utiles pour vos sites web.
 Les functions sont appelées en utilisant leur nom suivi par les paramètres
 requis séparés par des espaces. Des fonctions de modèles ne peuvent pas être
@@ -267,7 +267,7 @@ dans votre modèle.
 
 Dans chaque partie du contenu, vous pouvez fournir des variables pour être
 utilisées par le modèle. Cela se passe dans la
-[section liminaire](/content/front-matter).
+[section liminaire](https://gohugo.io/content-management/front-matter/).
 
 Un exemple de cela est utilisé par ce site de documentation. La plupart des
 pages bénéficient de la présentation de la table des matières. Quelques fois,

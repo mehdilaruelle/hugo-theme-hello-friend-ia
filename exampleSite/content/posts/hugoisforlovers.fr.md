@@ -23,7 +23,7 @@ Sauvegardez le fichier téléchargé à un endroit précis, afin de l'utiliser d
 l'étape suivante.
 
 Des informations plus complètes sont disponibles sur la page
-[installing hugo](/overview/installing/)
+[installing hugo](https://gohugo.io/installation/)
 <!--more-->
 
 ## Étape 2. Compilez la documentation
