@@ -49,4 +49,4 @@ jobs:
 
       - name: Check every internal link and asset
         working-directory: hello-friend-ng/exampleSite
-        run: node ../../.github/scripts/check-links.mjs public https://example.com/subpath/
+        run: node ../.github/scripts/check-links.mjs public https://example.com/subpath/
