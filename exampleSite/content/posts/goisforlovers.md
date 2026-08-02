@@ -1,4 +1,6 @@
 +++
+cover = "/img/cover.png"
+coverCaption = "A cover image, with its caption"
 title = "(Hu)go Template Primer"
 description = ""
 type = ["posts","post"]
