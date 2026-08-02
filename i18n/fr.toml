@@ -42,3 +42,6 @@ other = "Mise à jour"
 [pagination]
 newerPosts = "Articles plus récents"
 olderPosts = "Articles plus anciens"
+
+[skipToContent]
+other = "Aller au contenu"
