@@ -91,3 +91,13 @@ Having nearly instant feedback enables you to have your creativity flow without 
 ## Step 4. Have fun
 
 The best way to learn something is to play with it.
+
+## Images
+
+An image from `assets`, whose dimensions Hugo knows:
+
+{{< image src="img/example.png" alt="Hugo logo" position="center" >}}
+
+An image referenced by path, which Hugo cannot measure:
+
+{{< image src="/img/absent.png" alt="Referenced by path" position="center" >}}
