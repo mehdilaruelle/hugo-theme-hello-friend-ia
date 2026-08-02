@@ -31,3 +31,12 @@ change how existing diagrams render; bump the version in
 
 The library is fetched from a third party, so visitors to pages with diagrams
 resolve jsDelivr. Pages without a diagram request nothing.
+
+## Default color scheme
+
+`params.defaultTheme` accepts `"dark"` or `"light"`. Unset, the theme follows
+the visitor's operating system preference, which is the previous behaviour.
+
+The value is rendered server-side onto `<html>`, so the page arrives in the
+right scheme rather than switching once JavaScript runs. A visitor who picks a
+scheme with the toggle still overrides it, on every later visit.
