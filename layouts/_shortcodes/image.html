@@ -1,15 +1,7 @@
-{{ $src := .Get "src" }}
-{{ $remote := (urls.Parse $src).Scheme }}
-{{ $img := "" }}
-{{ if not $remote }}
-  {{ with .Page.Resources.GetMatch $src }}{{ $img = . }}{{ else }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end }}
-{{ end }}
-{{ $url := $src }}
-{{ with $img }}
-  {{ $url = .RelPermalink }}
-{{ else }}
-  {{ if not $remote }}{{ $url = urls.JoinPath $.Site.BaseURL $src }}{{ end }}
-{{ end }}
-{{ if $src }}
-    <img src="{{ $url | safeURL }}" loading="lazy" decoding="async"{{ with $img }}{{ with .Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }}{{ end }} {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
-{{ end }}
+{{- partial "image.html" (dict
+  "src" (.Get "src")
+  "alt" (.Get "alt")
+  "position" (.Get "position" | default "left")
+  "style" (.Get "style")
+  "page" .Page
+) -}}
