@@ -70,22 +70,27 @@ for whoever reads the history a year later.
 
 ## Versioning
 
-Releases follow [Semantic Versioning](https://semver.org), and the version is
-derived from the commit subjects since the previous tag:
+Releases are cut automatically. Merging a pull request into `master` tags a new
+version and publishes a GitHub Release, with no further step — the version comes
+from the pull request title, since that is the subject a squash merge lands:
 
-| what landed | bump |
-| --- | --- |
-| any `!` or `BREAKING CHANGE:` | major |
-| at least one `feat` | minor |
-| only `fix`, `perf` and the rest | patch |
+| title starts with | bump | example |
+| --- | --- | --- |
+| anything with `!`, or a body carrying `BREAKING CHANGE:` | major | `1.4.2` → `2.0.0` |
+| `feat` | minor | `1.4.2` → `1.5.0` |
+| `fix`, `perf`, `revert` | patch | `1.4.2` → `1.4.3` |
+| `docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore` | none | no release |
 
-This is why the subject line matters beyond tidiness: it is what the next
-version number is read from. A bug fix labelled `chore` silently understates
-the release.
+So a pull request that only touches documentation or CI merges without cutting
+a version, which is the intent — those change nothing for somebody using the
+theme.
 
-Tags on this fork carry a `v` prefix — `v2.0.0`, not `2.0.0`. Upstream tags do
-not (`1.0.9`), so the prefix also makes it unambiguous at a glance which of the
-two a tag belongs to.
+This is also why the title matters beyond tidiness: it is what the version is
+read from. A bug fix titled `chore` ships silently, with no release at all.
+
+Tags carry a `v` prefix — `v1.2.0`, not `1.2.0`. Upstream tags do not
+(`1.0.9`), so the prefix also makes it unambiguous at a glance which of the two
+a tag belongs to.
 
 ## Before opening a pull request
 
