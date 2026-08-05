@@ -10,9 +10,17 @@
 <meta name="theme-color" content="{{ .Site.Params.themeColor }}" />
 <link rel="canonical" href="{{ .Permalink }}" />
 {{- if .IsTranslated }}
+{{- /*
+  x-default names the version to serve when no hreflang matches the visitor.
+  hugo.Sites is ordered by language weight, so its first entry is the site's
+  primary language: give that one the x-default alongside its own hreflang.
+*/ -}}
+{{- $primary := (index hugo.Sites 0).Language.Lang }}
+{{- range .AllTranslations }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
-{{- range .Translations }}
-<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+{{- if eq .Language.Lang $primary }}
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -62,6 +70,7 @@
 {{- partial "favicons.html" . }}
 
 {{ partial "schema.html" . }}
+{{ partial "json-ld.html" . }}
 {{ partial "twitter_cards.html" . }}
 
 {{ partial "opengraph.html" . }}
@@ -99,3 +108,5 @@
 {{- if $.Site.Params.plausibleDataDomain }}
     <script defer data-domain="{{ .Site.Params.plausibleDataDomain }}" src="{{ .Site.Params.plausibleScriptSource }}"></script>
 {{- end}}
+
+

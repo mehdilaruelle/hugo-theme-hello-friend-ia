@@ -1,0 +1,92 @@
+{{- /*
+  Structured data as JSON-LD. Hugo's embedded schema.html already emits the same
+  facts as microdata, but Google reads JSON-LD in preference to it.
+
+  Home pages describe the site, dated single pages describe the article, and
+  anything else is skipped rather than described badly.
+*/ -}}
+
+{{- /*
+  author is a string in some configurations and a map with a name key in others,
+  at the page level and at the site level alike. Normalise both to a string.
+  This cannot use cond, which evaluates both branches: .name would fail on a
+  string.
+*/ -}}
+{{- $author := "" -}}
+{{- with .Params.author | default site.Params.author -}}
+  {{- if reflect.IsMap . -}}
+    {{- $author = .name -}}
+  {{- else -}}
+    {{- $author = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $image := "" -}}
+{{- with .Params.images -}}
+  {{- $image = index . 0 -}}
+{{- else -}}
+  {{- with site.Params.images -}}
+    {{- $image = index . 0 -}}
+  {{- end -}}
+{{- end -}}
+{{- with $image -}}
+  {{- $image = . | absURL -}}
+{{- end -}}
+
+{{- $data := dict -}}
+
+{{- if .IsHome -}}
+  {{- $data = dict
+    "@context" "https://schema.org"
+    "@type" "WebSite"
+    "url" .Permalink
+    "name" site.Title
+    "inLanguage" .Language.Lang
+  -}}
+  {{- with .Description | default site.Params.description -}}
+    {{- $data = merge $data (dict "description" .) -}}
+  {{- end -}}
+  {{- with $author -}}
+    {{- $data = merge $data (dict "author" (dict "@type" "Person" "name" .)) -}}
+  {{- end -}}
+{{- else if and .IsPage (not .Date.IsZero) -}}
+  {{- $data = dict
+    "@context" "https://schema.org"
+    "@type" "BlogPosting"
+    "@id" .Permalink
+    "url" .Permalink
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "headline" (.Title | plainify | truncate 110 "")
+    "datePublished" (.PublishDate.Format "2006-01-02T15:04:05Z07:00")
+    "inLanguage" .Language.Lang
+    "wordCount" .WordCount
+  -}}
+  {{- if not .Lastmod.IsZero -}}
+    {{- $data = merge $data (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")) -}}
+  {{- end -}}
+  {{- /* Without a description of its own, fall back to a trimmed summary rather
+         than the several hundred words .Summary can run to. */ -}}
+  {{- with .Description | default (.Summary | plainify | chomp | truncate 300 "") -}}
+    {{- $data = merge $data (dict "description" .) -}}
+  {{- end -}}
+  {{- with $author -}}
+    {{- $data = merge $data (dict "author" (dict "@type" "Person" "name" .)) -}}
+  {{- end -}}
+  {{- with $image -}}
+    {{- $data = merge $data (dict "image" .) -}}
+  {{- end -}}
+  {{- with .Params.tags -}}
+    {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
+  {{- end -}}
+  {{- $data = merge $data (dict "publisher" (dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink)) -}}
+{{- end -}}
+
+{{- /*
+  safeJS is required: inside a script element html/template treats the value as
+  JavaScript and would emit the object as a quoted string literal, which is not
+  structured data any crawler would read. It is safe because jsonify escapes
+  <, > and & to <, > and &, so no payload can close the element.
+*/ -}}
+{{- with $data -}}
+<script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
+{{- end -}}

@@ -28,6 +28,8 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - SCSS uses the Sass module system (`@use`) and compiles with Dart Sass, with
   an automatic fallback to LibSass when Dart Sass is not installed.
 - Fixes two selectors that made inline code lose its styling entirely.
+- Emits JSON-LD structured data, and completes the `hreflang` set with
+  `x-default`. See [SEO](#seo).
 - CI builds the exampleSite on every change and fails on any new deprecation.
 - The exampleSite is published as a
   [live demo](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/) on
@@ -39,6 +41,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 
 - [Differences from upstream](#differences-from-upstream)
 - [Features](#features)
+- [SEO](#seo)
 - [Requirements](#requirements)
 - [How to start](#how-to-start)
 - [How to configure](#how-to-configure)
@@ -70,6 +73,29 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Support for [Commento](https://gitlab.com/commento/commento) (commento.io is gone; see also [Comentario](https://comentario.app), its maintained successor)
 - Support for [Plausible](https://plausible.io) (thanks to [@Joffcom](https://github.com/Joffcom))
 - Support for [utterances](https://utteranc.es/) comment system
+- JSON-LD structured data and a complete `hreflang` set, see [SEO](#seo)
+
+## SEO
+
+Nothing to configure. Every page already carries a canonical link, Open Graph
+and Twitter Card tags, and microdata from Hugo's embedded `schema.html`. On top
+of that:
+
+**JSON-LD.** Google reads JSON-LD in preference to microdata, so the theme emits
+it as well. The home page is described as a `WebSite`, and any dated single page
+as a `BlogPosting` carrying its headline, description, dates, author, publisher,
+language, word count, and its image and tags when it has them. Pages that are
+neither are left alone rather than described badly.
+
+The values come from what you already set: `author` (a string or a map with a
+`name`, in the page or in the site params), `description` — falling back to a
+trimmed summary — and `images`, falling back to the site-wide list.
+
+**`hreflang="x-default"`.** Translated pages list every language, and the
+primary one is additionally tagged `x-default`, which is what a search engine
+serves to a visitor whose language matches none of them. Primary means first in
+`hugo.Sites`, i.e. the language with the lowest `weight`, so ordering your
+languages orders this too.
 
 ## Requirements
 
