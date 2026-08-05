@@ -163,7 +163,7 @@ disableHugoGeneratorInject = false
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
   [params.portrait]
     path     = "/img/portrait.png"
-    alt      = "Portrait"
+    alt      = "The Hugo logo"
     maxWidth = "120px"
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
