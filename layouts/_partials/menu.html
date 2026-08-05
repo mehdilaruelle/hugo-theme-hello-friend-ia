@@ -18,19 +18,20 @@
             {{ end }}
         {{- end }}
 
-        {{- if .Site.Params.EnableGlobalLanguageMenu }}
-        <ul class="submenu">
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">{{ .Language.Label | default .Language }}</a>
-                <div class="dropdown-content">
-                    {{- if hugo.IsMultilingual }}
-                        {{ range $.Translations }}
-                            <a title="{{ .Language.Label | default .Language }}" href="{{ .Permalink }}">{{ .Language.Label | default .Language }}</a>
-                        {{ end }}
-                    {{- end }}
-                </div>
+        {{- if and .Site.Params.EnableGlobalLanguageMenu hugo.IsMultilingual }}
+            <li class="languages">
+                {{- range .AllTranslations }}
+                    {{- $current := eq .Language.Lang $.Language.Lang }}
+                    <a class="language{{ if $current }} language--current{{ end }}"
+                       href="{{ .Permalink }}"
+                       lang="{{ .Language.Lang }}"
+                       hreflang="{{ .Language.Lang }}"
+                       {{- if $current }} aria-current="true"{{ end }}>
+                        <span class="flag fi fi-{{ index hugo.Data.langFlags .Language.Lang }}"></span>
+                        <span class="language__label">{{ .Language.Label | default .Language.Lang }}</span>
+                    </a>
+                {{- end }}
             </li>
-        </ul>
         {{- end }}
     </ul>
 </nav>
