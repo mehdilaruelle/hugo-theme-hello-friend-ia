@@ -168,15 +168,13 @@
 .languages {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 9px;
 }
 
 .language {
   display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  text-decoration: none;
-  opacity: 0.55;
+  line-height: 0;
+  opacity: 0.4;
   transition: opacity 0.15s ease-in-out;
 
   &:hover,
@@ -186,15 +184,11 @@
 
   &--current {
     opacity: 1;
-    font-weight: 500;
   }
 
   .flag {
+    width: 1.15em;
+    height: 1.15em;
     border-radius: 50%;
-    flex: none;
-  }
-
-  &__label {
-    white-space: nowrap;
   }
 }
