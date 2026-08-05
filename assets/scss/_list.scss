@@ -86,3 +86,22 @@
     }
   }
 }
+
+// Thumbnails, off unless params.enableThumbnails is set. Scoped to the
+// modifier class so a list without them renders exactly as before.
+.post-item-inner--thumbnail {
+  align-items: center;
+
+  .post-title {
+    flex: 1;
+  }
+}
+
+.post-thumbnail {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  margin-right: 16px;
+  border-radius: 6px;
+  object-fit: cover;
+}

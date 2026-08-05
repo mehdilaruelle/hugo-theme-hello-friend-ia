@@ -29,8 +29,12 @@
 
                         <ul class="posts-list">
                             {{ range .Pages }}
+                                {{- $thumbnail := and .Site.Params.enableThumbnails .Params.cover }}
                                 <li class="post-item">
-                                    <a href="{{.Permalink}}" class="post-item-inner">
+                                    <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}">
+                                        {{- if $thumbnail }}
+                                            {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
+                                        {{- end }}
                                         <span class="post-title">{{.Title}}</span>
                                         <span class="post-day">
                                             {{ if .Site.Params.dateformShort }}

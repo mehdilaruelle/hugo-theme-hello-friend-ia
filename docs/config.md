@@ -40,3 +40,19 @@ the visitor's operating system preference, which is the previous behaviour.
 The value is rendered server-side onto `<html>`, so the page arrives in the
 right scheme rather than switching once JavaScript runs. A visitor who picks a
 scheme with the toggle still overrides it, on every later visit.
+
+## Post thumbnails
+
+`params.enableThumbnails` shows each post's `cover` image beside its title in
+list pages. It is off by default, and a post without a `cover` is unaffected —
+a list with no thumbnails renders exactly as it did before.
+
+```toml
+[params]
+  enableThumbnails = true
+```
+
+The image is taken from the page's `cover` front matter, the same value the
+article page already uses. When it resolves to a page resource or an asset,
+Hugo's dimensions are emitted so the row reserves its space before the image
+arrives; a path under `static/` or a remote URL is used as given.
