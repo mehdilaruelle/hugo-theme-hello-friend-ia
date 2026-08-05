@@ -54,14 +54,15 @@ disableHugoGeneratorInject = false
   dateformNumTime = "2006-01-02 15:04"
 
   # Metadata mostly used in document's head
-  # 
-  description = "Nice theme for homepages and blogs"
+  #
+  # description is set per language below, since it is what search results and
+  # social cards show.
   keywords = ""
   images = [""]
 
   # Home subtitle of the index page.
   #
-  homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
+  # Set per language below.
 
   # Set a background for the homepage
   # backgroundImage = "assets/images/background.jpg"
@@ -163,8 +164,9 @@ disableHugoGeneratorInject = false
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
   [params.portrait]
     path     = "/img/portrait.png"
-    alt      = "The Hugo logo"
     maxWidth = "120px"
+    # alt is set per language below: it is read aloud, so it is text like any
+    # other on the page.
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
   # Addon: Commento
@@ -247,13 +249,45 @@ disableHugoGeneratorInject = false
 [languages]
   # Set locale per language: the root-level locale is only the default, so
   # without these every feed would announce the same language.
+  #
+  # Everything a visitor reads lives here too — subtitle, description, portrait
+  # alt text, menu labels. Left at the root they would be shared, and switching
+  # to French would serve the same English page under a second url.
+  #
+  # Menus are defined per language rather than once at the root, because a root
+  # menu applies to every language and there is then no way to translate a
+  # single entry.
   [languages.en]
     weight = 1
     locale = "en-us"
     label  = "English"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.en.params]
-    subtitle  = "Hello Friend NG Theme"
+    # subtitle is the tagline appended to every <title>; homeSubtitle is the
+    # line under the heading on the front page.
+    subtitle     = "Hello Friend NG Theme"
+    description  = "Nice theme for homepages and blogs"
+    homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
+  [languages.en.params.portrait]
+    alt = "The Hugo logo"
+  [languages.en.menu]
+    # Menu order follows weight, the usual Hugo mechanism.
+    [[languages.en.menu.main]]
+      identifier  = "about"
+      name        = "About"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.en.menu.main]]
+      identifier  = "me"
+      name        = "About Me"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.en.menu.main]]
+      identifier = "posts"
+      name       = "Posts"
+      url        = "posts/"
+      weight     = 20
 
   [languages.fr]
     weight = 2
@@ -261,25 +295,25 @@ disableHugoGeneratorInject = false
     label  = "Français"
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.fr.params]
-    subtitle  = "Hello Friend NG Theme"
-
-[menu]
-  # Menu order follows weight, the usual Hugo mechanism.
-  [[menu.main]]
-    identifier  = "about"
-    name        = "About"
-    url         = "about/"
-    weight      = 10
-    hasChildren = true
-
-  [[menu.main]]
-    identifier  = "me"
-    name        = "About Me"
-    url         = "about/me/"
-    parent      = "about"
-
-  [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "posts/"
-    weight     = 20
+    subtitle     = "Thème Hello Friend NG"
+    description  = "Un thème soigné pour pages d'accueil et blogs"
+    homeSubtitle = "Hello Friend NG propulsé par l'<strong>IA</strong>"
+  [languages.fr.params.portrait]
+    alt = "Le logo Hugo"
+  [languages.fr.menu]
+    [[languages.fr.menu.main]]
+      identifier  = "about"
+      name        = "À propos"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.fr.menu.main]]
+      identifier  = "me"
+      name        = "Qui suis-je"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.fr.menu.main]]
+      identifier = "posts"
+      name       = "Articles"
+      url        = "posts/"
+      weight     = 20
