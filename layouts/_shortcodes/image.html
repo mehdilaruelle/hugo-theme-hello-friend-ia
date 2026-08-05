@@ -1,6 +1,15 @@
 {{ $src := .Get "src" }}
+{{ $remote := (urls.Parse $src).Scheme }}
 {{ $img := "" }}
-{{ with .Page.Resources.GetMatch $src }}{{ $img = . }}{{ else }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end }}
+{{ if not $remote }}
+  {{ with .Page.Resources.GetMatch $src }}{{ $img = . }}{{ else }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end }}
+{{ end }}
+{{ $url := $src }}
+{{ with $img }}
+  {{ $url = .RelPermalink }}
+{{ else }}
+  {{ if not $remote }}{{ $url = urls.JoinPath $.Site.BaseURL $src }}{{ end }}
+{{ end }}
 {{ if $src }}
-    <img src="{{ with $img }}{{ .RelPermalink }}{{ else }}{{ $src | safeURL }}{{ end }}" loading="lazy" decoding="async"{{ with $img }}{{ with .Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }}{{ end }} {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
+    <img src="{{ $url | safeURL }}" loading="lazy" decoding="async"{{ with $img }}{{ with .Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }}{{ end }} {{ with .Get "alt" }} alt="{{ . | plainify }}" {{ end }} class="{{ with .Get "position"}}{{ . }}{{ else -}} left {{- end }}" {{ with .Get "style" }} style="{{ . | safeCSS }}" {{ end }} />
 {{ end }}

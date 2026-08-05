@@ -100,4 +100,4 @@ An image from `assets`, whose dimensions Hugo knows:
 
 An image referenced by path, which Hugo cannot measure:
 
-{{< image src="/img/absent.png" alt="Referenced by path" position="center" >}}
+{{< image src="/img/cover.png" alt="Referenced by path" position="center" >}}
