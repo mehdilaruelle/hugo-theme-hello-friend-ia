@@ -55,14 +55,25 @@ disableHugoGeneratorInject = false
 
   # Metadata mostly used in document's head
   #
-  # description is set per language below, since it is what search results and
-  # social cards show.
   keywords = ""
   images = [""]
 
-  # Home subtitle of the index page.
+  # Anything a visitor reads can be set here, or once per language under
+  # [languages.<code>.params] further down. A param set in both places takes the
+  # language value, so the one here acts as the fallback for a language that
+  # does not override it.
   #
-  # Set per language below.
+  # This site is bilingual, so it sets the three below per language. Uncomment
+  # them here instead if you run a single language — that is the shorter way to
+  # write it, and nothing else changes.
+  #
+  # subtitle: appended to every <title>, after the site title.
+  # description: what search results and social cards show.
+  # homeSubtitle: the line under the heading on the front page.
+  #
+  # subtitle     = "Hello Friend NG Theme"
+  # description  = "Nice theme for homepages and blogs"
+  # homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
 
   # Set a background for the homepage
   # backgroundImage = "assets/images/background.jpg"
@@ -165,8 +176,9 @@ disableHugoGeneratorInject = false
   [params.portrait]
     path     = "/img/portrait.png"
     maxWidth = "120px"
-    # alt is set per language below: it is read aloud, so it is text like any
-    # other on the page.
+    # alt is read aloud, so it is text like any other on the page and is set per
+    # language below. On a single-language site, uncomment it here instead:
+    # alt    = "The Hugo logo"
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
   # Addon: Commento
