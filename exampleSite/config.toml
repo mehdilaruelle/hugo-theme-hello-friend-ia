@@ -161,12 +161,10 @@ disableHugoGeneratorInject = false
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
   # Addon: Startpage portrait 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-  # Uncomment this if you want a portrait on your start page
-  #
-  # [params.portrait]
-  #   path     = "/img/image.jpg"
-  #   alt      = "Portrait"
-  #   maxWidth = "50px"
+  [params.portrait]
+    path     = "/img/portrait.png"
+    alt      = "The Hugo logo"
+    maxWidth = "120px"
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
   # Addon: Commento

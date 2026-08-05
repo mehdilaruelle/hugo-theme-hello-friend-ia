@@ -96,7 +96,7 @@ The best way to learn something is to play with it.
 
 An image from `assets`, whose dimensions Hugo knows:
 
-{{< image src="img/example.png" alt="Hugo logo" position="center" >}}
+{{< image src="img/example.png" alt="A screenshot of the theme" position="center" >}}
 
 An image referenced by path, which Hugo cannot measure:
 
