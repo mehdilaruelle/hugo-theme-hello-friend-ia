@@ -173,22 +173,54 @@
 
 .language {
   display: inline-flex;
-  line-height: 0;
-  opacity: 0.4;
-  transition: opacity 0.15s ease-in-out;
+  align-items: center;
+  font-size: 0.8em;
+  line-height: 1;
+  padding: 2px 5px;
+  border: 1px solid;
+  border-radius: 4px;
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+  // Default
+  color: $light-color-secondary;
+  border-color: $light-border-color;
 
   &:hover,
   &:focus-visible {
-    opacity: 1;
+    color: $light-color;
+    border-color: $light-color;
   }
 
-  &--current {
-    opacity: 1;
+  @media (prefers-color-scheme: dark) {
+  color: $dark-color-secondary;
+  border-color: $dark-border-color;
+
+  &:hover,
+  &:focus-visible {
+    color: $dark-color;
+    border-color: $dark-color;
+  }
   }
 
-  .flag {
-    width: 1.15em;
-    height: 1.15em;
-    border-radius: 50%;
+  [data-theme=dark] & {
+  color: $dark-color-secondary;
+  border-color: $dark-border-color;
+
+  &:hover,
+  &:focus-visible {
+    color: $dark-color;
+    border-color: $dark-color;
+  }
+  }
+
+  [data-theme=light] & {
+  color: $light-color-secondary;
+  border-color: $light-border-color;
+
+  &:hover,
+  &:focus-visible {
+    color: $light-color;
+    border-color: $light-color;
+  }
   }
 }
