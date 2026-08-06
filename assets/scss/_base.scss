@@ -133,6 +133,13 @@ video {
   }
 }
 
+// A standalone image written as a shortcode is a direct child of the content,
+// where markdown would have wrapped it in a paragraph. Restore the vertical
+// rhythm the paragraph used to provide.
+.post-content > img {
+  margin: 1em 0;
+}
+
 figure {
   display: table;
   max-width: 100%;
