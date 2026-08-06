@@ -1,0 +1,35 @@
+{{- /*
+  A video standing in for an animated GIF.
+
+  Autoplays muted on a loop, like the GIF it replaces, so an article reads the
+  same. Pass controls="true" when the clip is long enough that a reader may want
+  to stop it — something a GIF never allowed.
+
+  src is the path without an extension. Every source given in formats is
+  emitted, in order, and the browser takes the first it can play; put the
+  smaller encoding first. Width and height are worth passing: a video has no
+  intrinsic size until it loads, and without them the page jumps.
+
+      {{< video src="/demo/recording" poster="/demo/recording.jpg"
+                width="1600" height="900" alt="A session being recorded" >}}
+*/ -}}
+
+{{- $src := .Get "src" -}}
+{{- $formats := split (.Get "formats" | default "webm,mp4") "," -}}
+{{- $controls := eq (.Get "controls") "true" -}}
+
+{{- if $src -}}
+<video
+  {{- with .Get "width" }} width="{{ . }}"{{ end }}
+  {{- with .Get "height" }} height="{{ . }}"{{ end }}
+  {{- with .Get "poster" }} poster="{{ . | safeURL }}"{{ end }}
+  {{- with .Get "alt" }} aria-label="{{ . | plainify }}"{{ end }}
+  {{- if $controls }} controls{{ else }} autoplay loop{{ end }}
+  muted playsinline preload="metadata"
+{{- with .Get "position" }} class="{{ . }}"{{ end }}>
+  {{- range $formats }}
+    {{- $ext := trim . " " }}
+    <source src="{{ printf "%s.%s" $src $ext | safeURL }}" type="video/{{ $ext }}">
+  {{- end }}
+</video>
+{{- end -}}
