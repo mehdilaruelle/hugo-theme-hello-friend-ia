@@ -21,17 +21,17 @@
         {{- if and .Site.Params.EnableGlobalLanguageMenu hugo.IsMultilingual }}
             <li class="languages">
                 {{- range .AllTranslations }}
-                    {{- $current := eq .Language.Lang $.Language.Lang }}
-                    {{- $label := .Language.Label | default .Language.Lang }}
-                    <a class="language{{ if $current }} language--current{{ end }}"
-                       href="{{ .Permalink }}"
-                       lang="{{ .Language.Lang }}"
-                       hreflang="{{ .Language.Lang }}"
-                       title="{{ $label }}"
-                       {{- if $current }} aria-current="true"{{ end }}>
-                        <span class="flag fi fis fi-{{ index hugo.Data.langFlags .Language.Lang }}"></span>
-                        <span class="screen-reader-text">{{ $label }}</span>
-                    </a>
+                    {{- if ne .Language.Lang $.Language.Lang }}
+                        {{- $label := .Language.Label | default .Language.Lang }}
+                        <a class="language"
+                           href="{{ .Permalink }}"
+                           lang="{{ .Language.Lang }}"
+                           hreflang="{{ .Language.Lang }}"
+                           title="{{ $label }}">
+                            <span aria-hidden="true">{{ .Language.Lang | upper }}</span>
+                            <span class="screen-reader-text">{{ $label }}</span>
+                        </a>
+                    {{- end }}
                 {{- end }}
             </li>
         {{- end }}
