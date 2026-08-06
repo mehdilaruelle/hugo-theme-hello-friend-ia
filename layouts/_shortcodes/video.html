@@ -18,18 +18,27 @@
 {{- $formats := split (.Get "formats" | default "webm,mp4") "," -}}
 {{- $controls := eq (.Get "controls") "true" -}}
 
+{{- /* A site served from a subpath needs it kept; a remote URL must be left
+       alone. */ -}}
+{{- $poster := .Get "poster" -}}
+{{- if and $poster (not (urls.Parse $poster).Scheme) -}}
+  {{- $poster = urls.JoinPath site.BaseURL $poster -}}
+{{- end -}}
+
 {{- if $src -}}
 <video
   {{- with .Get "width" }} width="{{ . }}"{{ end }}
   {{- with .Get "height" }} height="{{ . }}"{{ end }}
-  {{- with .Get "poster" }} poster="{{ . | safeURL }}"{{ end }}
+  {{- with $poster }} poster="{{ . | safeURL }}"{{ end }}
   {{- with .Get "alt" }} aria-label="{{ . | plainify }}"{{ end }}
   {{- if $controls }} controls{{ else }} autoplay loop{{ end }}
   muted playsinline preload="metadata"
 {{- with .Get "position" }} class="{{ . }}"{{ end }}>
   {{- range $formats }}
     {{- $ext := trim . " " }}
-    <source src="{{ printf "%s.%s" $src $ext | safeURL }}" type="video/{{ $ext }}">
+    {{- $url := printf "%s.%s" $src $ext }}
+    {{- if not (urls.Parse $src).Scheme }}{{ $url = urls.JoinPath site.BaseURL $url }}{{ end }}
+    <source src="{{ $url | safeURL }}" type="video/{{ $ext }}">
   {{- end }}
 </video>
 {{- end -}}
