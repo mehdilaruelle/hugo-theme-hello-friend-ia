@@ -111,7 +111,3 @@ A looping clip, standing in for an animated GIF:
 The same clip with controls, for anything a reader may want to pause:
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern" controls="true" >}}
-
-## Markdown image
-
-![A markdown image, resized by the render hook](/img/example.png)
