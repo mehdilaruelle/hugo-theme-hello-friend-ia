@@ -42,3 +42,6 @@ other = "最終更新"
 [pagination]
 newerPosts = "新しいエントリー"
 olderPosts = "古いエントリー"
+
+[skipToContent]
+other = "本文へスキップ"

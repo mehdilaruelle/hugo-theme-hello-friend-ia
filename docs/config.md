@@ -94,13 +94,46 @@ that means adding `content/<section>/_index.<code>.md` with a `title`.
 
 ### The language switcher
 
-`params.enableGlobalLanguageMenu` shows a flag per language in the menu. It
-renders nothing on a single-language site — the flag stylesheet is not even
-requested — so it is safe to leave on.
+`params.enableGlobalLanguageMenu` puts the other languages in the menu, each as
+its two-letter code. It renders nothing on a single-language site, so it is safe
+to leave on.
 
 Strings the theme itself renders, such as *Reading time* or *Table of contents*,
 come from `i18n/<code>.toml` and are already translated for the languages
 shipped with the theme. Nothing to configure.
+
+### Right-to-left languages
+
+Set `direction` on any language that reads right to left:
+
+```toml
+[languages.ar]
+  weight = 3
+  locale = "ar"
+  label  = "العربية"
+  direction = "rtl"
+```
+
+That renders `dir="rtl"` on `<html>`, and the layout follows: margins, list
+indentation, the blockquote rule, the menu and the skip link all mirror. They
+are written as CSS logical properties — `margin-inline-start` rather than
+`margin-left` — so there is no second stylesheet and no `[dir]` overrides to
+keep in step.
+
+Two things deliberately do not mirror:
+
+- The `position` argument of the `image` shortcode. `position="left"` means the
+  left of the page; an author who asks for left means left, whatever direction
+  the language reads in.
+- Code blocks, which stay left to right because code does.
+
+Nothing changes for a site without an `rtl` language. The attribute is only
+emitted when a language declares a direction, and every logical property
+resolves to the physical one it replaced.
+
+Arabic ships with the theme as `i18n/ar.toml`, carrying the five plural forms
+the language distinguishes, so a reading time reads correctly at one, two, a few
+and many minutes rather than only at one and many.
 
 ## Footer copyright year
 

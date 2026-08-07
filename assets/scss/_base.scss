@@ -296,7 +296,7 @@ pre[class*="language-"] {
 }
 
 blockquote {
-  border-left: 3px solid #3eb0ef;
+  border-inline-start: 3px solid #3eb0ef;
   margin: 40px;
   padding: 10px 20px;
 
@@ -311,7 +311,7 @@ blockquote {
     font-display: auto;
     font-size: 3.875rem;
     position: absolute;
-    left: -40px;
+    inset-inline-start: -40px;
     top: -20px;
   }
 
@@ -326,11 +326,11 @@ blockquote {
 
 ul,
 ol {
-  margin-left: 40px;
+  margin-inline-start: 40px;
   padding: 0;
 
   @media #{$media-size-phone} {
-    margin-left: 20px;
+    margin-inline-start: 20px;
   }
 }
 
@@ -440,7 +440,7 @@ hr {
   height: auto;
   width: auto;
   top: 5px;
-  left: 5px;
+  inset-inline-start: 5px;
   line-height: normal;
   padding: 15px 23px 14px;
   text-decoration: none;

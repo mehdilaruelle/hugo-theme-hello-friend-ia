@@ -4,7 +4,7 @@
 .posts {
   width: 100%;
   max-width: 800px;
-  text-align: left;
+  text-align: start;
   padding: 20px;
   margin: 20px auto;
 
@@ -58,7 +58,7 @@
 
     &-year {
       padding-top: 6px;
-      margin-right: 1.8em;
+      margin-inline-end: 1.8em;
       font-size: 1.6em;
       @include dimmed;
 
@@ -81,7 +81,7 @@
 
     &-day {
       flex-shrink: 0;
-      margin-left: 1em;
+      margin-inline-start: 1em;
       @include dimmed;
     }
   }
@@ -104,7 +104,7 @@
     flex: none;
     width: 52px;
     height: 52px;
-    margin-right: 16px;
+    margin-inline-end: 16px;
     border-radius: 6px;
     object-fit: cover;
   }
