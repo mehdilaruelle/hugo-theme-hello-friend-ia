@@ -135,6 +135,12 @@ disableHugoGeneratorInject = false
   # Which section the footer's RSS icon and the 404 page point at.
   # mainSections = ["posts"]
 
+  # Proof of ownership for the search consoles, emitted on the home page only.
+  # [params.verification]
+  #   google = ""
+  #   bing   = ""
+  #   yandex = ""
+
   [params.author]
     name = "Jane Doe"
 

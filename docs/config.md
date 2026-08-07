@@ -146,6 +146,25 @@ Arabic ships with the theme as `i18n/ar.toml`, carrying the five plural forms
 the language distinguishes, so a reading time reads correctly at one, two, a few
 and many minutes rather than only at one and many.
 
+## Proving you own the site
+
+Every search console offers two ways to verify ownership: upload a file to the
+site root, or put a meta tag on the home page. The tag is the one that survives
+a rebuild, so the theme emits it for you:
+
+```toml
+[params.verification]
+  google    = "your-token"
+  bing      = "your-token"
+  yandex    = "your-token"
+  baidu     = "your-token"
+  pinterest = "your-token"
+```
+
+Set only the ones you use — an unset entry emits nothing, and with no
+`[params.verification]` at all nothing changes. The tags go on the home page
+only, which is where each console looks, rather than on all of them.
+
 ## Footer copyright year
 
 `params.footer.trademark` accepts either:
