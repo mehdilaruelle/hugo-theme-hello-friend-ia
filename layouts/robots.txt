@@ -1,0 +1,6 @@
+User-agent: *
+
+{{/* Crawlers find a sitemap far sooner when robots.txt names it, and Hugo's
+     built-in robots.txt does not. On a multilingual site this is the index,
+     which points at one sitemap per language. */ -}}
+Sitemap: {{ "sitemap.xml" | absURL }}
