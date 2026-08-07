@@ -18,6 +18,29 @@
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
 <link rel="canonical" href="{{ .Permalink }}" />
+{{- /* Search engine ownership verification. Each console gives you a token and
+       accepts a meta tag as proof; this saves uploading their file to the site
+       root. Only emitted on the home page, which is where every one of them
+       looks. */ -}}
+{{- if .IsHome }}
+{{- with .Site.Params.verification }}
+{{- with .google }}
+<meta name="google-site-verification" content="{{ . }}" />
+{{- end }}
+{{- with .bing }}
+<meta name="msvalidate.01" content="{{ . }}" />
+{{- end }}
+{{- with .yandex }}
+<meta name="yandex-verification" content="{{ . }}" />
+{{- end }}
+{{- with .baidu }}
+<meta name="baidu-site-verification" content="{{ . }}" />
+{{- end }}
+{{- with .pinterest }}
+<meta name="p:domain_verify" content="{{ . }}" />
+{{- end }}
+{{- end }}
+{{- end }}
 {{- if .IsTranslated }}
 {{- /*
   x-default names the version to serve when no hreflang matches the visitor.
