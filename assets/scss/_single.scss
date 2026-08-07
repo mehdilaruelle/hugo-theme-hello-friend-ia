@@ -4,7 +4,7 @@
 .post {
   width: 100%;
   max-width: 800px;
-  text-align: left;
+  text-align: start;
   padding: 20px;
   margin: 20px auto;
   @media #{$media-size-tablet} {
@@ -76,11 +76,11 @@
     }
 
     svg {
-      margin-right: 0.8em;
+      margin-inline-end: 0.8em;
     }
 
     .tag {
-      margin-right: 0.5em;
+      margin-inline-end: 0.5em;
 
       &::before {
         content: "#";
@@ -209,7 +209,7 @@
   }
 
   + .button {
-    margin-left: 10px;
+    margin-inline-start: 10px;
   }
 
   a {
@@ -228,11 +228,11 @@
   }
 
   &.next .button__icon {
-    margin-left: 8px;
+    margin-inline-start: 8px;
   }
 
   &.previous .button__icon {
-    margin-right: 8px;
+    margin-inline-end: 8px;
   }
 }
 

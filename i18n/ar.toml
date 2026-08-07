@@ -1,0 +1,58 @@
+# Translations for Arabic (Modern Standard)
+# https://gohugo.io/content-management/multilingual/#translation-of-strings
+
+# Generic
+#
+[translations]
+other = "الترجمات"
+
+[postAvailable]
+other = "متوفر أيضًا بـ"
+
+
+# 404.html
+#
+[archives]
+other = "الأرشيف"
+
+[home]
+other = "الرئيسية"
+
+[notFound]
+other = "عذرًا، الصفحة غير موجودة…"
+
+
+# posts/single.html
+#
+# Arabic distinguishes zero, one, two, a few (3-10) and many (11-99); Hugo
+# supports all five CLDR plural categories, so the count reads naturally at
+# every size rather than only at one and many.
+[readingTime]
+zero  = "أقل من دقيقة"
+one   = "دقيقة واحدة"
+two   = "دقيقتان"
+few   = "{{ .Count }} دقائق"
+many  = "{{ .Count }} دقيقة"
+other = "{{ .Count }} دقيقة"
+
+[tableOfContents]
+other = "المحتويات"
+
+[wordCount]
+zero  = "لا كلمات"
+one   = "كلمة واحدة"
+two   = "كلمتان"
+few   = "{{ .Count }} كلمات"
+many  = "{{ .Count }} كلمة"
+other = "{{ .Count }} كلمة"
+
+[lastModified]
+other = "آخر تحديث"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "مقالات أحدث"
+olderPosts = "مقالات أقدم"
+
+[skipToContent]
+other = "تخطَّ إلى المحتوى"
