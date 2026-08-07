@@ -1,0 +1,40 @@
++++
+title = "A video where a GIF used to be"
+description = "The video shortcode: a screen recording that does not weigh megabytes"
+date = "2026-01-24"
+type = ["posts","post"]
+tags = ["hugo"]
+categories = ["Development"]
+series = ["Showcase"]
+[author]
+  name = "Jane Doe"
++++
+
+An animated GIF is a poor way to ship a screen recording. A few seconds of
+motion runs to megabytes, and a reader cannot stop it. Measured on an eleven
+second, 3840×2160 capture:
+
+| file | size |
+| --- | --- |
+| `demo.gif` | 4248 Ko |
+| `demo.mp4` | 366 Ko |
+| `demo.webm` | 290 Ko |
+
+The `video` shortcode takes the path without an extension and emits one
+`<source>` per format, so the browser takes the first it can play:
+
+{{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern looping" >}}
+
+It autoplays, muted, on a loop — exactly like the GIF it replaces, so an article
+reads the same. Pass `controls="true"` when a clip is long enough that a reader
+may want to stop it, which a GIF never allowed:
+
+{{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" controls="true" alt="A test pattern" >}}
+
+`width` and `height` matter more here than for an image: a video has no
+intrinsic size until it loads, so without them the page reflows when it arrives.
+The `poster` is what fills the frame in the meantime.
+
+Hugo has no built-in shortcode for this. It ships `youtube` and `vimeo`, but
+those embed somebody else's player; there is nothing for a file you host
+yourself.

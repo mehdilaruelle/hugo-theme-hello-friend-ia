@@ -170,18 +170,20 @@
       url        = "posts/"
       weight     = 20
 
-# The exampleSite content, images and assets are mounted rather than copied, so
-# this site is the demo plus a few pages instead of a second copy to maintain.
+# The showcase carries its own articles, so that every language shows the same
+# list. The exampleSite is English only and deliberately so; mounting its content
+# here would leave three of the four languages holding pages that exist in none
+# of them.
+#
+# Its static files and assets are still mounted: the portrait, the video clip and
+# the image the shortcode resolves all live there, and copying them would mean
+# maintaining two of each.
 #
 # A mount replaces Hugo's default for that component, so the local directory has
-# to be named alongside the exampleSite one or it stops being picked up. assets
-# has no local counterpart to name — it exists only to reach the exampleSite
-# images the shortcodes resolve from there. Leaving it out is silent: nothing
-# fails at build time, an image simply stops resolving.
+# to be named alongside the exampleSite one or it stops being picked up. Leaving
+# assets out is silent — nothing fails at build time, an image simply stops
+# resolving.
 [module]
-  [[module.mounts]]
-    source = "../exampleSite/content"
-    target = "content"
   [[module.mounts]]
     source = "content"
     target = "content"

@@ -11,11 +11,9 @@ series = ["Showcase"]
   name = "Jane Doe"
 +++
 
-This site has its own folder, `showcaseSite/`, holding only what differs from
-the default demo: a configuration file and these two pages. The demo's content
-and images are mounted rather than copied, and its configuration is layered
-under this one — Hugo merges configuration rather than replacing it, so the file
-only has to name what changes:
+This site has its own folder, `showcaseSite/`, holding its four articles and a
+configuration file. That file is layered over the demo's — Hugo merges
+configuration rather than replacing it, so it only has to name what changes:
 
 | option | what you see |
 | --- | --- |
@@ -32,6 +30,9 @@ the commit that last changed it, which ties every build to the full commit
 history and points at the theme's own history rather than at anything you are
 reading.
 
-The two posts carrying thumbnails are the only ones with a `cover`. The others
-have none and render exactly as they always did — a list mixes the two without
-looking broken, which is the part worth checking.
+The articles are the showcase's own, in all four languages, so every language
+shows the same list. The demo's images and video are still mounted from it —
+those are files rather than prose, and there is no reason to keep two of each.
+
+Two of the four carry a `cover` and two do not, so the list mixes rows with and
+without a thumbnail, which is the part worth checking.
