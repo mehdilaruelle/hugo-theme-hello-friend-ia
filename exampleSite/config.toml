@@ -58,22 +58,16 @@ disableHugoGeneratorInject = false
   keywords = ""
   images = [""]
 
-  # Anything a visitor reads can be set here, or once per language under
-  # [languages.<code>.params] further down. A param set in both places takes the
-  # language value, so the one here acts as the fallback for a language that
-  # does not override it.
+  # subtitle is appended to every <title>, after the site title.
+  # description is what search results and social cards show.
+  # homeSubtitle is the line under the heading on the front page.
   #
-  # This site is bilingual, so it sets the three below per language. Uncomment
-  # them here instead if you run a single language — that is the shorter way to
-  # write it, and nothing else changes.
-  #
-  # subtitle: appended to every <title>, after the site title.
-  # description: what search results and social cards show.
-  # homeSubtitle: the line under the heading on the front page.
-  #
-  # subtitle     = "Hello Friend NG Theme"
-  # description  = "Nice theme for homepages and blogs"
-  # homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
+  # One language, so they live here. With more than one they move under
+  # [languages.<code>.params], since they are text a visitor reads — see
+  # docs/config.md, and the showcase site for a worked example.
+  subtitle     = "Hello Friend NG Theme"
+  description  = "Nice theme for homepages and blogs"
+  homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
 
   # Set a background for the homepage
   # backgroundImage = "assets/images/background.jpg"
@@ -117,7 +111,9 @@ disableHugoGeneratorInject = false
 
   # Global language menu
   #
-  # Enables the global language menu.
+  # Puts the other languages in the menu. Left on here although this site has
+  # only one, because it then renders nothing at all — which is the point worth
+  # demonstrating. The showcase site has four and shows what it looks like.
   #
   enableGlobalLanguageMenu = true
 
@@ -176,9 +172,9 @@ disableHugoGeneratorInject = false
   [params.portrait]
     path     = "/img/portrait.png"
     maxWidth = "120px"
-    # alt is read aloud, so it is text like any other on the page and is set per
-    # language below. On a single-language site, uncomment it here instead:
-    # alt    = "The Hugo logo"
+    # alt is read aloud, so it is text like any other on the page: with more
+    # than one language it moves under [languages.<code>.params.portrait].
+    alt      = "The Hugo logo"
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
   # Addon: Commento
@@ -258,74 +254,30 @@ disableHugoGeneratorInject = false
     name = "stackoverflow"
     url  = "https://www.stackoverflow.com/"
 
-[languages]
-  # Set locale per language: the root-level locale is only the default, so
-  # without these every feed would announce the same language.
-  #
-  # Everything a visitor reads lives here too — subtitle, description, portrait
-  # alt text, menu labels. Left at the root they would be shared, and switching
-  # to French would serve the same English page under a second url.
-  #
-  # Menus are defined per language rather than once at the root, because a root
-  # menu applies to every language and there is then no way to translate a
-  # single entry.
-  [languages.en]
-    weight = 1
-    locale = "en-us"
-    label  = "English"
-    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
-  [languages.en.params]
-    # subtitle is the tagline appended to every <title>; homeSubtitle is the
-    # line under the heading on the front page.
-    subtitle     = "Hello Friend NG Theme"
-    description  = "Nice theme for homepages and blogs"
-    homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
-  [languages.en.params.portrait]
-    alt = "The Hugo logo"
-  [languages.en.menu]
-    # Menu order follows weight, the usual Hugo mechanism.
-    [[languages.en.menu.main]]
-      identifier  = "about"
-      name        = "About"
-      url         = "about/"
-      weight      = 10
-      hasChildren = true
-    [[languages.en.menu.main]]
-      identifier  = "me"
-      name        = "About Me"
-      url         = "about/me/"
-      parent      = "about"
-    [[languages.en.menu.main]]
-      identifier = "posts"
-      name       = "Posts"
-      url        = "posts/"
-      weight     = 20
+# One language, so everything a visitor reads is set at the root: locale above,
+# the three params in [params], the portrait alt text, and this menu.
+#
+# Adding a second language means moving them under [languages.<code>], menu
+# included — a root menu applies to every language, and no single entry of it
+# can then be translated. docs/config.md shows both shapes side by side, and the
+# showcase site is the worked example, in four languages.
+[menu]
+  # Menu order follows weight, the usual Hugo mechanism.
+  [[menu.main]]
+    identifier  = "about"
+    name        = "About"
+    url         = "about/"
+    weight      = 10
+    hasChildren = true
 
-  [languages.fr]
-    weight = 2
-    locale = "fr-fr"
-    label  = "Français"
-    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
-  [languages.fr.params]
-    subtitle     = "Thème Hello Friend NG"
-    description  = "Un thème soigné pour pages d'accueil et blogs"
-    homeSubtitle = "Hello Friend NG propulsé par l'<strong>IA</strong>"
-  [languages.fr.params.portrait]
-    alt = "Le logo Hugo"
-  [languages.fr.menu]
-    [[languages.fr.menu.main]]
-      identifier  = "about"
-      name        = "À propos"
-      url         = "about/"
-      weight      = 10
-      hasChildren = true
-    [[languages.fr.menu.main]]
-      identifier  = "me"
-      name        = "Qui suis-je"
-      url         = "about/me/"
-      parent      = "about"
-    [[languages.fr.menu.main]]
-      identifier = "posts"
-      name       = "Articles"
-      url        = "posts/"
-      weight     = 20
+  [[menu.main]]
+    identifier  = "me"
+    name        = "About Me"
+    url         = "about/me/"
+    parent      = "about"
+
+  [[menu.main]]
+    identifier = "posts"
+    name       = "Posts"
+    url        = "posts/"
+    weight     = 20
