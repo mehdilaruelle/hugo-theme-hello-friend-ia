@@ -164,6 +164,10 @@ change how existing diagrams render; bump the version in
 The library is fetched from a third party, so visitors to pages with diagrams
 resolve jsDelivr. Pages without a diagram request nothing.
 
+The initialiser is a file rather than an inline script, so a site with a strict
+Content-Security-Policy does not have to allow `script-src 'unsafe-inline'` for
+the pages that carry a diagram.
+
 ## Default color scheme
 
 `params.defaultTheme` accepts `"dark"` or `"light"`. Unset, the theme follows
