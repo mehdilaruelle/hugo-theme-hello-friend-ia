@@ -1,6 +1,8 @@
 # Hello Friend NG
 
 **[See the theme live →](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)**
+&nbsp;·&nbsp;
+[every option turned on →](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/showcase/)
 
 [![Hello Friend NG](images/screenshot.png)](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)
 
@@ -33,7 +35,11 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - CI builds the exampleSite on every change and fails on any new deprecation.
 - The exampleSite is published as a
   [live demo](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/) on
-  every push, so what you see is what the current code produces.
+  every push, so what you see is what the current code produces. A second build
+  of the same site, with
+  [every option turned on](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/showcase/),
+  is published alongside it — and built in CI, so an optional feature cannot
+  break unnoticed.
 
 ---
 

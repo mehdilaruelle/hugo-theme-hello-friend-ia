@@ -1,0 +1,138 @@
+# The showcase site: the theme with every option turned on.
+#
+# Not a second site to keep in sync. It is layered on top of the exampleSite
+# configuration, and mounts the exampleSite content and static files, so the
+# only things here are what differs:
+#
+#   cd showcaseSite
+#   hugo --themesDir ../.. --config ../exampleSite/config.toml,config.toml
+#
+# Hugo merges configuration files rather than replacing them, so a second file
+# can add and override, never remove. Everything below is something switched on.
+#
+# The point is coverage as much as marketing. A feature no demo exercises is a
+# feature nobody notices is broken.
+
+[params]
+  # Every option below is off in the exampleSite, which is why it is here.
+  backgroundImage  = "img/background.svg"
+  enableThumbnails = true
+
+  # The background is a dark image, so the page should arrive dark rather than
+  # settle there. The toggle still overrides this, which is the point of having
+  # both.
+  defaultTheme = "dark"
+
+  # gitUrl and enableGitInfo are deliberately left off. They would tie every
+  # build to the full commit history, and the commit they link to belongs to the
+  # theme rather than to anything a visitor is reading.
+
+  [params.footer]
+    # bottomText replaces the list in the exampleSite rather than appending to
+    # it, so the original lines are repeated here with the way back added.
+    bottomText = [
+      "Powered by <a href=\"https://gohugo.io\">Hugo</a>",
+      "Made with &#10084; by <a href=\"https://github.com/rhazdon\">Djordje Atlialp</a>",
+      "Fork maintained by <a href=\"https://github.com/mehdilaruelle\">Mehdi Laruelle</a>",
+      "<a href=\"https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/\">← Back to the default demo</a>"
+    ]
+
+# Four languages, where the exampleSite has two. Two of them are here for a
+# reason beyond translation: Japanese has no spaces between words, and Arabic
+# reads right to left. Both are places a layout quietly falls apart, and neither
+# was exercised anywhere before this.
+#
+# English and French come from the exampleSite configuration and only need their
+# text overridden. Japanese and Arabic are declared in full, menus included: a
+# menu belongs to a language, so a language the exampleSite does not know about
+# arrives without one.
+[languages]
+  [languages.en.params]
+    subtitle     = "Feature showcase"
+    description  = "Every option the theme has, turned on at once"
+    homeSubtitle = "Every switch flipped, so you can see what they do"
+  [languages.fr.params]
+    subtitle     = "Vitrine des fonctionnalités"
+    description  = "Toutes les options du thème, activées d'un coup"
+    homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu'ils font"
+
+  [languages.ja]
+    weight = 3
+    locale = "ja-jp"
+    label  = "日本語"
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.ja.params]
+    subtitle     = "機能ショーケース"
+    description  = "テーマのすべてのオプションを一度に有効にしたサイト"
+    homeSubtitle = "すべてのスイッチを入れた状態です"
+  [languages.ja.menu]
+    [[languages.ja.menu.main]]
+      identifier  = "about"
+      name        = "概要"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.ja.menu.main]]
+      identifier  = "me"
+      name        = "自己紹介"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.ja.menu.main]]
+      identifier = "posts"
+      name       = "記事"
+      url        = "posts/"
+      weight     = 20
+
+  # direction is what renders dir="rtl" on <html> and mirrors the layout.
+  [languages.ar]
+    weight = 4
+    locale = "ar"
+    label  = "العربية"
+    direction = "rtl"
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.ar.params]
+    subtitle     = "عرض الميزات"
+    description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
+    homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
+  [languages.ar.menu]
+    [[languages.ar.menu.main]]
+      identifier  = "about"
+      name        = "حول"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.ar.menu.main]]
+      identifier  = "me"
+      name        = "من أنا"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.ar.menu.main]]
+      identifier = "posts"
+      name       = "المقالات"
+      url        = "posts/"
+      weight     = 20
+
+# The exampleSite content, images and assets are mounted rather than copied, so
+# this site is the demo plus a few pages instead of a second copy to maintain.
+#
+# A mount replaces Hugo's default for that component, so the local directory has
+# to be named alongside the exampleSite one or it stops being picked up. assets
+# has no local counterpart to name — it exists only to reach the exampleSite
+# images the shortcodes resolve from there. Leaving it out is silent: nothing
+# fails at build time, an image simply stops resolving.
+[module]
+  [[module.mounts]]
+    source = "../exampleSite/content"
+    target = "content"
+  [[module.mounts]]
+    source = "content"
+    target = "content"
+  [[module.mounts]]
+    source = "../exampleSite/static"
+    target = "static"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "../exampleSite/assets"
+    target = "assets"

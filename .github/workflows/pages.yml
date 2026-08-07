@@ -45,24 +45,36 @@ jobs:
             | tar -xz
           echo "${PWD}/dart-sass" >> "${GITHUB_PATH}"
 
-      - name: Build
+      # Two sites, one deployment. Pages publishes a single directory tree per
+      # repository, so the second site is a directory inside the first.
+      - name: Build the demo
         working-directory: hello-friend-ng/exampleSite
         run: |
           hugo --themesDir ../.. --gc --minify --panicOnWarning \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Fail if the stylesheet did not make it into the output
+      - name: Build the showcase
+        working-directory: hello-friend-ng/showcaseSite
+        run: |
+          hugo --themesDir ../.. --gc --minify --panicOnWarning \
+            --config ../exampleSite/config.toml,config.toml \
+            --baseURL "${{ steps.pages.outputs.base_url }}/showcase/"
+          mv public ../exampleSite/public/showcase
+
+      - name: Fail if a stylesheet did not make it into either site
         working-directory: hello-friend-ng/exampleSite
         run: |
-          if ! ls public/*.css >/dev/null 2>&1; then
-            echo "No stylesheet in the published output." >&2
-            exit 1
-          fi
-          # --minify strips the quotes around attribute values, so accept both.
-          if ! grep -Eq 'rel="?stylesheet"?' public/index.html; then
-            echo "index.html does not reference a stylesheet." >&2
-            exit 1
-          fi
+          for dir in public public/showcase; do
+            if ! ls "${dir}"/*.css >/dev/null 2>&1; then
+              echo "No stylesheet in ${dir}." >&2
+              exit 1
+            fi
+            # --minify strips the quotes around attribute values, so accept both.
+            if ! grep -Eq 'rel="?stylesheet"?' "${dir}/index.html"; then
+              echo "${dir}/index.html does not reference a stylesheet." >&2
+              exit 1
+            fi
+          done
 
       - uses: actions/upload-pages-artifact@v5
         with:

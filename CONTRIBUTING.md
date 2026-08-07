@@ -104,3 +104,16 @@ hugo --themesDir ../.. --gc --panicOnWarning
 That needs Hugo extended and Dart Sass — see
 [Requirements](README.md#requirements). CI runs exactly this, plus a second
 build without Dart Sass to keep the LibSass fallback working.
+
+Then build the showcase, which is the same site with every option turned on:
+
+```bash
+cd showcaseSite
+hugo --themesDir ../.. --gc --panicOnWarning --config ../exampleSite/config.toml,config.toml
+```
+
+`showcaseSite/` holds only what differs — a configuration file and a couple of
+pages. It mounts the exampleSite content and static files rather than copying
+them, and layers its configuration over the exampleSite one, so there is no
+second site to keep in sync. CI builds it too, so an option the default demo
+leaves off still cannot break unnoticed.
