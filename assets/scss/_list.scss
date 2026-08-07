@@ -85,23 +85,27 @@
       @include dimmed;
     }
   }
-}
 
-// Thumbnails, off unless params.enableThumbnails is set. Scoped to the
-// modifier class so a list without them renders exactly as before.
-.post-item-inner--thumbnail {
-  align-items: center;
+  // Thumbnails, off unless params.enableThumbnails is set. Scoped to the
+  // modifier class so a list without them renders exactly as before.
+  //
+  // Nested here rather than written at the top level so that it compiles to
+  // `.posts .post-item-inner--thumbnail`. `.posts .post-item-inner` above sets
+  // align-items, and a single class alone would lose to it.
+  .post-item-inner--thumbnail {
+    align-items: center;
 
-  .post-title {
-    flex: 1;
+    .post-title {
+      flex: 1;
+    }
   }
-}
 
-.post-thumbnail {
-  flex: none;
-  width: 52px;
-  height: 52px;
-  margin-right: 16px;
-  border-radius: 6px;
-  object-fit: cover;
+  .post-thumbnail {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    margin-right: 16px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
 }
