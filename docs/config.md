@@ -164,9 +164,37 @@ change how existing diagrams render; bump the version in
 The library is fetched from a third party, so visitors to pages with diagrams
 resolve jsDelivr. Pages without a diagram request nothing.
 
-The initialiser is a file rather than an inline script, so a site with a strict
-Content-Security-Policy does not have to allow `script-src 'unsafe-inline'` for
-the pages that carry a diagram.
+### Content-Security-Policy
+
+The initialiser is a file rather than an inline script, so a strict policy does
+not need `script-src 'unsafe-inline'`. What it does need, on pages with a
+diagram:
+
+    script-src  'self' https://cdn.jsdelivr.net
+    style-src   'self' 'unsafe-inline'
+
+`style-src 'unsafe-inline'` is Mermaid's doing, not the theme's: it writes a
+<style> element into the SVG it generates, and sets a style attribute on around
+forty of the shapes. A nonce cannot reach either, since both are created at
+runtime. Nothing else on the page needs it.
+
+No font directive is required — Mermaid draws with the fonts already on the
+page.
+
+Mermaid is pinned to an exact version, which also fixes the chunk tree — the
+chunks it pulls in at runtime sit under the same versioned path, so a release
+cannot change what runs without a reviewed change to the theme.
+
+There is no integrity hash, and the reason is worth stating rather than leaving
+as an omission. The entry module is 29 KB and imports the bulk of its code as
+further chunks — a hash on the entry would cover none of them. The single-file
+build that could carry one weighs **3.4 MB**.
+
+Measured on the showcase's flowchart, the chunked build fetches **230 KB across
+27 requests**, and only the chunks that diagram type needs. Full integrity would
+therefore cost roughly fifteen times the bytes, on every page with a diagram.
+If that trade is right for your site, point `data-mermaid-src` at
+`mermaid@<version>/dist/mermaid.min.js` and add an `integrity` attribute.
 
 ## Default color scheme
 
