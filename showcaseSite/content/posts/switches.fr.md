@@ -11,11 +11,10 @@ series = ["Showcase"]
   name = "Jane Doe"
 +++
 
-Ce site a son propre dossier, `showcaseSite/`, qui ne contient que ce qui diffère
-de la démo par défaut : un fichier de configuration et ces deux pages. Le contenu
-et les images de la démo sont montés plutôt que copiés, et sa configuration est
-posée en dessous de celle-ci — Hugo fusionne la configuration au lieu de la
-remplacer, donc ce fichier n'a qu'à nommer ce qui change :
+Ce site a son propre dossier, `showcaseSite/`, qui contient ses quatre articles
+et un fichier de configuration. Ce fichier est posé par-dessus celui de la démo —
+Hugo fusionne la configuration au lieu de la remplacer, donc il n'a qu'à nommer
+ce qui change :
 
 | option | ce que vous voyez |
 | --- | --- |
@@ -32,6 +31,10 @@ page au commit qui l'a modifiée en dernier : cela lie chaque build à
 l'historique complet, et vise l'historique du thème plutôt que ce que vous
 lisez.
 
-Les deux articles qui portent une miniature sont les seuls à avoir un `cover`.
-Les autres n'en ont pas et s'affichent exactement comme avant — une liste mélange
-les deux sans avoir l'air cassée, et c'est ça qui méritait d'être vérifié.
+Les articles appartiennent à la vitrine, dans les quatre langues, pour que chaque
+langue affiche la même liste. Les images et la vidéo de la démo restent montées
+depuis celle-ci : ce sont des fichiers, pas du texte, et rien ne justifie d'en
+garder deux exemplaires.
+
+Deux des quatre portent un `cover` et deux non, donc la liste mélange les lignes
+avec et sans miniature — et c'est ça qui méritait d'être vérifié.
