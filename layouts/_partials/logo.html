@@ -9,7 +9,11 @@
 <a href="{{ $home }}" style="text-decoration: none;">
     <div class="logo">
         {{ if .Site.Params.Logo.path }}
-            <img src="{{ .Site.Params.Logo.path }}" alt="{{ .Site.Params.Logo.alt }}" />
+            {{- $logo := .Site.Params.Logo.path -}}
+            {{- if not (urls.Parse $logo).Scheme -}}
+              {{- $logo = urls.JoinPath site.BaseURL $logo -}}
+            {{- end -}}
+            <img src="{{ $logo | safeURL }}" alt="{{ .Site.Params.Logo.alt }}" />
         {{ else }}
             <span class="logo__mark">{{ with .Site.Params.Logo.logoMark }}{{ . }}{{ else }}>{{ end }}</span>
             <span class="logo__text {{ with.Site.Params.Logo.logoCursorPathname}}logo__pathname{{ end }}">
