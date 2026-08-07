@@ -3,7 +3,9 @@ title   = "Hello Friend NG"
 locale  = "en-us"
 theme   = "hello-friend-ng"
 
-copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
+# Shown in the footer, and in the feed's <copyright>. Markup is allowed: the
+# footer renders it, and the feed reduces it to its text.
+copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 
 archetypeDir = "archetypes"
 contentDir   = "content"
