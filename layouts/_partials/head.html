@@ -6,8 +6,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="{{ if .Params.author }}{{ .Params.author }}{{ else }}{{ range .Site.Params.Author }}{{ . }} {{ end }}{{ end }}">
 <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.homeSubtitle | plainify }}{{ else }}{{ if .Params.Description }}{{ .Params.Description }}{{ else }}{{ .Summary | plainify }}{{ end }}{{ end }}" />
-<meta name="keywords" content="{{ .Site.Params.keywords }}{{ if .Params.tags }}{{ range .Params.tags }}, {{ . }}{{ end }}{{ end }}" />
-<meta name="theme-color" content="{{ .Site.Params.themeColor }}" />
+{{- /* Emitted only when there is something to say. An empty content attribute
+       is not a neutral default: it is a tag asserting the value is blank. */ -}}
+{{- $keywords := slice }}
+{{- with .Site.Params.keywords }}{{ $keywords = $keywords | append . }}{{ end }}
+{{- with .Params.tags }}{{ $keywords = $keywords | append . }}{{ end }}
+{{- with delimit $keywords ", " }}
+<meta name="keywords" content="{{ . }}" />
+{{- end }}
+{{- with .Site.Params.themeColor }}
+<meta name="theme-color" content="{{ . }}" />
+{{- end }}
 <link rel="canonical" href="{{ .Permalink }}" />
 {{- if .IsTranslated }}
 {{- /*

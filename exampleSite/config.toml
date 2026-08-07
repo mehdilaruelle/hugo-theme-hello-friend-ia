@@ -127,6 +127,12 @@ disableHugoGeneratorInject = false
   # plausibleDataDomain = 'test.com'
   # plausibleScriptSource = 'https://plausible.io/js/script.js'
 
+  # Browser UI tint on mobile. Only emitted when set.
+  # themeColor = "#1b1c1d"
+
+  # Which section the footer's RSS icon and the 404 page point at.
+  # mainSections = ["posts"]
+
   [params.author]
     name = "Jane Doe"
 

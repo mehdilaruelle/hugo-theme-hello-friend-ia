@@ -188,3 +188,61 @@ The image is taken from the page's `cover` front matter, the same value the
 article page already uses. When it resolves to a page resource or an asset,
 Hugo's dimensions are emitted so the row reserves its space before the image
 arrives; a path under `static/` or a remote URL is used as given.
+
+## Everything else the theme reads
+
+The options below all work and none of them were written down anywhere. Three of
+them — `mainSections`, `themeColor` and the `noindex` front matter — did not
+even appear in the exampleSite, so the only way to find them was to read the
+templates.
+
+### Site params
+
+| param | what it does |
+| --- | --- |
+| `enableThemeToggle` | shows the light/dark button in the menu |
+| `enableReadingTime` | shows an estimated reading time on articles |
+| `enableSharingButtons` | shows the sharing row under an article |
+| `disableReadOtherPosts` | hides the previous/next links |
+| `backgroundImage` | an image behind the front page, `cover`-sized and fixed |
+| `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
+| `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
+| `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts` |
+| `customCSS` / `customJS` | extra files to load, each a path relative to `static/` or an absolute URL |
+| `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
+| `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
+
+```toml
+[params]
+  themeColor   = "#1b1c1d"
+  mainSections = ["posts"]
+  customCSS    = ["css/extra.css"]
+  customJS     = ["js/extra.js"]
+```
+
+`themeColor` and `keywords` are only emitted when set. An empty `content` is not
+a neutral default — it is a tag asserting the value is blank.
+
+### Front matter
+
+| key | what it does |
+| --- | --- |
+| `cover` / `coverCaption` | image above the article, caption takes Markdown |
+| `toc` | table of contents above the article. `notoc` on a heading keeps it out |
+| `audio` | an audio player above the article. **A list**, see below |
+| `noindex` | `<meta name="robots" content="noindex">` on that page alone |
+| `comments` | set to `"false"` to hide Disqus on that page |
+| `description` | overrides the summary in `<meta name="description">` and Open Graph |
+| `author` | overrides the site author for that page |
+
+`audio` has to be a list, even for one file:
+
+```yaml
+audio: ["/audio/episode-01.mp3"]
+```
+
+Hugo's own Open Graph partial ranges over this key, so a bare string stops the
+build before the theme is reached.
+
+`noindex` is the one to know about: it is how you keep a page out of search
+results without touching `robots.txt`.
