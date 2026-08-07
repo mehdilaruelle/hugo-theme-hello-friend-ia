@@ -1,0 +1,50 @@
+{{- /*
+  Renders one content image, and is the single place that decides how.
+
+  Both entry points call it: the image shortcode, and the cover on an article
+  page. Plain markdown ![]() is left to Hugo.
+
+  Resizing only happens when the file resolves as a resource — a page bundle,
+  or assets/. A site whose images sit in static/ can mount that directory into
+  assets to opt in; without it the image is still emitted, just unprocessed.
+
+  Accepts: src, alt, position, style, page.
+*/ -}}
+
+{{- $src := .src -}}
+{{- $alt := .alt | default "" -}}
+{{- $page := .page -}}
+{{- $remote := (urls.Parse $src).Scheme -}}
+
+{{- $img := "" -}}
+{{- if not $remote -}}
+  {{- with $page.Resources.GetMatch $src -}}
+    {{- $img = . -}}
+  {{- else -}}
+    {{- with resources.Get (printf "_static%s" $src) -}}{{- $img = . -}}{{- else -}}{{- with resources.Get $src -}}{{- $img = . -}}{{- end -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Animated GIFs lose their animation when resized, so leave them alone. */ -}}
+{{- $maxWidth := site.Params.imageMaxWidth | default 1400 -}}
+{{- $rendered := $img -}}
+{{- with $img -}}
+  {{- if and (gt .Width $maxWidth) (ne .MediaType.SubType "gif") -}}
+    {{- $rendered = .Resize (printf "%dx q85 webp" $maxWidth) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $url := $src -}}
+{{- with $rendered -}}
+  {{- $url = .RelPermalink -}}
+{{- else -}}
+  {{- if not $remote -}}{{- $url = urls.JoinPath site.BaseURL $src -}}{{- end -}}
+{{- end -}}
+
+{{- if $src -}}
+  <img src="{{ $url | safeURL }}" loading="lazy" decoding="async"
+    {{- with $rendered }} width="{{ .Width }}" height="{{ .Height }}"{{ end }}
+    {{- with $alt }} alt="{{ . | plainify }}"{{ end }}
+    {{- with .position }} class="{{ . }}"{{ end }}
+    {{- with .style }} style="{{ . | safeCSS }}"{{ end }} />
+{{- end -}}
