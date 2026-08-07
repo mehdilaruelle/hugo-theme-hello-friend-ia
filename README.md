@@ -54,6 +54,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - [More](#more-things)
   - [Built in shortcodes](#built-in-shortcodes)
     - [image](#image)
+    - [video](#video)
   - [Code highlighting](#code-highlighting)
   - [Favicon](#favicon)
   - [Audio Support](#audio-support)
@@ -242,6 +243,41 @@ Example:
 
 ``` golang
 {{< image src="/img/hello.png" alt="Hello Friend" position="center" style="border-radius: 8px;" >}}
+```
+
+#### video
+
+Plays a clip in place of an animated GIF: the same silent loop, a fraction of
+the weight. Encode once with ffmpeg and drop the files next to your images.
+
+Properties:
+
+  - `src` (required, the path **without** an extension)
+  - `poster` (optional, an image shown before the clip loads)
+  - `width` / `height` (optional but recommended — a video has no size until it
+    loads, and the page jumps around without them)
+  - `alt` (optional, becomes the accessible name)
+  - `controls` (optional, default `false`; `true` shows the player controls and
+    drops the autoplay, which lets a reader stop the clip — something a GIF
+    never allowed)
+  - `position` (optional, options: [`left`, `center`, `right`])
+  - `formats` (optional, default `webm,mp4`; emitted in that order and the
+    browser takes the first it can play, so put the smaller encoding first)
+
+Example:
+
+``` golang
+{{< video src="/video/demo" poster="/video/demo.jpg" width="1600" height="900" alt="A session being recorded" >}}
+```
+
+Converting a GIF, scaled to twice the width the theme renders. Both encodings
+need `-pix_fmt yuv420p`: a GIF carries an alpha channel that neither H.264 nor
+VP9 will accept.
+
+``` bash
+ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -c:v libvpx-vp9 -crf 34 -b:v 0 -pix_fmt yuv420p -an demo.webm
+ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -movflags +faststart -an demo.mp4
+ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -frames:v 1 demo.jpg
 ```
 
 ### Code highlighting

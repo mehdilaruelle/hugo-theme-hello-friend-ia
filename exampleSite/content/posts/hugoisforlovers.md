@@ -101,3 +101,13 @@ An image from `assets`, whose dimensions Hugo knows:
 An image referenced by path, which Hugo cannot measure:
 
 {{< image src="/img/cover.png" alt="Referenced by path" position="center" >}}
+
+## Video
+
+A looping clip, standing in for an animated GIF:
+
+{{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern looping" >}}
+
+The same clip with controls, for anything a reader may want to pause:
+
+{{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern" controls="true" >}}
