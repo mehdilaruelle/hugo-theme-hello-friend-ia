@@ -45,3 +45,12 @@ olderPosts = "Older posts"
 
 [skipToContent]
 other = "Skip to content"
+
+[copyCode]
+other = "Copy"
+
+[copyCodeDone]
+other = "Copied"
+
+[copyCodeFailed]
+other = "Press Ctrl+C"

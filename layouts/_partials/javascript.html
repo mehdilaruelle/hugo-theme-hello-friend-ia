@@ -1,8 +1,15 @@
 {{ $main := resources.Get "js/main.js" }}
 {{ $menu := resources.Get "js/menu.js" }}
 {{ $prism := resources.Get "js/prism.js" }}
-{{ $secureJS := slice $main $menu $prism | resources.Concat "bundle.js" | resources.Minify | resources.Fingerprint "sha512" }}
-<script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"></script>
+{{ $copy := resources.Get "js/copy-code.js" }}
+{{ $secureJS := slice $main $menu $prism $copy | resources.Concat "bundle.js" | resources.Minify | resources.Fingerprint "sha512" }}
+{{- /* The copy button reads its labels from this tag. The files are
+       concatenated, so document.currentScript is this element for all of
+       them. */ -}}
+<script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"
+        data-label="{{ i18n "copyCode" | default "Copy" }}"
+        data-label-done="{{ i18n "copyCodeDone" | default "Copied" }}"
+        data-label-failed="{{ i18n "copyCodeFailed" | default "Press Ctrl+C" }}"></script>
 
 {{ range $val := $.Site.Params.customJS }}
     {{ if gt (len $val) 0 }}
