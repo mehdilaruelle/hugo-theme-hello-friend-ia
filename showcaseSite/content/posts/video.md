@@ -3,6 +3,7 @@ title = "A video where a GIF used to be"
 description = "The video shortcode: a screen recording that does not weigh megabytes"
 date = "2026-01-24"
 type = ["posts","post"]
+audio = ["/video/demo.mp4"]
 tags = ["hugo"]
 categories = ["Development"]
 series = ["Showcase"]

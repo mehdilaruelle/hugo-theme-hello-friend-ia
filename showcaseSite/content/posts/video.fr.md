@@ -3,6 +3,7 @@ title = "Une vidéo là où il y avait un GIF"
 description = "Le shortcode video : une capture d'écran qui ne pèse pas des mégaoctets"
 date = "2026-01-24"
 type = ["posts","post"]
+audio = ["/video/demo.mp4"]
 tags = ["hugo"]
 categories = ["Development"]
 series = ["Showcase"]
