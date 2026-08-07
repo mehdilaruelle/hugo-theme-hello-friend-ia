@@ -37,6 +37,15 @@
       "<a href=\"https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/\">← Back to the default demo</a>"
     ]
 
+# Four languages, where the exampleSite has two. Two of them are here for a
+# reason beyond translation: Japanese has no spaces between words, and Arabic
+# reads right to left. Both are places a layout quietly falls apart, and neither
+# was exercised anywhere before this.
+#
+# English and French come from the exampleSite configuration and only need their
+# text overridden. Japanese and Arabic are declared in full, menus included: a
+# menu belongs to a language, so a language the exampleSite does not know about
+# arrives without one.
 [languages]
   [languages.en.params]
     subtitle     = "Feature showcase"
@@ -46,6 +55,62 @@
     subtitle     = "Vitrine des fonctionnalités"
     description  = "Toutes les options du thème, activées d'un coup"
     homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu'ils font"
+
+  [languages.ja]
+    weight = 3
+    locale = "ja-jp"
+    label  = "日本語"
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.ja.params]
+    subtitle     = "機能ショーケース"
+    description  = "テーマのすべてのオプションを一度に有効にしたサイト"
+    homeSubtitle = "すべてのスイッチを入れた状態です"
+  [languages.ja.menu]
+    [[languages.ja.menu.main]]
+      identifier  = "about"
+      name        = "概要"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.ja.menu.main]]
+      identifier  = "me"
+      name        = "自己紹介"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.ja.menu.main]]
+      identifier = "posts"
+      name       = "記事"
+      url        = "posts/"
+      weight     = 20
+
+  # direction is what renders dir="rtl" on <html> and mirrors the layout.
+  [languages.ar]
+    weight = 4
+    locale = "ar"
+    label  = "العربية"
+    direction = "rtl"
+    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+  [languages.ar.params]
+    subtitle     = "عرض الميزات"
+    description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
+    homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
+  [languages.ar.menu]
+    [[languages.ar.menu.main]]
+      identifier  = "about"
+      name        = "حول"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.ar.menu.main]]
+      identifier  = "me"
+      name        = "من أنا"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.ar.menu.main]]
+      identifier = "posts"
+      name       = "المقالات"
+      url        = "posts/"
+      weight     = 20
 
 # The exampleSite content, images and assets are mounted rather than copied, so
 # this site is the demo plus a few pages instead of a second copy to maintain.
