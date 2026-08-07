@@ -1,0 +1,22 @@
+{{- /*
+  One entry in the "Also available in" line. Takes a translation page.
+
+  The flag comes from data/langFlags.yaml, keyed by language code. A language
+  with no entry there falls back to its code rather than to an empty flag box —
+  the theme ships flags for the languages it translates, but a site is free to
+  add its own, and a blank square is worse than "AR".
+
+  The link carries the language name as text for a screen reader: a flag is a
+  country, not a language, and on its own it gives a link no accessible name at
+  all.
+*/ -}}
+{{- $flag := index hugo.Data.langFlags .Lang -}}
+{{- $name := .Language.Label | default (upper .Lang) -}}
+<a href="{{ .Permalink }}" lang="{{ .Lang }}" hreflang="{{ .Lang }}" title="{{ $name }}">
+    {{- with $flag -}}
+        <span class="flag fi fi-{{ . }}" aria-hidden="true"></span>
+    {{- else -}}
+        <span class="flag flag--code" aria-hidden="true">{{ upper $.Lang }}</span>
+    {{- end -}}
+    <span class="screen-reader-text">{{ $name }}</span>
+</a>
