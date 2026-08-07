@@ -45,3 +45,12 @@ olderPosts = "古いエントリー"
 
 [skipToContent]
 other = "本文へスキップ"
+
+[copyCode]
+other = "コピー"
+
+[copyCodeDone]
+other = "コピーしました"
+
+[copyCodeFailed]
+other = "Ctrl+C を押してください"

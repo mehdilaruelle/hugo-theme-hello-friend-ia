@@ -1,0 +1,61 @@
+// A copy button on every code block.
+//
+// No dependency: navigator.clipboard covers every browser this theme targets.
+// Where it is absent — an insecure origin, mainly — no button is added, rather
+// than one that does nothing when pressed.
+
+(function () {
+  if (!navigator.clipboard) return;
+
+  var script = document.currentScript;
+  var label = (script && script.dataset.label) || 'Copy';
+  var done = (script && script.dataset.labelDone) || 'Copied';
+  var failed = (script && script.dataset.labelFailed) || 'Press Ctrl+C';
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+      // Mermaid renders into a pre, and there is no source worth copying there.
+      if (pre.classList.contains('mermaid') || !pre.querySelector('code')) return;
+
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy-code';
+      button.textContent = label;
+      button.setAttribute('aria-label', label);
+
+      function flash(text, className) {
+        button.textContent = text;
+        button.classList.add(className);
+        setTimeout(function () {
+          button.textContent = label;
+          button.classList.remove(className);
+        }, 1600);
+      }
+
+      button.addEventListener('click', function () {
+        // The button lives inside the pre, so its own label would otherwise be
+        // copied along with the code.
+        var code = pre.querySelector('code').innerText;
+
+        navigator.clipboard.writeText(code).then(
+          function () {
+            flash(done, 'copy-code--done');
+          },
+          function () {
+            // No permission, or the document lost focus. Say so instead of
+            // looking like it worked, and select the code so it can still be
+            // copied by hand.
+            flash(failed, 'copy-code--failed');
+            var range = document.createRange();
+            range.selectNodeContents(pre.querySelector('code'));
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        );
+      });
+
+      pre.appendChild(button);
+    });
+  });
+})();

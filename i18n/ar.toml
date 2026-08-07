@@ -56,3 +56,12 @@ olderPosts = "مقالات أقدم"
 
 [skipToContent]
 other = "تخطَّ إلى المحتوى"
+
+[copyCode]
+other = "نسخ"
+
+[copyCodeDone]
+other = "تم النسخ"
+
+[copyCodeFailed]
+other = "اضغط Ctrl+C"

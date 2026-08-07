@@ -255,6 +255,10 @@ pre {
   font-size: 0.95rem;
   overflow: auto;
 
+  // Anchors the copy button. The block still scrolls; the button does not
+  // travel with the code because it is positioned against this box.
+  position: relative;
+
   @media #{$media-size-phone} {
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -458,4 +462,61 @@ hr {
 // Prism JS Additionals
 .highlight {
   margin: 10px auto;
+}
+
+// Copy button on code blocks.
+//
+// Hidden until the block is hovered or the button itself is focused, so it
+// stays out of the way while reading but is reachable from the keyboard.
+.copy-code {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out, color 0.15s ease-in-out;
+
+  [data-theme=dark] & {
+    background-color: $dark-background-header;
+    border-color: $dark-background-secondary;
+    color: $dark-color;
+  }
+
+  [data-theme=light] & {
+    background-color: $light-background-header;
+    border-color: $light-border-color;
+    color: $light-color;
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid #67a2c9;
+    outline-offset: 2px;
+  }
+
+  &--done {
+    color: #67a2c9;
+  }
+
+  &--failed {
+    color: #d9534f;
+  }
+}
+
+pre:hover .copy-code,
+.copy-code:focus-visible {
+  opacity: 1;
+}
+
+// A touch screen has no hover, so the button would never appear.
+@media (hover: none) {
+  .copy-code {
+    opacity: 1;
+  }
 }
