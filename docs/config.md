@@ -69,6 +69,17 @@ Set `locale` on every language. The root `locale` is only the default, so
 without it each feed and each `og:locale` announces the same language whatever
 the page is in.
 
+Give it a territory — `en-us`, not `en`. The value goes straight into the feed's
+`<language>` and into `og:locale`, and Open Graph expects `language_TERRITORY`.
+A language with no obvious country still needs one picked: Modern Standard
+Arabic is `ar-001` in CLDR, but `001` is a UN region code rather than a
+two-letter country, so `og:locale` comes out as the invalid `ar_001`. `ar-sa`
+is valid everywhere, and no more of an approximation than calling English
+`en-us`.
+
+The two demo sites are the worked examples: `exampleSite/` is the single
+language shape, `showcaseSite/` the multilingual one, in four languages.
+
 ### Menus
 
 Menus follow the same rule with one difference: a menu defined at the root

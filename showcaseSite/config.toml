@@ -37,34 +37,82 @@
       "<a href=\"https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/\">← Back to the default demo</a>"
     ]
 
-# Four languages, where the exampleSite has two. Two of them are here for a
+# Four languages, where the exampleSite has one. Two of them are here for a
 # reason beyond translation: Japanese has no spaces between words, and Arabic
-# reads right to left. Both are places a layout quietly falls apart, and neither
-# was exercised anywhere before this.
+# reads right to left. Both are places a layout quietly falls apart.
 #
-# English and French come from the exampleSite configuration and only need their
-# text overridden. Japanese and Arabic are declared in full, menus included: a
-# menu belongs to a language, so a language the exampleSite does not know about
-# arrives without one.
+# All four are declared in full, menus included. The exampleSite is monolingual
+# and keeps its menu at the root, and a root menu applies to every language with
+# no way to translate a single entry — so each language needs its own here, and
+# the English one has to be restated to replace the inherited root menu rather
+# than sit beside it.
 [languages]
+  [languages.en]
+    weight = 1
+    locale = "en-us"
+    label  = "English"
   [languages.en.params]
     subtitle     = "Feature showcase"
     description  = "Every option the theme has, turned on at once"
     homeSubtitle = "Every switch flipped, so you can see what they do"
+  [languages.en.params.portrait]
+    alt = "The Hugo logo"
+  [languages.en.menu]
+    [[languages.en.menu.main]]
+      identifier  = "about"
+      name        = "About"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.en.menu.main]]
+      identifier  = "me"
+      name        = "About Me"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.en.menu.main]]
+      identifier = "posts"
+      name       = "Posts"
+      url        = "posts/"
+      weight     = 20
+
+  [languages.fr]
+    weight = 2
+    locale = "fr-fr"
+    label  = "Français"
   [languages.fr.params]
     subtitle     = "Vitrine des fonctionnalités"
-    description  = "Toutes les options du thème, activées d'un coup"
-    homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu'ils font"
+    description  = "Toutes les options du thème, activées d’un coup"
+    homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu’ils font"
+  [languages.fr.params.portrait]
+    alt = "Le logo Hugo"
+  [languages.fr.menu]
+    [[languages.fr.menu.main]]
+      identifier  = "about"
+      name        = "À propos"
+      url         = "about/"
+      weight      = 10
+      hasChildren = true
+    [[languages.fr.menu.main]]
+      identifier  = "me"
+      name        = "Qui suis-je"
+      url         = "about/me/"
+      parent      = "about"
+    [[languages.fr.menu.main]]
+      identifier = "posts"
+      name       = "Articles"
+      url        = "posts/"
+      weight     = 20
 
   [languages.ja]
     weight = 3
     locale = "ja-jp"
     label  = "日本語"
-    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.ja.params]
     subtitle     = "機能ショーケース"
     description  = "テーマのすべてのオプションを一度に有効にしたサイト"
     homeSubtitle = "すべてのスイッチを入れた状態です"
+  [languages.ja.params.portrait]
+    alt = "Hugo のロゴ"
   [languages.ja.menu]
     [[languages.ja.menu.main]]
       identifier  = "about"
@@ -84,16 +132,26 @@
       weight     = 20
 
   # direction is what renders dir="rtl" on <html> and mirrors the layout.
+  #
+  # locale carries a territory like the other three, or the feed announces plain
+  # "ar" and og:locale comes out without one.
+  #
+  # Modern Standard Arabic belongs to no single country, so any territory here
+  # is an approximation. ar-001 is the exact CLDR code for it — 001 being the UN
+  # code for the world — but Open Graph wants a two-letter country and renders
+  # it as the invalid ar_001. ar-sa is valid everywhere, and no more of a
+  # stretch than calling English en-us.
   [languages.ar]
     weight = 4
-    locale = "ar"
+    locale = "ar-sa"
     label  = "العربية"
     direction = "rtl"
-    copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   [languages.ar.params]
     subtitle     = "عرض الميزات"
     description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
     homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
+  [languages.ar.params.portrait]
+    alt = "شعار Hugo"
   [languages.ar.menu]
     [[languages.ar.menu.main]]
       identifier  = "about"
