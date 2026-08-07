@@ -1,8 +1,8 @@
 {{- /*
   Renders one content image, and is the single place that decides how.
 
-  Both entry points call it: the markdown render hook, so plain ![]() gets the
-  same treatment, and the image shortcode.
+  Both entry points call it: the image shortcode, and the cover on an article
+  page. Plain markdown ![]() is left to Hugo.
 
   Resizing only happens when the file resolves as a resource — a page bundle,
   or assets/. A site whose images sit in static/ can mount that directory into
