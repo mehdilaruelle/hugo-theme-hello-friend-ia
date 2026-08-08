@@ -18,27 +18,22 @@
 {{ end }}
 
 {{ if .Page.Store.Get "hasMermaid" }}
-<script type="module">
-    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-    const settings = localStorage.getItem("theme") === "dark" ?
-        {
-            startOnLoad: true,
-            theme: "dark",
-            darkMode: true,
-            themeVariables: {
-                tertiaryColor: "#dee3ed"
-            }
-        }
-        :
-        {
-            startOnLoad: true,
-            theme: "base",
-            darkMode: false,
-            themeVariables: {
-                tertiaryColor: "#dee3ed"
-            }
-        }
-    ;
-    mermaid.initialize(settings);
-</script>
+{{- /* The initialiser is a file, not an inline module, so a site with a strict
+       CSP does not have to allow script-src 'unsafe-inline' for the pages that
+       carry a diagram. Mermaid itself is imported dynamically, and only from
+       here, so a page without a diagram fetches neither.
+
+       Pinned to an exact version. The URL also fixes the chunk tree, since the
+       chunks Mermaid pulls in at runtime sit under the same versioned path — a
+       release cannot change what runs without a reviewed change here.
+
+       No integrity hash, and it is worth being plain about why: the entry
+       module is 29 KB and imports the bulk of its code as further chunks, which
+       a hash on the entry would not cover. The single-file build that could
+       carry one weighs 3.4 MB, on every page with a diagram. See
+       docs/config.md for the CSP directives this needs. */ -}}
+{{- with resources.Get "js/mermaid-init.js" | resources.Minify | resources.Fingerprint "sha512" }}
+<script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"
+        data-mermaid-src="https://cdn.jsdelivr.net/npm/mermaid@11.16.1/dist/mermaid.esm.min.mjs"></script>
+{{- end }}
 {{ end }}
