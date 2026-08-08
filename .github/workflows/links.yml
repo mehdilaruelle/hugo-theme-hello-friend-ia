@@ -69,3 +69,10 @@ jobs:
       - name: Check the sharing links parse
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-sharing.mjs public
+
+      # The build succeeds whether or not the passthrough delimiters survive
+      # Goldmark, so only an assertion on the built HTML catches a formula that
+      # quietly became prose.
+      - name: Check the maths survived Markdown
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-math.mjs public

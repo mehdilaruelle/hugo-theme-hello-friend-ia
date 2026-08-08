@@ -222,6 +222,51 @@ global bundle with no ES module exports — a dynamic import of it would find no
 `<script src integrity>` and driving it through the global it defines, which is
 a different mechanism rather than a setting.
 
+## Mathematics
+
+Set `math = true` in a page's front matter, or `params.math` for a whole site,
+and KaTeX renders the formulas on that page:
+
+```markdown
+Inline \(a^2 + b^2 = c^2\), and set apart:
+
+$$
+\int_0^\infty e^{-x}\,dx = 1
+$$
+```
+
+It is opt-in rather than detected from the content, because `$$` is ordinary
+text in a shell snippet and a false positive would fetch 300 KB for nothing. A
+page without it requests neither the stylesheet nor the script.
+
+You have to enable Goldmark's **passthrough** extension yourself, in your own
+configuration. Without it a formula is treated as ordinary Markdown before KaTeX
+ever sees it: underscores open emphasis, and a backslash before punctuation is
+swallowed as an escape.
+
+A theme cannot do this for you — Hugo merges a theme's params but not its markup
+settings — so it belongs in your site config:
+
+```toml
+[markup.goldmark.extensions.passthrough]
+  enable = true
+  [markup.goldmark.extensions.passthrough.delimiters]
+    block  = [['\[', '\]'], ['$$', '$$']]
+    inline = [['\(', '\)']]
+```
+
+`exampleSite/config.toml` carries it, and the showcase layers over that file, so
+both demo sites exercise it.
+
+KaTeX is pinned to an **exact** version, and each file carries an `integrity`
+hash, so neither a new release nor a compromised CDN can change what runs for
+your visitors. Upgrading is deliberate: bump the version in
+`layouts/_partials/head.html` and `javascript.html` and recompute the hashes.
+
+The call that renders the formulas lives in `assets/js/katex-render.js` rather
+than an inline `onload` attribute, so turning this on does not oblige your site
+to allow `script-src 'unsafe-inline'`.
+
 ## Default color scheme
 
 `params.defaultTheme` accepts `"dark"` or `"light"`. Unset, the theme follows

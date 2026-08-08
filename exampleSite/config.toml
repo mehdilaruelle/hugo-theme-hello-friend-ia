@@ -41,6 +41,21 @@ disableHugoGeneratorInject = false
 #   [services.googleAnalytics]
 #     ID = 'G-MEASUREMENT_ID'
 
+# Required for the maths support. Without it Goldmark treats a formula as
+# ordinary Markdown: "\," becomes a plain comma and "_" opens emphasis, before
+# KaTeX ever sees it.
+#
+# This cannot come from the theme. Hugo merges a theme's params but not its
+# markup settings, so it has to live in your own configuration.
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block  = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)']]
+
 [permalinks]
   posts = "/posts/:year/:month/:title/"
 

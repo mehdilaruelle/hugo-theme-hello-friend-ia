@@ -37,3 +37,24 @@
         data-mermaid-src="https://cdn.jsdelivr.net/npm/mermaid@11.16.1/dist/mermaid.esm.min.mjs"></script>
 {{- end }}
 {{ end }}
+
+{{ if or .Params.math .Site.Params.math }}
+{{- /* Pinned to an exact version with an integrity hash on each file. A range
+       like katex@0.18 would let a new release change the JavaScript executed
+       for visitors with no reviewed change here, and an integrity hash cannot
+       cover a file that moves.
+
+       The call that renders the formulas lives in a file of its own, not an
+       onload attribute, so enabling this does not oblige a site to allow
+       script-src 'unsafe-inline'. Deferred scripts run in document order, so
+       KaTeX and auto-render are both defined by the time it runs. */ -}}
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.js"
+        integrity="sha384-ycJ6GAwiS15LoUPipwJOrWTvkUHl/YqELValBwI5I4awP1EeEQJYarj+w85ntcz7"
+        crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/contrib/auto-render.min.js"
+        integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz"
+        crossorigin="anonymous"></script>
+{{- with resources.Get "js/katex-render.js" | resources.Minify | resources.Fingerprint "sha512" }}
+<script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{- end }}
+{{ end }}
