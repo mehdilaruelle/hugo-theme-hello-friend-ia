@@ -1,3 +1,6 @@
+# Modern Standard Arabic is not tied to a country; sa matches the ar-sa locale
+# the docs recommend, and is the conventional choice.
+ar: sa
 da: dk
 de: de
 en: gb
@@ -7,6 +10,7 @@ gl: es-ga
 hi: in
 id: id
 it: it
+lmo: it
 ja: jp
 ml: in
 nl: nl

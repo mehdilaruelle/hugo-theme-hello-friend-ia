@@ -489,6 +489,16 @@ hr {
   opacity: 0;
   transition: opacity 0.15s ease-in-out, color 0.15s ease-in-out;
 
+  background-color: $light-background-header;
+  border-color: $light-border-color;
+  color: $light-color;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $dark-background-header;
+    border-color: $dark-background-secondary;
+    color: $dark-color;
+  }
+
   [data-theme=dark] & {
     background-color: $dark-background-header;
     border-color: $dark-background-secondary;
@@ -525,5 +535,36 @@ pre:hover .copy-code,
 @media (hover: none) {
   .copy-code {
     opacity: 1;
+  }
+}
+
+// Fallback for a language with no entry in data/langFlags.yaml: its code, sized
+// and boxed like the flag it stands in for.
+.flag--code {
+  display: inline-block;
+  min-width: 1.33em;
+  padding: 0 0.15em;
+  border-radius: 2px;
+  font-size: 0.7em;
+  font-weight: bold;
+  line-height: 1.45;
+  text-align: center;
+  vertical-align: middle;
+
+  // data-theme is only present once the script has run, so the system
+  // preference has to be honoured on its own as well — the same shape every
+  // other themed rule in this file uses.
+  background-color: $light-background-secondary;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $dark-background-secondary;
+  }
+
+  [data-theme=dark] & {
+    background-color: $dark-background-secondary;
+  }
+
+  [data-theme=light] & {
+    background-color: $light-background-secondary;
   }
 }
