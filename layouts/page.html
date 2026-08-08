@@ -17,7 +17,7 @@
 
                 {{ if .Params.Cover }}
                     <figure class="post-cover">
-                        <img src="{{ urls.JoinPath .Site.BaseURL .Params.Cover }}" alt="{{ .Title }}" />
+                        {{ partial "image.html" (dict "src" .Params.Cover "alt" .Title "page" .) }}
                     
                         {{ if .Params.CoverCaption }}
                             <figcaption class="center">{{ .Params.CoverCaption | markdownify }}</figcaption>
