@@ -157,9 +157,8 @@ and many minutes rather than only at one and many.
 ## Mermaid diagrams
 
 Pages containing a ```mermaid code block load Mermaid from jsDelivr, pinned to
-the current major version. Pinning means a future Mermaid major cannot silently
-change how existing diagrams render; bump the version in
-`layouts/_partials/javascript.html` when you want to move to the next one.
+an exact version. Bump it in `layouts/_partials/javascript.html` when you want
+to move on.
 
 The library is fetched from a third party, so visitors to pages with diagrams
 resolve jsDelivr. Pages without a diagram request nothing.
@@ -170,8 +169,10 @@ The initialiser is a file rather than an inline script, so a strict policy does
 not need `script-src 'unsafe-inline'`. What it does need, on pages with a
 diagram:
 
-    script-src  'self' https://cdn.jsdelivr.net
-    style-src   'self' 'unsafe-inline'
+```text
+script-src  'self' https://cdn.jsdelivr.net
+style-src   'self' 'unsafe-inline'
+```
 
 `style-src 'unsafe-inline'` is Mermaid's doing, not the theme's: it writes a
 <style> element into the SVG it generates, and sets a style attribute on around
@@ -193,8 +194,14 @@ build that could carry one weighs **3.4 MB**.
 Measured on the showcase's flowchart, the chunked build fetches **230 KB across
 27 requests**, and only the chunks that diagram type needs. Full integrity would
 therefore cost roughly fifteen times the bytes, on every page with a diagram.
-If that trade is right for your site, point `data-mermaid-src` at
-`mermaid@<version>/dist/mermaid.min.js` and add an `integrity` attribute.
+
+Nor is it a matter of swapping the URL. `import()` takes no integrity
+parameter, so a hash on the initialiser covers the initialiser and nothing it
+loads; and `dist/mermaid.min.js`, the single file that could carry one, is a
+global bundle with no ES module exports — a dynamic import of it would find no
+`default` to call. Doing this properly means loading that bundle as a classic
+`<script src integrity>` and driving it through the global it defines, which is
+a different mechanism rather than a setting.
 
 ## Default color scheme
 
