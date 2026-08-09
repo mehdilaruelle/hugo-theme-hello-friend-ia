@@ -1,0 +1,16 @@
+{{- /*
+  Reports whether a URL points somewhere other than this site, and is the one
+  place that decides it.
+
+  A scheme is the obvious case. A protocol-relative URL has none — urls.Parse
+  gives "//cdn.example.com/x.css" an empty Scheme and a Host of
+  cdn.example.com — so testing the scheme alone reads it as a local path and
+  prefixes the site's base URL, which breaks it.
+
+      {{ if not (partial "is-remote.html" $src) }}
+        {{ $src = urls.JoinPath site.BaseURL $src }}
+      {{ end }}
+*/ -}}
+
+{{- $parsed := urls.Parse . -}}
+{{- return or (ne $parsed.Scheme "") (ne $parsed.Host "") -}}

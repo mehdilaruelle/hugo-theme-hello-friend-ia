@@ -14,7 +14,7 @@
 {{- $src := .src -}}
 {{- $alt := .alt | default "" -}}
 {{- $page := .page -}}
-{{- $remote := (urls.Parse $src).Scheme -}}
+{{- $remote := partial "is-remote.html" $src -}}
 
 {{- $img := "" -}}
 {{- if not $remote -}}

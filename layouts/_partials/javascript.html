@@ -16,7 +16,7 @@
 {{ range $val := $.Site.Params.customJS }}
     {{- with $val }}
         {{- $src := . }}
-        {{- if not (urls.Parse $src).Scheme }}{{ $src = urls.JoinPath site.BaseURL $src }}{{ end }}
+        {{- if not (partial "is-remote.html" $src) }}{{ $src = urls.JoinPath site.BaseURL $src }}{{ end }}
         <script src="{{ $src | safeURL }}"></script>
     {{- end }}
 {{ end }}

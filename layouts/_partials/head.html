@@ -98,7 +98,7 @@
 {{ range $val := $.Site.Params.customCSS }}
     {{- with $val }}
         {{- $href := . }}
-        {{- if not (urls.Parse $href).Scheme }}{{ $href = urls.JoinPath site.BaseURL $href }}{{ end }}
+        {{- if not (partial "is-remote.html" $href) }}{{ $href = urls.JoinPath site.BaseURL $href }}{{ end }}
         <link rel="stylesheet" type="text/css" href="{{ $href | safeURL }}">
     {{- end }}
 {{ end }}

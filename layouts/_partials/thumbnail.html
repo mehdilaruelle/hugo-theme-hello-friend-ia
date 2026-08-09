@@ -1,5 +1,5 @@
 {{- $src := .cover -}}
-{{- $remote := (urls.Parse $src).Scheme -}}
+{{- $remote := partial "is-remote.html" $src -}}
 {{- $img := "" -}}
 {{- if not $remote -}}
   {{- with .page.Resources.GetMatch $src }}{{ $img = . }}{{ else }}{{ with resources.Get $src }}{{ $img = . }}{{ end }}{{ end -}}
