@@ -98,6 +98,21 @@
     {{ end }}
 {{ end }}
 
+{{- /* KaTeX, on pages that ask for it.
+
+       math = true in the front matter, or params.math for a whole site. It is
+       opt-in rather than detected from the content because "$" is ordinary
+       text in a shell snippet, and a false positive would fetch 300 KB for
+       nothing.
+
+       Pinned to an exact version with an integrity hash, so neither a new
+       release nor a compromised CDN can change what runs for visitors. */ -}}
+{{- if or .Params.math .Site.Params.math }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css"
+      integrity="sha384-1vdNCNel6Tx/NQa8IR1mGOGKsbGreCkOPfbtPPnUURJ5Tu2PRVfQ/7KLZC+Pi1p1"
+      crossorigin="anonymous">
+{{- end }}
+
 <!-- Icons -->
 {{- partial "favicons.html" . }}
 

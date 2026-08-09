@@ -4,6 +4,7 @@ description = "見出し、コード、表、引用、画像を一枚に。何�
 date = "2026-01-10"
 type = ["posts","post"]
 toc = true
+math = true
 tags = ["hugo", "development"]
 categories = ["Development"]
 series = ["Showcase"]
@@ -49,6 +50,19 @@ func main() {
 2. 二番目の項目があると、字下げが見えます
    - そして入れ子の順序なしリスト
    - 右から左に読む言語で左右の余白が現れるのはここです
+
+
+## 数式
+
+front matter の `math = true` は、このページにだけ KaTeX を読み込みます。行内は
+\(a^2 + b^2 = c^2\)、独立した式はこちら。
+
+$$
+\int_0^\infty e^{-x}\,dx = 1
+$$
+
+本文から自動検出せず明示的にしてあるのは、シェルの断片では `$$` がただの文字で
+あり、誤検出すると 300 KB を無駄に取りに行くからです。
 
 ## 画像
 

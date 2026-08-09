@@ -4,6 +4,7 @@ description = "Titres, code, tableaux, citations et images sur une page, pour qu
 date = "2026-01-10"
 type = ["posts","post"]
 toc = true
+math = true
 tags = ["hugo", "development"]
 categories = ["Development"]
 series = ["Showcase"]
@@ -51,6 +52,20 @@ thème a un jour raté sur deux sélecteurs à la fois.
 2. Avec un deuxième élément, pour voir le retrait
    - et une sous-liste non ordonnée
    - c'est là que les marges gauche et droite se voient dans une langue RTL
+
+
+## Les mathématiques
+
+`math = true` dans le front matter charge KaTeX sur cette page et sur aucune
+autre. En ligne \(a^2 + b^2 = c^2\), et en bloc :
+
+$$
+\int_0^\infty e^{-x}\,dx = 1
+$$
+
+C'est explicite plutôt que détecté depuis le contenu, parce que `$$` est du texte
+ordinaire dans un extrait shell et qu'un faux positif téléchargerait 300 Ko pour
+rien.
 
 ## Les images
 
