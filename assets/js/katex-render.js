@@ -11,8 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
   renderMathInElement(document.body, {
     delimiters: [
       { left: '$$', right: '$$', display: true },
-      { left: '\[', right: '\]', display: true },
-      { left: '\(', right: '\)', display: false }
+      // Doubled on purpose: '\[' is not an escape sequence, so JavaScript
+      // drops the backslash and the delimiter becomes a bare bracket, which
+      // never matches the \[ and \( the page actually contains.
+      { left: '\\[', right: '\\]', display: true },
+      { left: '\\(', right: '\\)', display: false }
     ],
     throwOnError: false
   });
