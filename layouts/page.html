@@ -13,7 +13,12 @@
             </div>
 
             <article>
-                <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h2>
+                {{- /* h1, as posts use: a page whose title is an h2 has no
+                       top-level heading at all, which leaves a screen reader
+                       nothing to land on and a crawler no subject. .post-title
+                       carries the size, so this changes the outline and not the
+                       look. */ -}}
+                <h1 class="post-title"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
 
                 {{ if .Params.Cover }}
                     <figure class="post-cover">
