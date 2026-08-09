@@ -76,3 +76,10 @@ jobs:
       - name: Check the maths survived Markdown
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-math.mjs public
+
+      # width and height on the element fix the used height, so a rule that
+      # narrows the box stretches the picture unless height is released. The
+      # markup is identical either way; only the geometry is wrong.
+      - name: Check images keep their aspect ratio
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-image-sizing.mjs public

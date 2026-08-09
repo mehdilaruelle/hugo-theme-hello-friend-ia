@@ -114,6 +114,15 @@ video {
   display: block;
   max-width: 100%;
 
+  /*
+    The image partial sets width and height on the element so the browser can
+    reserve the space before the file arrives. max-width then narrows the box
+    whenever the container is smaller than that declared width — which is the
+    normal case — and without this the declared height stays put and the
+    picture is stretched vertically.
+  */
+  height: auto;
+
   &.left {
     margin-right: auto;
   }
