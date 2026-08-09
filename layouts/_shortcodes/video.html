@@ -21,7 +21,7 @@
 {{- /* A site served from a subpath needs it kept; a remote URL must be left
        alone. */ -}}
 {{- $poster := .Get "poster" -}}
-{{- if and $poster (not (urls.Parse $poster).Scheme) -}}
+{{- if and $poster (not (partial "is-remote.html" $poster)) -}}
   {{- $poster = urls.JoinPath site.BaseURL $poster -}}
 {{- end -}}
 
@@ -37,7 +37,7 @@
   {{- range $formats }}
     {{- $ext := trim . " " }}
     {{- $url := printf "%s.%s" $src $ext }}
-    {{- if not (urls.Parse $src).Scheme }}{{ $url = urls.JoinPath site.BaseURL $url }}{{ end }}
+    {{- if not (partial "is-remote.html" $src) }}{{ $url = urls.JoinPath site.BaseURL $url }}{{ end }}
     <source src="{{ $url | safeURL }}" type="video/{{ $ext }}">
   {{- end }}
 </video>

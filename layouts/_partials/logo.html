@@ -10,7 +10,7 @@
     <div class="logo">
         {{ if .Site.Params.Logo.path }}
             {{- $logo := .Site.Params.Logo.path -}}
-            {{- if not (urls.Parse $logo).Scheme -}}
+            {{- if not (partial "is-remote.html" $logo) -}}
               {{- $logo = urls.JoinPath site.BaseURL $logo -}}
             {{- end -}}
             <img src="{{ $logo | safeURL }}" alt="{{ .Site.Params.Logo.alt }}" />
