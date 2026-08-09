@@ -5,7 +5,26 @@
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="{{ if .Params.author }}{{ .Params.author }}{{ else }}{{ range .Site.Params.Author }}{{ . }} {{ end }}{{ end }}">
-<meta name="description" content="{{ if .IsHome }}{{ .Site.Params.homeSubtitle | plainify }}{{ else }}{{ if .Params.Description }}{{ .Params.Description }}{{ else }}{{ .Summary | plainify }}{{ end }}{{ end }}" />
+{{- /*
+  A list or taxonomy page has no summary, so the chain used to end in an empty
+  string and the tag shipped as content="". The site description is the same
+  fallback og:description already uses; the tag is dropped entirely when even
+  that is unset, since an empty one says less than none at all.
+*/ -}}
+{{- $description := "" -}}
+{{- if .IsHome -}}
+  {{- $description = .Site.Params.homeSubtitle | plainify -}}
+{{- else if .Params.Description -}}
+  {{- $description = .Params.Description -}}
+{{- else -}}
+  {{- $description = .Summary | plainify -}}
+{{- end -}}
+{{- if not $description -}}
+  {{- $description = .Site.Params.description | plainify -}}
+{{- end -}}
+{{- with $description }}
+<meta name="description" content="{{ . }}" />
+{{- end }}
 {{- /* Emitted only when there is something to say. An empty content attribute
        is not a neutral default: it is a tag asserting the value is blank. */ -}}
 {{- $keywords := slice }}
