@@ -11,10 +11,14 @@
         data-label-done="{{ i18n "copyCodeDone" | default "Copied" }}"
         data-label-failed="{{ i18n "copyCodeFailed" | default "Press Ctrl+C" }}"></script>
 
+{{- /* Same as customCSS in head.html: a path under static/ has to carry the
+       site's base URL, or it resolves against the page being served. */ -}}
 {{ range $val := $.Site.Params.customJS }}
-    {{ if gt (len $val) 0 }}
-        <script src="{{ $val }}"></script>
-    {{ end }}
+    {{- with $val }}
+        {{- $src := . }}
+        {{- if not (urls.Parse $src).Scheme }}{{ $src = urls.JoinPath site.BaseURL $src }}{{ end }}
+        <script src="{{ $src | safeURL }}"></script>
+    {{- end }}
 {{ end }}
 
 {{ if .Page.Store.Get "hasMermaid" }}

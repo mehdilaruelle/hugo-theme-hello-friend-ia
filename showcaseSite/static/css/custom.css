@@ -1,0 +1,3 @@
+/* Loaded through params.customCSS, to keep that path exercised.
+   Deliberately subtle: the demo should not look different because of it. */
+.post-title a { text-underline-offset: 3px; }
