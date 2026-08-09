@@ -21,6 +21,11 @@ for (const [lang, prefix] of Object.entries(langs)) {
     .map(d => join(dir, d, "index.html"))
     .filter(f => existsSync(f))
     .find(f => readFileSync(f, "utf8").includes("katex"));
+  if (!file) {
+    console.log(`  ${lang.padEnd(3)} BAD  no page loading KaTeX under ${dir}`);
+    bad++;
+    continue;
+  }
   const s = readFileSync(file, "utf8");
   const inline = s.includes(INLINE);
   const block = s.includes(BLOCK);
@@ -29,3 +34,4 @@ for (const [lang, prefix] of Object.entries(langs)) {
   console.log(`  ${lang.padEnd(3)} inline ${inline ? "ok " : "BAD"}   block ${block ? "ok " : "BAD"}   wrapped-in-p ${paragraph ? "BAD" : "no "}`);
 }
 console.log(bad ? `\n  ${bad} language(s) wrong` : "\n  all four languages carry the delimiters intact");
+process.exit(bad ? 1 : 0);
