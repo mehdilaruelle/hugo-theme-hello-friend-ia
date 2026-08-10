@@ -14,8 +14,8 @@
 {{- $description := "" -}}
 {{- if .IsHome -}}
   {{- $description = .Site.Params.homeSubtitle | plainify -}}
-{{- else if .Params.Description -}}
-  {{- $description = .Params.Description -}}
+{{- else if .Description -}}
+  {{- $description = .Description -}}
 {{- else -}}
   {{- $description = .Summary | plainify -}}
 {{- end -}}
