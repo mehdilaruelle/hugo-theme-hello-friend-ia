@@ -1,5 +1,11 @@
 {{ define "body" }}
-    <body class="{{ if .Site.Params.backgroundImage }} background-image" style="background-image: url('{{ urls.JoinPath .Site.BaseURL .Site.Params.backgroundImage }}');" {{ else }}"{{ end }}>
+    {{- /*
+      The images travel as custom properties rather than as background-image
+      itself, because the theme toggle runs in the browser: a value written
+      straight into the attribute could not follow it. The stylesheet picks
+      between them on data-theme.
+    */ -}}
+    <body class="{{ if .Site.Params.backgroundImage }} background-image" style="--background-image: url('{{ urls.JoinPath .Site.BaseURL .Site.Params.backgroundImage }}');{{ with .Site.Params.backgroundImageLight }} --background-image-light: url('{{ urls.JoinPath $.Site.BaseURL . }}');{{ end }}" {{ else }}"{{ end }}>
 {{ end }}
 
 {{ define "main" }}

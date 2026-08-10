@@ -16,6 +16,9 @@
 [params]
   # Every option below is off in the exampleSite, which is why it is here.
   backgroundImage  = "img/background.svg"
+  # The light variant. Without it, light mode drops the image rather than
+  # printing dark text over a dark picture.
+  backgroundImageLight = "img/background-light.svg"
   enableThumbnails = true
 
   # The background is a dark image, so the page should arrive dark rather than
