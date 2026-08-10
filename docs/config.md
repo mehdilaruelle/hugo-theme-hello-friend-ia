@@ -307,7 +307,8 @@ templates.
 | `enableReadingTime` | shows an estimated reading time on articles |
 | `enableSharingButtons` | shows the sharing row under an article |
 | `disableReadOtherPosts` | hides the previous/next links |
-| `backgroundImage` | an image behind the front page, `cover`-sized and fixed |
+| `backgroundImage` | an image behind the front page, `cover`-sized and fixed. Used in dark mode |
+| `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
 | `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
 | `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
 | `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts` |

@@ -468,11 +468,32 @@ hr {
   z-index: 100000;
 }
 
+// The site chooses this image, and the theme cannot know whether it suits a
+// light page. A dark one under the light palette leaves #222 text on a dark
+// picture, which is what happened before: unreadable.
+//
+// So light mode uses backgroundImageLight when the site provides one, and
+// otherwise shows no image at all. Dropping it is the safe half of the guess —
+// the page stays legible either way.
 .background-image {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
   background-position: center center;
+
+  background-image: var(--background-image);
+
+  @media (prefers-color-scheme: light) {
+    background-image: var(--background-image-light, none);
+  }
+
+  [data-theme=dark] & {
+    background-image: var(--background-image);
+  }
+
+  [data-theme=light] & {
+    background-image: var(--background-image-light, none);
+  }
 }
 
 // Prism JS Additionals
