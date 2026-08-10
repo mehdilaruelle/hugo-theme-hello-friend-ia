@@ -526,12 +526,15 @@ pre:hover .copy-code,
   opacity: 1;
 }
 
-// Prism's toolbar plugin puts the language name in the same corner, and both
-// appear on hover, so they sat on top of each other. Drop the button below it.
-// Offsetting vertically rather than horizontally keeps them apart whatever the
-// language is called — "yaml" and "shell-session" are not the same width.
-div.code-toolbar pre .copy-code {
-  top: 2.4rem;
+// Prism's toolbar plugin puts the language name in the same corner as the copy
+// button, and both appear on hover, so they sat on top of each other.
+//
+// The label moves rather than the button. Pushing the button down instead put
+// it past the bottom of a one-line block, which then scrolled. The label is
+// positioned by its right edge, so shifting that edge clears the button
+// whatever the language is called — a longer name simply extends further left.
+div.code-toolbar > .toolbar {
+  inset-inline-end: 4.25rem;
 }
 
 // A touch screen has no hover, so the button would never appear.
