@@ -1,3 +1,8 @@
+# Search needs the index, and the index is the home page rendered as JSON.
+# Without this Hugo emits no index and the search page says so.
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 # The showcase site: the theme with every option turned on.
 #
 # Not a second site to keep in sync. It is layered on top of the exampleSite
@@ -95,6 +100,11 @@
       name       = "Posts"
       url        = "posts/"
       weight     = 20
+    [[languages.en.menu.main]]
+      identifier = "search"
+      name       = "Search"
+      url        = "search/"
+      weight     = 30
 
   [languages.fr]
     weight = 2
@@ -123,6 +133,11 @@
       name       = "Articles"
       url        = "posts/"
       weight     = 20
+    [[languages.fr.menu.main]]
+      identifier = "search"
+      name       = "Recherche"
+      url        = "search/"
+      weight     = 30
 
   [languages.ja]
     weight = 3
@@ -151,6 +166,11 @@
       name       = "記事"
       url        = "posts/"
       weight     = 20
+    [[languages.ja.menu.main]]
+      identifier = "search"
+      name       = "検索"
+      url        = "search/"
+      weight     = 30
 
   # direction is what renders dir="rtl" on <html> and mirrors the layout.
   #
@@ -190,6 +210,11 @@
       name       = "المقالات"
       url        = "posts/"
       weight     = 20
+    [[languages.ar.menu.main]]
+      identifier = "search"
+      name       = "بحث"
+      url        = "search/"
+      weight     = 30
 
 # The showcase carries its own articles, so that every language shows the same
 # list. The exampleSite is English only and deliberately so; mounting its content

@@ -54,3 +54,29 @@ other = "Copied"
 
 [copyCodeFailed]
 other = "Press Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Search this site"
+
+[searchPlaceholder]
+other = "Type to search…"
+
+[searchResultsOne]
+other = "1 result"
+
+[searchResultsMany]
+other = "%d results"
+
+[searchFailed]
+other = "The search index could not be loaded."
+
+[searchNoScript]
+other = "Search needs JavaScript. The archive is browsable by tag and by date."
+
+[searchNoIndex]
+other = "Search is not configured on this site."
+
+[searchLoading]
+other = "Searching…"

@@ -54,3 +54,29 @@ other = "Copié"
 
 [copyCodeFailed]
 other = "Faites Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Rechercher sur ce site"
+
+[searchPlaceholder]
+other = "Tapez pour rechercher…"
+
+[searchResultsOne]
+other = "1 résultat"
+
+[searchResultsMany]
+other = "%d résultats"
+
+[searchFailed]
+other = "L’index de recherche n’a pas pu être chargé."
+
+[searchNoScript]
+other = "La recherche nécessite JavaScript. Les archives restent consultables par tag et par date."
+
+[searchNoIndex]
+other = "La recherche n’est pas configurée sur ce site."
+
+[searchLoading]
+other = "Recherche en cours…"

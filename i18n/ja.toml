@@ -54,3 +54,29 @@ other = "コピーしました"
 
 [copyCodeFailed]
 other = "Ctrl+C を押してください"
+
+# Search
+#
+[searchLabel]
+other = "このサイトを検索"
+
+[searchPlaceholder]
+other = "入力して検索…"
+
+[searchResultsOne]
+other = "1 件"
+
+[searchResultsMany]
+other = "%d 件"
+
+[searchFailed]
+other = "検索インデックスを読み込めませんでした。"
+
+[searchNoScript]
+other = "検索には JavaScript が必要です。タグと日付から記事を辿れます。"
+
+[searchNoIndex]
+other = "このサイトでは検索が設定されていません。"
+
+[searchLoading]
+other = "検索中…"

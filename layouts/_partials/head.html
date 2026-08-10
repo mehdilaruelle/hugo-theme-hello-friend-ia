@@ -159,11 +159,17 @@
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 {{ end -}}
 
-<!-- JSON Feed -->
-{{ if .OutputFormats.Get "json" }}
-<link href="{{ if .OutputFormats.Get "json" }}{{ .Site.BaseURL }}feed.json{{ end }}" rel="alternate"
-    type="application/json" title="{{ .Site.Title }}" />
-{{ end }}
+{{- /* There is no JSON Feed here.
+
+       This used to advertise one at feed.json whenever a page had a JSON
+       output format. The theme has never carried a template for it, and Hugo
+       names the home page's JSON output index.json, so the link pointed at a
+       file that does not exist. It stayed hidden only because no site turned
+       the JSON output on — enabling it for search made four pages of the
+       showcase link to a 404.
+
+       The JSON output is the search index, which is not a feed and is not
+       something to announce with rel="alternate". */ -}}
 
 <!-- Custom head tags -->
 {{- if templates.Exists "_partials/extra-head.html" -}}

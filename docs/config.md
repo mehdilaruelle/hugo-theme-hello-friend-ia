@@ -350,3 +350,61 @@ build before the theme is reached.
 
 `noindex` is the one to know about: it is how you keep a page out of search
 results without touching `robots.txt`.
+
+## Search
+
+Search is off until the site publishes an index, which is the home page
+rendered as JSON:
+
+```toml
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+```
+
+Then add a page and give it the `search` layout. Where it lives and what it is
+called is yours to choose:
+
+```markdown
+---
+title: "Search"
+layout: search
+searchable: false
+---
+
+Type a word or two.
+```
+
+`searchable: false` keeps the search page out of its own results. Any page can
+use it to stay out of the index.
+
+Add it to the menu like any other entry.
+
+### What it costs
+
+One JSON file, fetched the first time someone types — not on page load, and
+not at all on any other page. The script is only loaded on the page using the
+`search` layout.
+
+The index carries each page's title, URL, date, tags, summary and the first
+4000 characters of its text. Raise or lower that with
+`params.searchContentLimit`. The showcase's four languages come to 10–17 KB
+each.
+
+There is no library and no third-party service. Matching is done in the
+browser over that array.
+
+### How it matches
+
+Every word typed has to appear somewhere in the page — two words narrow the
+result rather than widening it. Case is ignored, and so are accents: *resume*
+finds *résumé*, because a reader searching for a word is not making that
+distinction. A hit in the title counts for more than one in the body, and a
+hit in a tag for more than that; ties are broken by date, newest first.
+
+Each language gets its own index and searches only itself.
+
+### Without JavaScript
+
+The form is hidden in the markup and revealed by the script, so a visitor with
+JavaScript off is told search is unavailable instead of being handed a box
+that does nothing.

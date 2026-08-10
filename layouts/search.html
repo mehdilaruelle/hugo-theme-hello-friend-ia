@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- /*
+  The search page. Reached by giving a page `layout: search` in its front
+  matter, so the site decides where it lives and what it is called.
+
+  The form works without JavaScript in the sense that it does not lie: with
+  the script blocked, the page says search is unavailable rather than
+  presenting a box that does nothing.
+
+  The index URL is passed as an attribute rather than built in the script,
+  because it is per-language and only the template knows it.
+*/ -}}
+{{- $index := "" -}}
+{{- with site.Home.OutputFormats.Get "json" }}{{ $index = .RelPermalink }}{{ end -}}
+
+<div class="content">
+  <main id="main" class="post">
+    <div class="post-header">
+      <h1 class="post-title">{{ .Title | default (i18n "search" | default "Search") }}</h1>
+    </div>
+
+    <div class="post-content">
+      {{ .Content }}
+
+      {{- if $index }}
+      {{- /* The result wording is translated here rather than in the script,
+             which has no way to reach i18n. %d is replaced with the count.
+
+             Assigned rather than piped through default, which returned its
+fallback with the quotes still attached.
+
+             The attributes are named data-hits-* rather than data-one: Go's
+             html/template strips the data- prefix and treats anything then
+             starting with "on" as an event handler, so data-one emitted its
+             value as a JavaScript string literal — quotes included. */ -}}
+      {{- $one := i18n "searchResultsOne" -}}
+      {{- if not $one }}{{ $one = "1 result" }}{{ end -}}
+      {{- $many := i18n "searchResultsMany" -}}
+      {{- if not $many }}{{ $many = "%d results" }}{{ end -}}
+      {{- $loading := i18n "searchLoading" -}}
+      {{- if not $loading }}{{ $loading = "Searching…" }}{{ end -}}
+      {{- $failed := i18n "searchFailed" -}}
+      {{- if not $failed }}{{ $failed = "The search index could not be loaded." }}{{ end -}}
+      <form class="search-form" role="search" data-search data-index="{{ $index }}"
+            data-hits-one="{{ $one }}" data-hits-many="{{ $many }}" data-hits-failed="{{ $failed }}" data-hits-loading="{{ $loading }}"
+            hidden action="{{ .RelPermalink }}" method="get">
+        <label class="screen-reader-text" for="search-input">
+          {{ i18n "searchLabel" | default "Search this site" }}
+        </label>
+        <input id="search-input" type="search" name="q" autocomplete="off"
+               placeholder="{{ i18n "searchPlaceholder" | default "Type to search…" }}">
+      </form>
+
+      <p data-search-status role="status" aria-live="polite"></p>
+      <ul class="search-results" data-search-results></ul>
+
+      <noscript>
+        <p>{{ i18n "searchNoScript" | default "Search needs JavaScript. The archive is browsable by tag and by date." }}</p>
+      </noscript>
+      {{- else }}
+      <p>{{ i18n "searchNoIndex" | default "Search is not configured on this site." }}</p>
+      {{- end }}
+    </div>
+  </main>
+</div>
+{{ end }}
