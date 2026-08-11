@@ -77,8 +77,11 @@ other = "اكتب للبحث…"
 [searchResultsOne]
 other = "نتيجة واحدة"
 
+# Arabic distinguishes six plural categories, and the script can only pick
+# between one and not-one. Count-neutral wording is correct at every count
+# rather than correct at one of them.
 [searchResultsMany]
-other = "%d نتيجة"
+other = "عدد النتائج: %d"
 
 [searchFailed]
 other = "تعذّر تحميل فهرس البحث."

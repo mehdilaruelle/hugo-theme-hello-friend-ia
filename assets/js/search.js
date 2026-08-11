@@ -54,6 +54,12 @@
           };
         });
         return index;
+      })
+      .catch(function (e) {
+        // Forget the failure, or every later keystroke would be handed this
+        // same rejected promise and search would stay broken until reload.
+        loading = null;
+        throw e;
       });
     return loading;
   }
@@ -82,7 +88,13 @@
     status.textContent = t.replace("%d", count);
   }
 
+  // Every render takes a number, and only the newest one is allowed to write
+  // to the page. Without it a slow query that resolves late overwrites the
+  // results of a newer one, or refills a list the visitor has just cleared.
+  var generation = 0;
+
   function render(query) {
+    var mine = ++generation;
     var terms = fold(query).split(/\s+/).filter(Boolean);
     list.innerHTML = "";
 
@@ -97,6 +109,8 @@
 
     load()
       .then(function (entries) {
+        if (mine !== generation) return;
+
         var hits = entries
           .filter(function (e) {
             return match(e, terms);
@@ -133,6 +147,7 @@
         list.appendChild(frag);
       })
       .catch(function () {
+        if (mine !== generation) return;
         say("failed", 0);
       });
   }
