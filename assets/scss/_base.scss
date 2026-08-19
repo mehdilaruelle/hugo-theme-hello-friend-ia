@@ -595,3 +595,65 @@ div.code-toolbar > .toolbar {
     background-color: $light-background-secondary;
   }
 }
+
+// Search
+//
+// The form is revealed by the script, so it stays hidden for a visitor who
+// has none and the noscript note speaks instead.
+.search-form {
+  margin: 1.5em 0 0.5em;
+
+  input[type="search"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: inherit;
+
+    background: $light-background-secondary;
+    border: 1px solid $light-border-color;
+
+    @media (prefers-color-scheme: dark) {
+      background: $dark-background-secondary;
+      border-color: $dark-background-secondary;
+    }
+
+    [data-theme=dark] & {
+      background: $dark-background-secondary;
+      border-color: $dark-background-secondary;
+    }
+
+    [data-theme=light] & {
+      background: $light-background-secondary;
+      border-color: $light-border-color;
+    }
+  }
+}
+
+.search-results {
+  margin-inline-start: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin: 1.4em 0;
+  }
+
+  a {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  time {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  p {
+    margin: 0.35em 0 0;
+    opacity: 0.85;
+  }
+}

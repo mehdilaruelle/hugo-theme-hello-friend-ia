@@ -1,0 +1,25 @@
+{{- /*
+  The search index: one entry per regular page of this language.
+
+  Built at publish time, so search costs the visitor one file and no service.
+  Hugo emits it only when the site asks for the JSON output on the home page,
+  which is what keeps a site that does not want search from paying for it.
+
+  Each language gets its own index, because .Site.RegularPages is already
+  scoped to the language being rendered.
+
+  Set searchable = false in a page's front matter to keep it out.
+*/ -}}
+{{- $limit := site.Params.searchContentLimit | default 4000 -}}
+{{- $index := slice -}}
+{{- range where site.RegularPages "Params.searchable" "!=" false -}}
+  {{- $index = $index | append (dict
+      "title"   .Title
+      "url"     .RelPermalink
+      "date"    (.Date.Format "2006-01-02")
+      "tags"    (.Params.tags | default slice)
+      "summary" (.Summary | plainify | htmlUnescape | chomp)
+      "content" (.Plain | htmlUnescape | chomp | truncate $limit "")
+  ) -}}
+{{- end -}}
+{{- $index | jsonify -}}

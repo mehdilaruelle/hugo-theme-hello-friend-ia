@@ -11,6 +11,17 @@
         data-label-done="{{ i18n "copyCodeDone" | default "Copied" }}"
         data-label-failed="{{ i18n "copyCodeFailed" | default "Press Ctrl+C" }}"></script>
 
+{{- /* Search, on the page that has it and nowhere else. The index can run to
+       hundreds of kilobytes, so a page with no search box asks for neither the
+       script nor the file it would fetch. */ -}}
+{{- if eq .Layout "search" }}
+{{- with resources.Get "js/search.js" }}
+{{- $search := . | resources.Minify | resources.Fingerprint "sha512" }}
+<script type="text/javascript" defer src="{{ $search.RelPermalink }}"
+        integrity="{{ $search.Data.Integrity }}"></script>
+{{- end }}
+{{- end }}
+
 {{- /* Same as customCSS in head.html: a path under static/ has to carry the
        site's base URL, or it resolves against the page being served. */ -}}
 {{ range $val := $.Site.Params.customJS }}
