@@ -10,12 +10,13 @@
 
   Set searchable = false in a page's front matter to keep it out.
 
-  htmlUnescape appears twice, and each one has its own job. .Plain leaves the
-  entities the renderer produced — the apostrophes Goldmark turns into
+  htmlUnescape appears twice, and each one has its own job. .Plain leaves
+  the entities the renderer produced — the apostrophes Goldmark turns into
   &rsquo;, and so on — so the first decodes those, and truncate then counts
-  real characters rather than four per apostrophe. truncate escapes whatever
-  it returns, so the second undoes that. Without either, a search for a word
-  next to a quote or an angle bracket finds nothing.
+  real characters rather than the four to eight an entity spells one with.
+  truncate escapes whatever it returns, so the second undoes that. Without
+  either, a search for a word next to a quote or an angle bracket finds
+  nothing.
 */ -}}
 {{- $limit := site.Params.searchContentLimit | default 4000 -}}
 {{- $index := slice -}}
