@@ -9,6 +9,13 @@
   scoped to the language being rendered.
 
   Set searchable = false in a page's front matter to keep it out.
+
+  htmlUnescape appears twice, and each one has its own job. .Plain leaves the
+  entities the renderer produced — the apostrophes Goldmark turns into
+  &rsquo;, and so on — so the first decodes those, and truncate then counts
+  real characters rather than four per apostrophe. truncate escapes whatever
+  it returns, so the second undoes that. Without either, a search for a word
+  next to a quote or an angle bracket finds nothing.
 */ -}}
 {{- $limit := site.Params.searchContentLimit | default 4000 -}}
 {{- $index := slice -}}
@@ -19,7 +26,7 @@
       "date"    (.Date.Format "2006-01-02")
       "tags"    (.Params.tags | default slice)
       "summary" (.Summary | plainify | htmlUnescape | chomp)
-      "content" (.Plain | htmlUnescape | chomp | truncate $limit "")
+      "content" (.Plain | htmlUnescape | chomp | truncate $limit "" | htmlUnescape)
   ) -}}
 {{- end -}}
 {{- $index | jsonify -}}
