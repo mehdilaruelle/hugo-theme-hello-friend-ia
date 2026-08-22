@@ -80,3 +80,7 @@ other = "Search is not configured on this site."
 
 [searchLoading]
 other = "Searching…"
+
+# partials/head.html
+[termDescription]
+other = "Every post filed under the {{ .Singular }} “{{ .Term }}”."
