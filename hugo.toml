@@ -1,0 +1,15 @@
+# Output formats the theme brings with it. A site does not have to declare
+# these — only to ask for them in its own [outputs], which is what keeps a
+# site that wants neither from paying for either.
+[outputFormats]
+  [outputFormats.llms]
+    mediaType      = "text/plain"
+    baseName       = "llms"
+    isPlainText    = true
+    notAlternative = true
+
+  [outputFormats.md]
+    mediaType      = "text/markdown"
+    baseName       = "index"
+    isPlainText    = true
+    notAlternative = true

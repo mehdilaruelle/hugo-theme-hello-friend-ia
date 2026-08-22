@@ -89,6 +89,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Front page content from `content/_index.md`, see [Front page content](#front-page-content)
 - JSON-LD structured data, breadcrumbs and a complete `hreflang` set, see [SEO](#seo)
 - 100 on accessibility, best practices and SEO on both demo sites, see [Speed](#speed)
+- Optional `llms.txt` and a Markdown copy of each page, see [llms.txt](docs/config.md#llmstxt)
 
 ### Speed
 

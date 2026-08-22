@@ -83,3 +83,10 @@ jobs:
       - name: Check images keep their aspect ratio
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-image-sizing.mjs public
+
+      # A summary that arrived as "world&rsquo;s", a link to a file that was
+      # never written, or a shortcode left verbatim all render as a valid text
+      # file. Only an assertion on the output tells them apart.
+      - name: Check llms.txt and the Markdown copies
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-llms.mjs public https://example.com/subpath/showcase/

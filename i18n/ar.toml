@@ -112,3 +112,14 @@ other = "المظهر الداكن"
 
 [pageNumber]
 other = "الصفحة {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "نُشر في الأصل على"
+
+[posts]
+other = "المقالات"
+
+[pages]
+other = "الصفحات"

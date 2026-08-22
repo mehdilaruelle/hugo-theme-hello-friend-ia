@@ -49,6 +49,9 @@
   {{- end -}}
 {{- end -}}
 <link rel="canonical" href="{{ $canonical }}" />
+{{- with .OutputFormats.Get "md" }}
+<link rel="alternate" type="text/markdown" href="{{ .Permalink }}" />
+{{- end }}
 {{- /* Search engine ownership verification. Each console gives you a token and
        accepts a meta tag as proof; this saves uploading their file to the site
        root. Only emitted on the home page, which is where every one of them

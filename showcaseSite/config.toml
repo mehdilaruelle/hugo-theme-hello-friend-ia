@@ -1,7 +1,9 @@
 # Search needs the index, and the index is the home page rendered as JSON.
-# Without this Hugo emits no index and the search page says so.
+# Without this Hugo emits no index and the search page says so. llms and md
+# are the theme's text formats; a site that wants neither leaves them out.
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML", "md"]
+  home = ["HTML", "RSS", "JSON", "llms"]
 
 # The showcase site: the theme with every option turned on.
 #
@@ -82,6 +84,7 @@
     subtitle     = "Feature showcase"
     description  = "Every option the theme has, turned on at once"
     homeSubtitle = "Every switch flipped, so you can see what they do"
+    llmsNote     = "A demonstration site for the Hello Friend NG theme. The articles exist to show what the theme does, not to be quoted as fact."
   [languages.en.params.portrait]
     alt = "The Hugo logo"
   [languages.en.menu]
@@ -115,6 +118,7 @@
     subtitle     = "Vitrine des fonctionnalités"
     description  = "Toutes les options du thème, activées d’un coup"
     homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu’ils font"
+    llmsNote     = "Site de démonstration du thème Hello Friend NG. Les articles sont là pour montrer ce que fait le thème, pas pour être cités."
   [languages.fr.params.portrait]
     alt = "Le logo Hugo"
   [languages.fr.menu]
@@ -148,6 +152,7 @@
     subtitle     = "機能ショーケース"
     description  = "テーマのすべてのオプションを一度に有効にしたサイト"
     homeSubtitle = "すべてのスイッチを入れた状態です"
+    llmsNote     = "Hello Friend NG テーマのデモサイトです。記事はテーマの機能を示すためのもので、事実として引用するためのものではありません。"
   [languages.ja.params.portrait]
     alt = "Hugo のロゴ"
   [languages.ja.menu]
@@ -192,6 +197,7 @@
     subtitle     = "عرض الميزات"
     description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
     homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
+    llmsNote     = "موقع عرض توضيحي لقالب Hello Friend NG. المقالات موجودة لإظهار ما يفعله القالب، لا للاقتباس منها كحقائق."
   [languages.ar.params.portrait]
     alt = "شعار Hugo"
   [languages.ar.menu]
