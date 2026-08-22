@@ -98,6 +98,25 @@ The values come from what you already set: `author` (a string or a map with a
 `name`, in the page or in the site params), `description` — falling back to a
 trimmed summary — and `images`, falling back to the site-wide list.
 
+**`Person`.** A name on its own is a string. What makes it an entity a search
+engine can recognise is the evidence tying it to the same person elsewhere, so
+the author of the site is described as a `Person` carrying `sameAs` — every
+`params.social` URL, which is the same claim `rel="me"` already makes on the
+links themselves. An email entry is an address rather than a profile and is left
+out. `params.portrait.path` becomes the image, and `params.author.jobTitle`, if
+you set one, the job title:
+
+```toml
+[params.author]
+  name     = "Jane Doe"
+  jobTitle = "Platform Engineer"
+```
+
+The same `Person` is the author of every article, under one `@id`, so it reads
+as one person rather than as a name repeated. An article that names its own
+author in its front matter gets that name and nothing else — the site owner's
+profiles and job title are not theirs to claim.
+
 **`hreflang="x-default"`.** Translated pages list every language, and the
 primary one is additionally tagged `x-default`, which is what a search engine
 serves to a visitor whose language matches none of them. Primary means first in
