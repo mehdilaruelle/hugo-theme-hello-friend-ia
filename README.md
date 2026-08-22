@@ -252,6 +252,11 @@ as before.
 Worth having: the front page is the page search engines weigh most, and a name
 with a one-line subtitle gives them, and a first-time visitor, nothing to read.
 
+A `description` in its front matter also becomes the page's meta description,
+in place of `homeSubtitle` — that line is written to be read on the page, and a
+search result gives you more room than it uses. Without one, `homeSubtitle`
+stays the fallback.
+
 ### Built-in shortcodes
 
 Of course you are able to use all default shortcodes from hugo (https://gohugo.io/content-management/shortcodes/).

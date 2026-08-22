@@ -12,7 +12,10 @@
   that is unset, since an empty one says less than none at all.
 */ -}}
 {{- $description := "" -}}
-{{- if .IsHome -}}
+{{- if and .IsHome (not .Description) -}}
+  {{- /* homeSubtitle is the line under the title, written to be read on the
+         page. A front page with a description of its own says what the site is
+         for at the length a search result gives it, so that wins. */ -}}
   {{- $description = .Site.Params.homeSubtitle | plainify -}}
 {{- else if .Description -}}
   {{- $description = .Description -}}

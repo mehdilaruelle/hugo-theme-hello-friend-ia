@@ -1,5 +1,6 @@
 ---
 title: "Home"
+description: "A Hugo theme kept current with Hugo, with a front page that can say what the site is about."
 ---
 
 This paragraph comes from `content/_index.md`. Everything a front page is
