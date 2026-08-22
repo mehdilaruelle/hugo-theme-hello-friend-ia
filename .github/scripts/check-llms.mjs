@@ -30,7 +30,7 @@ for (const [lang, prefix] of Object.entries(langs)) {
   if (!/^# \S/m.test(s)) fail(`${lang}: no title heading`);
   if (!/^## \S/m.test(s)) fail(`${lang}: no section heading`);
 
-  const entities = s.match(/&(?:[a-zA-Z]+|#\d+);/g);
+  const entities = s.match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
   if (entities) fail(`${lang}: ${entities.length} HTML entities, e.g. ${entities[0]}`);
 
   const links = [...s.matchAll(/^- \[[^\]]*\]\(([^)]+)\)/gm)].map((m) => m[1]);

@@ -437,6 +437,10 @@ then every page with a note. The convention is described at
   home = ["HTML", "RSS", "llms"]
 ```
 
+That list replaces the whole of `home`, so a site using [Search](#search) —
+which is `JSON` on the same key — names both rather than one after the other:
+`home = ["HTML", "RSS", "JSON", "llms"]`.
+
 It appears at `/llms.txt`, one per language, because a model reading the
 French site should be handed French.
 
