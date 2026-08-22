@@ -82,5 +82,12 @@ other = "Search is not configured on this site."
 other = "Searching…"
 
 # partials/head.html
+[termDescriptionTag]
+other = "Every post tagged “{{ .Term }}”."
+
+[termDescriptionCategory]
+other = "Every post in the category “{{ .Term }}”."
+
 [termDescription]
-other = "Every post filed under the {{ .Singular }} “{{ .Term }}”."
+other = "Every post filed under “{{ .Term }}”."
+

@@ -94,3 +94,15 @@ other = "البحث غير مُهيَّأ في هذا الموقع."
 
 [searchLoading]
 other = "جارٍ البحث…"
+
+
+# partials/head.html
+#
+[termDescriptionTag]
+other = "كل المقالات الموسومة بـ«{{ .Term }}»."
+
+[termDescriptionCategory]
+other = "كل المقالات في تصنيف «{{ .Term }}»."
+
+[termDescription]
+other = "كل المقالات المصنّفة تحت «{{ .Term }}»."
