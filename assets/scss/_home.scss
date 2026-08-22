@@ -1,0 +1,26 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+// .container centres the front page, which suits a name and a one-line
+// subtitle and nothing longer: a paragraph set centred is hard to read, and
+// a full-width one is harder still. Prose gets the same measure and the same
+// alignment as a post.
+.home-content {
+  width: 100%;
+  max-width: 800px;
+  text-align: start;
+  padding: 0 20px;
+  margin: 20px auto 0;
+
+  @media #{$media-size-tablet} {
+    max-width: 600px;
+  }
+
+  :first-child {
+    margin-block-start: 0;
+  }
+
+  :last-child {
+    margin-block-end: 0;
+  }
+}
