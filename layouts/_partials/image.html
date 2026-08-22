@@ -25,12 +25,17 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Animated GIFs lose their animation when resized, so leave them alone. */ -}}
+{{- /* Animated GIFs lose their animation when resized, so leave them alone.
+
+       An SVG reports ResourceType "image" and answers neither .Width nor
+       .Resize, so asking either aborts the whole build. Only a processable
+       one is measured. */ -}}
 {{- $maxWidth := site.Params.imageMaxWidth | default 1400 -}}
 {{- $rendered := $img -}}
-{{- with $img -}}
-  {{- if and (gt .Width $maxWidth) (ne .MediaType.SubType "gif") -}}
-    {{- $rendered = .Resize (printf "%dx q85 webp" $maxWidth) -}}
+{{- $measurable := and $img (reflect.IsImageResourceProcessable $img) -}}
+{{- if $measurable -}}
+  {{- if and (gt $img.Width $maxWidth) (ne $img.MediaType.SubType "gif") -}}
+    {{- $rendered = $img.Resize (printf "%dx q85 webp" $maxWidth) -}}
   {{- end -}}
 {{- end -}}
 
@@ -43,7 +48,7 @@
 
 {{- if $src -}}
   <img src="{{ $url | safeURL }}" loading="lazy" decoding="async"
-    {{- with $rendered }} width="{{ .Width }}" height="{{ .Height }}"{{ end }}
+    {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }}
     {{- with $alt }} alt="{{ . | plainify }}"{{ end }}
     {{- with .position }} class="{{ . }}"{{ end }}
     {{- with .style }} style="{{ . | safeCSS }}"{{ end }} />

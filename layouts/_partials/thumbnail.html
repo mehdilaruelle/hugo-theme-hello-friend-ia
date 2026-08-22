@@ -11,4 +11,4 @@
   {{- if not $remote }}{{ $url = urls.JoinPath site.BaseURL $src }}{{ end -}}
 {{- end -}}
 <img class="post-thumbnail" src="{{ $url | safeURL }}" alt="" loading="lazy" decoding="async"
-  {{- with $img }}{{ with .Width }} width="{{ . }}"{{ end }}{{ with $img.Height }} height="{{ . }}"{{ end }}{{ end }}>
+  {{- if and $img (reflect.IsImageResourceProcessable $img) }} width="{{ $img.Width }}" height="{{ $img.Height }}"{{ end }}>
