@@ -19,6 +19,7 @@
 # feature nobody notices is broken.
 
 [params]
+  ogImage = "img/example.png"
   # Every option below is off in the exampleSite, which is why it is here.
   backgroundImage  = "img/background.svg"
   # The light variant. Without it, light mode drops the image rather than

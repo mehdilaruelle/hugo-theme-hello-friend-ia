@@ -311,6 +311,7 @@ templates.
 | `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
 | `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
 | `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
+| `ogImage` | the picture a social card falls back to when a page has no `cover`. Use PNG or JPEG — no platform renders an SVG card |
 | `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts` |
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
@@ -326,6 +327,15 @@ templates.
 
 `themeColor` and `keywords` are only emitted when set. An empty `content` is not
 a neutral default — it is a tag asserting the value is blank.
+
+A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
+`ogImage`. Setting `params.images` yourself hands both tags back to Hugo's own
+Open Graph partial instead.
+
+One trap in that partial, which the theme cannot reach: it absolutises `audio`
+and `videos` with `absURL`, and a leading slash there resolves against the host
+rather than the base URL. On a site served from a subpath, write them without
+one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 
 ### Front matter
 

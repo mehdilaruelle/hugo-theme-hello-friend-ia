@@ -73,7 +73,7 @@ disableHugoGeneratorInject = false
   # Metadata mostly used in document's head
   #
   keywords = ""
-  images = [""]
+  ogImage  = "img/example.png"
 
   # subtitle is appended to every <title>, after the site title.
   # description is what search results and social cards show.
