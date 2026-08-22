@@ -11,17 +11,19 @@
   fallback og:description already uses; the tag is dropped entirely when even
   that is unset, since an empty one says less than none at all.
 
-  A term page is given a description naming its term instead. A site with many
-  tags has as many term pages, and the site description on every one of them
-  makes each look like a copy of the next to a search engine, which is the one
-  thing they are not: each holds a different set of posts.
+  A term page with nothing written on it is given a description naming its term
+  instead. A site with many tags has as many term pages, and the site
+  description on every one of them makes each look like a copy of the next to a
+  search engine, which is the one thing they are not: each holds a different set
+  of posts. A term page that does have a _index.md with a body keeps its own
+  summary, which says more than any sentence generated from the term.
 */ -}}
 {{- $description := "" -}}
 {{- if .IsHome -}}
   {{- $description = .Site.Params.homeSubtitle | plainify -}}
 {{- else if .Description -}}
   {{- $description = .Description -}}
-{{- else if eq .Kind "term" -}}
+{{- else if and (eq .Kind "term") (not .Summary) -}}
   {{- $description = i18n "termDescription" (dict "Singular" .Data.Singular "Term" .Data.Term) -}}
 {{- else -}}
   {{- $description = .Summary | plainify -}}
