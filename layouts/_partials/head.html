@@ -181,6 +181,24 @@
 
 {{ partial "opengraph.html" . }}
 
+{{- /* Hugo's partial takes og:image from params.images and nothing else, so a
+       page with a cover has a card with no picture in it. Skipped when the site
+       does set images, which is the one case the partial above covers. */ -}}
+{{- if not (or .Params.images site.Params.images) }}
+  {{- with or .Params.cover site.Params.ogImage }}
+    {{- $url := . }}
+    {{- if not (partial "is-remote.html" $url) }}
+      {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) }}
+        {{- $url = .Permalink }}
+      {{- else }}
+        {{- $url = urls.JoinPath site.BaseURL $url }}
+      {{- end }}
+    {{- end }}
+<meta property="og:image" content="{{ $url }}" />
+<meta name="twitter:image" content="{{ $url }}" />
+  {{- end }}
+{{- end }}
+
 {{ range .Params.categories }}
     <meta property="article:section" content="{{ . }}" />
 {{ end }}
