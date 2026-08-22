@@ -63,14 +63,6 @@
       "<a href=\"https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/\">← Back to the default demo</a>"
     ]
 
-  # Tokens a search console hands you. These are not real ones — they are here
-  # so the tags can be seen in the page source, which is the whole point of the
-  # showcase.
-  [params.verification]
-    google    = "showcase-not-a-real-google-token"
-    bing      = "showcase-not-a-real-bing-token"
-    yandex    = "showcase-not-a-real-yandex-token"
-
 # Four languages, where the exampleSite has one. Two of them are here for a
 # reason beyond translation: Japanese has no spaces between words, and Arabic
 # reads right to left. Both are places a layout quietly falls apart.
