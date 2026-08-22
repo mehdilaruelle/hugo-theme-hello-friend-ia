@@ -352,11 +352,13 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 `audio` has to be a list, even for one file:
 
 ```yaml
-audio: ["/audio/episode-01.mp3"]
+audio: ["audio/episode-01.mp3"]
 ```
 
 Hugo's own Open Graph partial ranges over this key, so a bare string stops the
-build before the theme is reached.
+build before the theme is reached — and it absolutises what it finds with
+`absURL`, which is why there is no leading slash above. See
+[Everything else the theme reads](#everything-else-the-theme-reads).
 
 `noindex` is the one to know about: it is how you keep a page out of search
 results without touching `robots.txt`.
