@@ -150,10 +150,6 @@
     <meta property="article:section" content="{{ . }}" />
 {{ end }}
 
-{{ if isset .Params "date" }}
-    <meta property="article:published_time" content="{{ time .Date }}" />
-{{ end }}
-
 <!-- RSS -->
 {{ with .OutputFormats.Get "rss" -}}
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
