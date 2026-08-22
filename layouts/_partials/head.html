@@ -27,7 +27,13 @@
 {{- else if .Description -}}
   {{- $description = .Description -}}
 {{- else if and (eq .Kind "term") (not .Summary) -}}
-  {{- $description = i18n "termDescription" (dict "Singular" .Data.Singular "Term" .Data.Term) -}}
+  {{- /* .Data.Singular is Hugo's own word for the taxonomy, so it is English
+         whatever the page is written in. One string per taxonomy instead, and
+         a term-only one for taxonomies the theme does not know. */ -}}
+  {{- $description = i18n (printf "termDescription%s" (title .Data.Singular)) (dict "Term" .Data.Term) -}}
+  {{- if not $description -}}
+    {{- $description = i18n "termDescription" (dict "Term" .Data.Term) -}}
+  {{- end -}}
 {{- else -}}
   {{- $description = .Summary | plainify -}}
 {{- end -}}

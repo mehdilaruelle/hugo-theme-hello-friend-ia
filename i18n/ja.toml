@@ -80,3 +80,15 @@ other = "このサイトでは検索が設定されていません。"
 
 [searchLoading]
 other = "検索中…"
+
+
+# partials/head.html
+#
+[termDescriptionTag]
+other = "「{{ .Term }}」タグの記事すべて。"
+
+[termDescriptionCategory]
+other = "「{{ .Term }}」カテゴリーの記事すべて。"
+
+[termDescription]
+other = "「{{ .Term }}」に分類された記事すべて。"

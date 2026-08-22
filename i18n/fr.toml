@@ -82,5 +82,12 @@ other = "La recherche n’est pas configurée sur ce site."
 other = "Recherche en cours…"
 
 # partials/head.html
+[termDescriptionTag]
+other = "Tous les articles avec le tag « {{ .Term }} »."
+
+[termDescriptionCategory]
+other = "Tous les articles de la catégorie « {{ .Term }} »."
+
 [termDescription]
-other = "Tous les articles associés au {{ .Singular }} « {{ .Term }} »."
+other = "Tous les articles classés sous « {{ .Term }} »."
+
