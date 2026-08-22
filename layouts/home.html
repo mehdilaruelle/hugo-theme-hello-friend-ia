@@ -20,6 +20,16 @@
 
                 {{ partial "subtitle.html" . }}
 
+                {{- /*
+                  content/_index.md, if the site has one. The front page is
+                  otherwise a name and one line, which leaves a search engine
+                  and a first-time visitor alike with nothing to read on the
+                  page that carries the most weight of any on the site.
+                */ -}}
+                {{- with .Content }}
+                    <div class="home-content">{{ . }}</div>
+                {{- end }}
+
                 {{- with .Site.Params.social }}
                     <div>
                         {{ partial "social-icons.html" . }}

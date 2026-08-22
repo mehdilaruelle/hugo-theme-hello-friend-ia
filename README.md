@@ -32,6 +32,8 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Fixes two selectors that made inline code lose its styling entirely.
 - Emits JSON-LD structured data, and completes the `hreflang` set with
   `x-default`. See [SEO](#seo).
+- Renders `content/_index.md` on the front page, which upstream ignores. See
+  [Front page content](#front-page-content).
 - CI builds the exampleSite on every change and fails on any new deprecation.
 - The exampleSite is published as a
   [live demo](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/) on
@@ -52,6 +54,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - [How to start](#how-to-start)
 - [How to configure](#how-to-configure)
 - [More](#more-things)
+  - [Front page content](#front-page-content)
   - [Built in shortcodes](#built-in-shortcodes)
     - [image](#image)
     - [video](#video)
@@ -80,6 +83,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Support for [Commento](https://gitlab.com/commento/commento) (commento.io is gone; see also [Comentario](https://comentario.app), its maintained successor)
 - Support for [Plausible](https://plausible.io) (thanks to [@Joffcom](https://github.com/Joffcom))
 - Support for [utterances](https://utteranc.es/) comment system
+- Front page content from `content/_index.md`, see [Front page content](#front-page-content)
 - JSON-LD structured data and a complete `hreflang` set, see [SEO](#seo)
 
 ## SEO
@@ -225,6 +229,33 @@ pagination.pagerSize     = 10
 ```
 
 ## More things
+
+### Front page content
+
+The front page shows a portrait, the site title, `homeSubtitle` and the social
+icons. Add a `content/_index.md` and its body is rendered between the subtitle
+and the icons:
+
+```markdown
+---
+title: "Home"
+---
+
+Platform engineer, writing about AWS and Terraform. Start with
+[the Terraform series]({{< ref "/posts/terraform" >}}).
+```
+
+Ordinary Markdown, set to the same measure and alignment as a post rather than
+centred with the title. A site with no `_index.md` gets the front page exactly
+as before.
+
+Worth having: the front page is the page search engines weigh most, and a name
+with a one-line subtitle gives them, and a first-time visitor, nothing to read.
+
+A `description` in its front matter also becomes the page's meta description,
+in place of `homeSubtitle` — that line is written to be read on the page, and a
+search result gives you more room than it uses. Without one, `homeSubtitle`
+stays the fallback.
 
 ### Built-in shortcodes
 
