@@ -28,12 +28,20 @@
 {{- /* Animated GIFs lose their animation when resized, so leave them alone.
 
        An SVG reports ResourceType "image" and answers neither .Width nor
-       .Resize, so asking either aborts the whole build. Only a processable
-       one is measured. */ -}}
+       .Resize, so asking either aborts the whole build. The two are separate
+       questions: HEIC and HEIF carry their dimensions but cannot be resized,
+       so measuring asks WithMeta and resizing asks Processable.
+
+       A format that carries dimensions is still only answering for its kind.
+       Where the file itself will not give them up Hugo returns 0, and
+       width="0" collapses the picture, so the number is checked too. */ -}}
 {{- $maxWidth := site.Params.imageMaxWidth | default 1400 -}}
 {{- $rendered := $img -}}
-{{- $measurable := and $img (reflect.IsImageResourceProcessable $img) -}}
-{{- if $measurable -}}
+{{- $measurable := false -}}
+{{- if $img -}}{{- if reflect.IsImageResourceWithMeta $img -}}
+  {{- $measurable = gt $img.Width 0 -}}
+{{- end -}}{{- end -}}
+{{- if and $img (reflect.IsImageResourceProcessable $img) -}}
   {{- if and (gt $img.Width $maxWidth) (ne $img.MediaType.SubType "gif") -}}
     {{- $rendered = $img.Resize (printf "%dx q85 webp" $maxWidth) -}}
   {{- end -}}
