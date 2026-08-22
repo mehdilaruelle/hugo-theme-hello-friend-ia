@@ -13,6 +13,7 @@
 - [codechef](https://simpleicons.org/?q=codechef)
 - [codepen](https://simpleicons.org/?q=codepen)
 - [codesandbox](https://simpleicons.org/?q=codesandbox)
+- [credly](https://simpleicons.org/?q=credly)
 - [csgo](https://simpleicons.org/?q=counterstrike)
 - [cyberdefenders](https://simpleicons.org/?q=cyberdefenders)
 - dev
@@ -77,6 +78,7 @@
 - [researchgate](https://simpleicons.org/?q=researchgate)
 - [revolut](https://simpleicons.org/?q=revolut)
 - [rss](https://simpleicons.org/?q=rss)
+- [sessionize](https://simpleicons.org/?q=sessionize)
 - [signal](https://simpleicons.org/?q=signal)
 - [slack](https://simpleicons.org/?q=slack)
 - [soundcloud](https://simpleicons.org/?q=soundcloud)

@@ -285,6 +285,14 @@ disableHugoGeneratorInject = false
     name = "stackoverflow"
     url  = "https://www.stackoverflow.com/"
 
+  [[params.social]]
+    name = "credly"
+    url  = "https://www.credly.com/"
+
+  [[params.social]]
+    name = "sessionize"
+    url  = "https://sessionize.com/"
+
 # One language, so everything a visitor reads is set at the root: locale above,
 # the three params in [params], the portrait alt text, and this menu.
 #
