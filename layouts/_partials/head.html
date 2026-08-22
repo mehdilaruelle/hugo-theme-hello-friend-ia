@@ -10,12 +10,19 @@
   string and the tag shipped as content="". The site description is the same
   fallback og:description already uses; the tag is dropped entirely when even
   that is unset, since an empty one says less than none at all.
+
+  A term page is given a description naming its term instead. A site with many
+  tags has as many term pages, and the site description on every one of them
+  makes each look like a copy of the next to a search engine, which is the one
+  thing they are not: each holds a different set of posts.
 */ -}}
 {{- $description := "" -}}
 {{- if .IsHome -}}
   {{- $description = .Site.Params.homeSubtitle | plainify -}}
 {{- else if .Description -}}
   {{- $description = .Description -}}
+{{- else if eq .Kind "term" -}}
+  {{- $description = i18n "termDescription" (dict "Singular" .Data.Singular "Term" .Data.Term) -}}
 {{- else -}}
   {{- $description = .Summary | plainify -}}
 {{- end -}}
@@ -36,7 +43,24 @@
 {{- with .Site.Params.themeColor }}
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
-<link rel="canonical" href="{{ .Permalink }}" />
+{{- /*
+  Every pager of a paginated list shares one .Permalink, so page 2 and beyond
+  used to name page 1 as their canonical. That tells a search engine they are
+  duplicates of it and their posts are not worth indexing from here, which is
+  the opposite of what pagination is for: each pager is a distinct set of
+  posts, so each is its own canonical.
+
+  .Paginator is only read on the kinds list.html paginates. Reading it on a
+  page that is never paginated would build a paginator, and with it the
+  /page/2/ output files, for nothing.
+*/ -}}
+{{- $canonical := .Permalink -}}
+{{- if in (slice "section" "taxonomy" "term") .Kind -}}
+  {{- with .Paginator -}}
+    {{- $canonical = .URL | absURL -}}
+  {{- end -}}
+{{- end -}}
+<link rel="canonical" href="{{ $canonical }}" />
 {{- /* Search engine ownership verification. Each console gives you a token and
        accepts a meta tag as proof; this saves uploading their file to the site
        root. Only emitted on the home page, which is where every one of them

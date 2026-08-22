@@ -80,3 +80,7 @@ other = "La recherche n’est pas configurée sur ce site."
 
 [searchLoading]
 other = "Recherche en cours…"
+
+# partials/head.html
+[termDescription]
+other = "Tous les articles associés au {{ .Singular }} « {{ .Term }} »."
