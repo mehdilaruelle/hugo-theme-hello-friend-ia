@@ -33,6 +33,55 @@
   {{- $image = . | absURL -}}
 {{- end -}}
 
+{{- /*
+  The Person behind the site, for the home page.
+
+  A name on its own is a string; what makes it an entity a search engine can
+  recognise is the evidence tying it to the same person elsewhere. sameAs
+  carries the social profiles for that — the same claim rel="me" already makes
+  on the links themselves. mailto: is an address, not a profile, so it is left
+  out. jobTitle comes from params.author when it is written as a map.
+*/ -}}
+{{- $jobTitle := "" -}}
+{{- with site.Params.author -}}
+  {{- if reflect.IsMap . -}}
+    {{- $jobTitle = .jobTitle -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $sameAs := slice -}}
+{{- range site.Params.social -}}
+  {{- with .url -}}
+    {{- if not (strings.HasPrefix (lower .) "mailto:") -}}
+      {{- $sameAs = $sameAs | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $person := dict "@type" "Person" -}}
+{{- with $author -}}
+  {{- $person = merge $person (dict "@id" (printf "%s#person" site.Home.Permalink) "name" . "url" site.Home.Permalink) -}}
+{{- end -}}
+{{- with $jobTitle -}}
+  {{- $person = merge $person (dict "jobTitle" .) -}}
+{{- end -}}
+{{- with site.Params.portrait.path -}}
+  {{- $person = merge $person (dict "image" (. | absURL)) -}}
+{{- end -}}
+{{- with $sameAs -}}
+  {{- $person = merge $person (dict "sameAs" .) -}}
+{{- end -}}
+
+{{- /*
+  A page naming its own author is a different person from whoever owns the
+  site, so it gets a name and nothing else: the site's profiles and job title
+  are not theirs to claim.
+*/ -}}
+{{- $authorNode := dict -}}
+{{- with $author -}}
+  {{- $authorNode = cond (isset $.Params "author") (dict "@type" "Person" "name" .) $person -}}
+{{- end -}}
+
 {{- $data := dict -}}
 
 {{- if .IsHome -}}
@@ -47,7 +96,7 @@
     {{- $data = merge $data (dict "description" .) -}}
   {{- end -}}
   {{- with $author -}}
-    {{- $data = merge $data (dict "author" (dict "@type" "Person" "name" .)) -}}
+    {{- $data = merge $data (dict "author" $authorNode) -}}
   {{- end -}}
 {{- else if and .IsPage (not .Date.IsZero) -}}
   {{- $data = dict
@@ -70,7 +119,7 @@
     {{- $data = merge $data (dict "description" .) -}}
   {{- end -}}
   {{- with $author -}}
-    {{- $data = merge $data (dict "author" (dict "@type" "Person" "name" .)) -}}
+    {{- $data = merge $data (dict "author" $authorNode) -}}
   {{- end -}}
   {{- with $image -}}
     {{- $data = merge $data (dict "image" .) -}}
