@@ -310,12 +310,26 @@ pre[class*="language-"] {
 //
 // The colour is the one the page already uses for text, so it follows the
 // theme rather than guessing at a palette.
-[data-theme=light] {
+// A page with no defaultTheme and no toggle never gets data-theme at all, and
+// still turns light through prefers-color-scheme, so both have to be covered.
+// The explicit attribute comes last so a reader choosing dark on such a page
+// is not overridden by their system saying light.
+@mixin readable-code-on-light {
   code[class*="language-"],
   pre[class*="language-"] {
     color: $light-color;
     text-shadow: none;
   }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme=dark]) {
+    @include readable-code-on-light;
+  }
+}
+
+[data-theme=light] {
+  @include readable-code-on-light;
 }
 
 blockquote {
