@@ -96,6 +96,38 @@
   {{- with $author -}}
     {{- $data = merge $data (dict "author" $authorNode) -}}
   {{- end -}}
+{{- else if in (slice "section" "taxonomy" "term") .Kind -}}
+  {{- /*
+    A section or a taxonomy page is a list of things, which is what a
+    CollectionPage is. It used to get nothing, so the one page a search engine
+    is most likely to reach a whole topic through said nothing about itself.
+
+    Only the first pager is described. Page two of the same list is the same
+    collection seen further down, and describing each as its own would claim
+    several collections where there is one.
+  */ -}}
+  {{- $first := true -}}
+  {{- with .Paginator -}}{{- $first = eq .PageNumber 1 -}}{{- end -}}
+  {{- if $first -}}
+    {{- $data = dict
+      "@context" "https://schema.org"
+      "@type" "CollectionPage"
+      "@id" .Permalink
+      "url" .Permalink
+      "name" (.Title | plainify)
+      "inLanguage" .Language.Lang
+    -}}
+    {{- with .Description -}}
+      {{- $data = merge $data (dict "description" .) -}}
+    {{- end -}}
+    {{- with .Pages -}}
+      {{- $items := slice -}}
+      {{- range $i, $p := first 20 . -}}
+        {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "url" $p.Permalink "name" ($p.Title | plainify)) -}}
+      {{- end -}}
+      {{- $data = merge $data (dict "mainEntity" (dict "@type" "ItemList" "numberOfItems" (len .) "itemListElement" $items)) -}}
+    {{- end -}}
+  {{- end -}}
 {{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
   {{- /*
     An about page is not an article. It has no date on most sites, and when it
