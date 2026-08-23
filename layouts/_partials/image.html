@@ -8,15 +8,20 @@
   or assets/. A site whose images sit in static/ can mount that directory into
   assets to opt in; without it the image is still emitted, just unprocessed.
 
-  Accepts: src, alt, position, style, page, and two options a caller above the
-  fold needs: loading, to say eager where lazy would delay the largest paint,
-  and maxWidth, to cap a picture that is never shown at the width articles get.
+  Accepts: src, alt, position, style, page, and three options: loading, to say
+  eager where lazy would delay the largest paint; maxWidth, to cap a picture
+  that is never shown at the width articles get; and sizes, to say how wide it
+  will be shown when that is not the measure of an article.
 */ -}}
 
 {{- $src := .src -}}
 {{- $alt := .alt | default "" -}}
 {{- $page := .page -}}
 {{- $loading := .loading | default "lazy" -}}
+{{- /* How wide the picture will be shown. The default is the measure of an
+       article, and anything narrower than that fills the viewport. A caller
+       showing a picture at a fixed size passes its own. */ -}}
+{{- $sizes := .sizes | default site.Params.imageSizes | default "(max-width: 800px) 100vw, 800px" -}}
 {{- $remote := partial "is-remote.html" $src -}}
 
 {{- $img := "" -}}
@@ -44,9 +49,38 @@
 {{- if $img -}}{{- if reflect.IsImageResourceWithMeta $img -}}
   {{- $measurable = gt $img.Width 0 -}}
 {{- end -}}{{- end -}}
-{{- if and $img (reflect.IsImageResourceProcessable $img) -}}
-  {{- if and (gt $img.Width $maxWidth) (ne $img.MediaType.SubType "gif") -}}
-    {{- $rendered = $img.Resize (printf "%dx q85 webp" $maxWidth) -}}
+{{- /* The widths to offer, and the copy the src points at.
+
+       A phone asked to download a picture sized for a desktop pays for every
+       pixel it will never show. srcset lets it pick, and sizes tells it how
+       wide the picture will be before any of them have loaded.
+
+       Only widths smaller than the source are generated: upscaling invents
+       detail and costs bytes to do it. The largest is the cap, so the set is
+       never wider than what the unresponsive src would have been. */ -}}
+{{- $widths := slice 480 800 1200 -}}
+{{- $srcset := slice -}}
+{{- $processable := and $img (reflect.IsImageResourceProcessable $img) (ne $img.MediaType.SubType "gif") -}}
+{{- if $processable -}}
+  {{- $ceiling := cond (gt $img.Width $maxWidth) $maxWidth $img.Width -}}
+  {{- $offered := slice -}}
+  {{- range $widths -}}
+    {{- if lt . $ceiling -}}{{- $offered = $offered | append . -}}{{- end -}}
+  {{- end -}}
+  {{- $offered = $offered | append $ceiling -}}
+  {{- /* One width, and it is the source width: there is nothing to choose
+         between and nothing to shrink, so the file is left alone. Resizing it
+         anyway would re-encode a picture nobody asked to change, for a srcset
+         that would then be dropped as saying nothing. */ -}}
+  {{- if and (eq (len $offered) 1) (eq $ceiling $img.Width) -}}
+    {{- $srcset = slice -}}
+  {{- else -}}
+    {{- range $offered -}}
+      {{- $copy := $img.Resize (printf "%dx q85 webp" .) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $copy.RelPermalink $copy.Width) -}}
+      {{- if eq . $ceiling -}}{{- $rendered = $copy -}}{{- end -}}
+    {{- end -}}
+    {{- if eq (len $offered) 1 -}}{{- $srcset = slice -}}{{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -59,6 +93,7 @@
 
 {{- if $src -}}
   <img src="{{ $url | safeURL }}" loading="{{ $loading }}" decoding="async"
+    {{- with $srcset }} srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"{{ end }}
     {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }}
     {{- with $alt }} alt="{{ . | plainify }}"{{ end }}
     {{- with .position }} class="{{ . }}"{{ end }}
