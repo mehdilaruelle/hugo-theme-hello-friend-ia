@@ -7,44 +7,13 @@
 {{- with partial "author.html" . }}
 <meta name="author" content="{{ . }}" />
 {{- end }}
-{{- /*
-  A list or taxonomy page has no summary, so the chain used to end in an empty
-  string and the tag shipped as content="". The site description is the same
-  fallback og:description already uses; the tag is dropped entirely when even
-  that is unset, since an empty one says less than none at all.
-
-  A term page with nothing written on it is given a description naming its term
-  instead. A site with many tags has as many term pages, and the site
-  description on every one of them makes each look like a copy of the next to a
-  search engine, which is the one thing they are not: each holds a different set
-  of posts. A term page that does have a _index.md with a body keeps its own
-  summary, which says more than any sentence generated from the term.
-*/ -}}
-{{- $description := "" -}}
-{{- if and .IsHome (not .Description) -}}
-  {{- /* homeSubtitle is the line under the title, written to be read on the
-         page. A front page with a description of its own says what the site is
-         for at the length a search result gives it, so that wins. */ -}}
-  {{- $description = .Site.Params.homeSubtitle | plainify -}}
-{{- else if .Description -}}
-  {{- $description = .Description -}}
-{{- else if and (eq .Kind "term") (not .Summary) -}}
-  {{- /* .Data.Singular is Hugo's own word for the taxonomy, so it is English
-         whatever the page is written in. One string per taxonomy instead, and
-         a term-only one for taxonomies the theme does not know. */ -}}
-  {{- $description = i18n (printf "termDescription%s" (title .Data.Singular)) (dict "Term" .Data.Term) -}}
-  {{- if not $description -}}
-    {{- $description = i18n "termDescription" (dict "Term" .Data.Term) -}}
-  {{- end -}}
-{{- else -}}
-  {{- /* The summary runs to whatever Hugo decided, newlines and all, and went
-         out whole: 549 characters on the exampleSite, six of its twenty
-         descriptions carrying a line break. Google shows about 155 and reads
-         none of the rest, so it is trimmed to a length a result can hold and
-         flattened to one line. A description written by hand is left exactly
-         as written. */ -}}
-  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 160 "" -}}
-{{- end -}}
+{{- /* The page's own description, and the site's when it has none. The chain
+       lives in a partial because json-ld.html needs the same answer, and two
+       templates working it out separately is two templates that will disagree
+       one day. The site-wide fallback stays here: it is the right thing to put
+       in a meta tag, and the wrong thing to repeat in structured data on every
+       page that lacks one of its own. */ -}}
+{{- $description := partial "description.html" . -}}
 {{- if not $description -}}
   {{- $description = .Site.Params.description | plainify -}}
 {{- end -}}
