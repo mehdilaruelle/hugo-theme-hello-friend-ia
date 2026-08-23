@@ -139,6 +139,30 @@
     {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
   {{- end -}}
   {{- $data = merge $data (dict "publisher" (dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink)) -}}
+{{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
+  {{- /*
+    An about page is not an article. It has no date, so the branch above skips
+    it and it used to come out with no structured data at all, which is the
+    wrong way round: it is the page that exists to say who is behind the site.
+
+    ProfilePage is what Google documents for it, and mainEntity is the Person
+    the page is about — the same node, under the same @id, that the home page
+    and every article already carry.
+  */ -}}
+  {{- $data = dict
+    "@context" "https://schema.org"
+    "@type" "ProfilePage"
+    "@id" .Permalink
+    "url" .Permalink
+    "name" (.Title | plainify)
+    "inLanguage" .Language.Lang
+  -}}
+  {{- with .Description -}}
+    {{- $data = merge $data (dict "description" .) -}}
+  {{- end -}}
+  {{- with $person -}}
+    {{- $data = merge $data (dict "mainEntity" .) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /*
@@ -149,4 +173,31 @@
 */ -}}
 {{- with $data -}}
 <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
+{{- end -}}
+
+{{- /*
+  The trail to the page, as its own block. A search result shows it in place of
+  the bare URL, so posts/2025/04/aws-sso-with-auth0-for-free reads as
+  Home › Blog › AWS SSO with Auth0 for Free.
+
+  Only single pages get one, and only when they sit in a section: the home page
+  is the root of the trail rather than a step on it, and a list page is already
+  named by the trail of everything under it.
+
+  The last item carries no url. Google asks for the current page to be named
+  and not linked, since a breadcrumb pointing at itself is not a step.
+*/ -}}
+{{- $section := "" -}}
+{{- if .IsPage -}}
+  {{- with .Parent -}}{{- if not .IsHome -}}{{- $section = . -}}{{- end -}}{{- end -}}
+{{- end -}}
+{{- with $section -}}
+  {{- $trail := dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+    "itemListElement" (slice
+      (dict "@type" "ListItem" "position" 1 "name" (i18n "home" | default "Home") "item" site.Home.Permalink)
+      (dict "@type" "ListItem" "position" 2 "name" (.Title | plainify) "item" .Permalink)
+      (dict "@type" "ListItem" "position" 3 "name" ($.Title | plainify))) -}}
+<script type="application/ld+json">{{ $trail | jsonify | safeJS }}</script>
 {{- end -}}
