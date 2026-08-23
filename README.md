@@ -85,7 +85,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Support for [Plausible](https://plausible.io) (thanks to [@Joffcom](https://github.com/Joffcom))
 - Support for [utterances](https://utteranc.es/) comment system
 - Front page content from `content/_index.md`, see [Front page content](#front-page-content)
-- JSON-LD structured data and a complete `hreflang` set, see [SEO](#seo)
+- JSON-LD structured data, breadcrumbs and a complete `hreflang` set, see [SEO](#seo)
 
 ## SEO
 
@@ -121,6 +121,25 @@ The same `Person` is the author of every article, under one `@id`, so it reads
 as one person rather than as a name repeated. An article that names its own
 author in its front matter gets that name and nothing else — the site owner's
 profiles and job title are not theirs to claim.
+
+**`BreadcrumbList`.** A single page that sits in a section carries the trail
+to it, so a search result shows *Home › Blog › the title* in place of the bare
+URL. The section is named by its own title and the current page is named but
+not linked, which is what Google asks for. A page at the root of the site gets
+none: *Home › About* says nothing the URL did not.
+
+**`ProfilePage`.** An about page is not an article and has no date, so it used
+to come out with no structured data at all, which is backwards for the page
+that exists to say who is behind the site. Give it `schema = "ProfilePage"` in
+its front matter and it is described as one, with the `Person` above as its
+`mainEntity` under the same `@id`:
+
+```toml
++++
+title  = "About"
+schema = "ProfilePage"
++++
+```
 
 **`hreflang="x-default"`.** Translated pages list every language, and the
 primary one is additionally tagged `x-default`, which is what a search engine
