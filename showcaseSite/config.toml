@@ -76,7 +76,7 @@
 [languages]
   [languages.en]
     weight = 1
-    locale = "en-us"
+    locale = "en-US"
     label  = "English"
   [languages.en.params]
     subtitle     = "Feature showcase"
@@ -109,7 +109,7 @@
 
   [languages.fr]
     weight = 2
-    locale = "fr-fr"
+    locale = "fr-FR"
     label  = "Français"
   [languages.fr.params]
     subtitle     = "Vitrine des fonctionnalités"
@@ -142,7 +142,7 @@
 
   [languages.ja]
     weight = 3
-    locale = "ja-jp"
+    locale = "ja-JP"
     label  = "日本語"
   [languages.ja.params]
     subtitle     = "機能ショーケース"
@@ -185,7 +185,7 @@
   # stretch than calling English en-us.
   [languages.ar]
     weight = 4
-    locale = "ar-sa"
+    locale = "ar-SA"
     label  = "العربية"
     direction = "rtl"
   [languages.ar.params]
