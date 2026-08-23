@@ -18,7 +18,7 @@ being noticed months later on somebody's blog.
 
 ## Code
 
-Highlighted by PrismJS, with the language taken from the fence:
+Highlighted by Chroma as Hugo builds the page, with the language taken from the fence:
 
 ```go
 func main() {
