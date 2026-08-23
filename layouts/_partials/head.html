@@ -146,6 +146,18 @@
   {{- else -}}
     {{- $css = $scss | toCSS $dartOpts -}}
   {{- end -}}
+  {{- /* The metric-matched fallback, concatenated into the same stylesheet
+         rather than written into a style element. An inline style forces
+         style-src 'unsafe-inline' on a site with a strict policy, which is
+         why the mermaid initialiser is a file too. It also keeps this to one
+         request and one fingerprint. */ -}}
+  {{- with partial "font-fallback.html" . }}
+    {{- /* The target path is the cache key for Concat, so it carries a digest
+           of the face: two languages configuring different metrics would
+           otherwise be handed whichever bundle was built first. */ -}}
+    {{- $key := printf "main-%s.css" (substr (sha256 .) 0 8) -}}
+    {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat $key -}}
+  {{- end -}}
   {{- with $css | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
   {{- end -}}
@@ -185,34 +197,6 @@
        which the fallback is on screen; the metric-matched fallback is what
        makes that window cost nothing. */ -}}
 <link rel="preload" href="{{ "fonts/Inter-Regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
-{{- /*
-  The fallback, told to occupy exactly the space Inter will.
-
-  Inter loads with font-display: swap, so the page is painted in whatever the
-  system offers and repainted in Inter. Two fonts with different metrics take
-  different amounts of room, so that second paint moves everything under the
-  text. Matched metrics make the swap free.
-
-  The defaults are measured from the font this theme ships, not copied from an
-  article: unitsPerEm 2816, winAscent 2728, winDescent 680 out of
-  static/fonts/Inter-Regular.woff, and Inter measured at 105.39% the width of
-  Arial. .github/scripts/font-metrics.mjs is how they were read, and how to
-  read them again.
-
-  Which is the catch worth knowing: replace the font files and keep the family
-  name, and these numbers describe a font that is no longer there. Override
-  them, or set params.fontFallback to false to drop the face entirely. See the
-  README.
-*/ -}}
-{{- $fallback := site.Params.fontFallback | default dict -}}
-{{- if ne $fallback false }}
-{{- $sizeAdjust := $fallback.sizeAdjust | default "105.39%" -}}
-{{- $ascent := $fallback.ascentOverride | default "91.92%" -}}
-{{- $descent := $fallback.descentOverride | default "22.91%" -}}
-{{- $lineGap := $fallback.lineGapOverride | default "0%" -}}
-{{- $local := $fallback.local | default (slice "Arial" "Helvetica" "Liberation Sans") -}}
-<style>@font-face{font-family:"Inter fallback";src:{{ range $i, $n := $local }}{{ if $i }},{{ end }}local("{{ $n }}"){{ end }};size-adjust:{{ $sizeAdjust }};ascent-override:{{ $ascent }};descent-override:{{ $descent }};line-gap-override:{{ $lineGap }}}</style>
-{{- end }}
 
 <!-- Icons -->
 {{- partial "favicons.html" . }}
