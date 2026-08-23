@@ -120,12 +120,23 @@
     {{- with .Description -}}
       {{- $data = merge $data (dict "description" .) -}}
     {{- end -}}
-    {{- with .Pages -}}
+    {{- /* The same pages, in the same order, as list.html puts on the screen:
+           it sorts a taxonomy page by title and leaves the rest by date, and it
+           shows one pager at a time. Describing a different set, or the same
+           set differently ordered, would name positions nobody can see.
+           numberOfItems still counts the whole collection. */ -}}
+    {{- $listed := .Pages -}}
+    {{- if eq .Kind "taxonomy" -}}{{- $listed = .Pages.ByTitle -}}{{- end -}}
+    {{- with .Paginator -}}
+      {{- $listed = .Pages -}}
+      {{- if eq $.Kind "taxonomy" -}}{{- $listed = .Pages.ByTitle -}}{{- end -}}
+    {{- end -}}
+    {{- with $listed -}}
       {{- $items := slice -}}
       {{- range $i, $p := first 20 . -}}
         {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "url" $p.Permalink "name" ($p.Title | plainify)) -}}
       {{- end -}}
-      {{- $data = merge $data (dict "mainEntity" (dict "@type" "ItemList" "numberOfItems" (len .) "itemListElement" $items)) -}}
+      {{- $data = merge $data (dict "mainEntity" (dict "@type" "ItemList" "numberOfItems" (len $.Pages) "itemListElement" $items)) -}}
     {{- end -}}
   {{- end -}}
 {{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
