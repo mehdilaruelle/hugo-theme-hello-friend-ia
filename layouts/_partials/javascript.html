@@ -1,8 +1,17 @@
 {{ $main := resources.Get "js/main.js" }}
 {{ $menu := resources.Get "js/menu.js" }}
-{{ $prism := resources.Get "js/prism.js" }}
 {{ $copy := resources.Get "js/copy-code.js" }}
-{{ $secureJS := slice $main $menu $prism $copy | resources.Concat "bundle.js" | resources.Minify | resources.Fingerprint "sha512" }}
+{{ $secureJS := slice $main $menu $copy | resources.Concat "bundle.js" | resources.Minify | resources.Fingerprint "sha512" }}
+
+{{- /* Prism re-highlights the code Chroma already coloured and writes the
+       language label above it. 180 KB for that, so only a page that has a code
+       block asks for it, and it is emitted before the bundle so copy-code.js
+       still registers its DOMContentLoaded handler after Prism does. */ -}}
+{{- if .Page.Store.Get "hasCode" }}
+{{- with resources.Get "js/prism.js" | resources.Minify | resources.Fingerprint "sha512" }}
+<script type="text/javascript" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{- end }}
+{{- end }}
 {{- /* The copy button reads its labels from this tag. The files are
        concatenated, so document.currentScript is this element for all of
        them. */ -}}

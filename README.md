@@ -340,6 +340,9 @@ By default the theme is using PrismJS to color your code syntax. All you need to
 ```
 </pre>
 
+Prism weighs 178 KB, so it is loaded on the pages that have a code block
+and nowhere else. Nothing to configure — a fence is what turns it on.
+
 ### Favicon
 
 Check the [docs](docs/favicons.md).

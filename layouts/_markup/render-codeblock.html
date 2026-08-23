@@ -1,0 +1,4 @@
+{{- /* Hugo's own rendering, kept exactly, with a note left on the page that it
+       carries code. Prism is 180 KB and only these pages need it. */ -}}
+{{- .Page.Store.Set "hasCode" true -}}
+{{- (transform.HighlightCodeBlock .).Wrapped -}}
