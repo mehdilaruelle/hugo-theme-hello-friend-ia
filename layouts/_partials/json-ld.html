@@ -109,6 +109,34 @@
   {{- with $author -}}
     {{- $data = merge $data (dict "author" $authorNode) -}}
   {{- end -}}
+{{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
+  {{- /*
+    An about page is not an article. It has no date on most sites, and when it
+    does have one that is a publication date for the page rather than a claim
+    that it is a post, so this is tested before the date below: asking for a
+    ProfilePage is explicit, and having a date is a guess.
+
+    ProfilePage is what Google documents for it, and mainEntity is the Person
+    the page is about, the same node under the same @id that the home page and
+    every article already carry.
+  */ -}}
+  {{- $data = dict
+    "@context" "https://schema.org"
+    "@type" "ProfilePage"
+    "@id" .Permalink
+    "url" .Permalink
+    "name" (.Title | plainify)
+    "inLanguage" .Language.Lang
+  -}}
+  {{- with .Description -}}
+    {{- $data = merge $data (dict "description" .) -}}
+  {{- end -}}
+  {{- /* $person always carries at least its @type, so it cannot be the test.
+         A site with no author configured has no person to point at, and a
+         mainEntity holding nothing but a type says less than no mainEntity. */ -}}
+  {{- with $author -}}
+    {{- $data = merge $data (dict "mainEntity" $person) -}}
+  {{- end -}}
 {{- else if and .IsPage (not .Date.IsZero) -}}
   {{- $data = dict
     "@context" "https://schema.org"
@@ -139,30 +167,6 @@
     {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
   {{- end -}}
   {{- $data = merge $data (dict "publisher" (dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink)) -}}
-{{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
-  {{- /*
-    An about page is not an article. It has no date, so the branch above skips
-    it and it used to come out with no structured data at all, which is the
-    wrong way round: it is the page that exists to say who is behind the site.
-
-    ProfilePage is what Google documents for it, and mainEntity is the Person
-    the page is about — the same node, under the same @id, that the home page
-    and every article already carry.
-  */ -}}
-  {{- $data = dict
-    "@context" "https://schema.org"
-    "@type" "ProfilePage"
-    "@id" .Permalink
-    "url" .Permalink
-    "name" (.Title | plainify)
-    "inLanguage" .Language.Lang
-  -}}
-  {{- with .Description -}}
-    {{- $data = merge $data (dict "description" .) -}}
-  {{- end -}}
-  {{- with $person -}}
-    {{- $data = merge $data (dict "mainEntity" .) -}}
-  {{- end -}}
 {{- end -}}
 
 {{- /*
