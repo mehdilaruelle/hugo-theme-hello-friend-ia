@@ -4,7 +4,9 @@
 <meta name="robots" content="noindex" />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="{{ if .Params.author }}{{ .Params.author }}{{ else }}{{ range .Site.Params.Author }}{{ . }} {{ end }}{{ end }}">
+{{- with partial "author.html" . }}
+<meta name="author" content="{{ . }}" />
+{{- end }}
 {{- /*
   A list or taxonomy page has no summary, so the chain used to end in an empty
   string and the tag shipped as content="". The site description is the same

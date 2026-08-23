@@ -6,20 +6,7 @@
   anything else is skipped rather than described badly.
 */ -}}
 
-{{- /*
-  author is a string in some configurations and a map with a name key in others,
-  at the page level and at the site level alike. Normalise both to a string.
-  This cannot use cond, which evaluates both branches: .name would fail on a
-  string.
-*/ -}}
-{{- $author := "" -}}
-{{- with .Params.author | default site.Params.author -}}
-  {{- if reflect.IsMap . -}}
-    {{- $author = .name -}}
-  {{- else -}}
-    {{- $author = . -}}
-  {{- end -}}
-{{- end -}}
+{{- $author := partial "author.html" . -}}
 
 {{- $image := "" -}}
 {{- with .Params.images -}}
