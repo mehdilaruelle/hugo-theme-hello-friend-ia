@@ -172,6 +172,12 @@
       crossorigin="anonymous">
 {{- end }}
 
+{{- /* The regular weight, which is the body text and therefore the first
+       thing the swap would repaint. Preloading it shortens the window in
+       which the fallback is on screen; the metric-matched fallback is what
+       makes that window cost nothing. */ -}}
+<link rel="preload" href="{{ "fonts/Inter-Regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
+
 <!-- Icons -->
 {{- partial "favicons.html" . }}
 

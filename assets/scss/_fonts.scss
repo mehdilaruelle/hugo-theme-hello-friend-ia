@@ -1,3 +1,32 @@
+// Inter is loaded with font-display: swap, so the page is first painted in
+// whatever the system offers and then repainted in Inter. Two fonts with
+// different metrics occupy different amounts of space, so that second paint
+// moved every line under the text: on a real site, a Cumulative Layout Shift
+// of 0.145 with nothing else left to blame.
+//
+// This face is the fallback, told to occupy exactly the space Inter will.
+// Every number is measured rather than copied:
+//
+//   unitsPerEm 2816, winAscent 2728, winDescent 680, lineGap 0
+//     read from static/fonts/Inter-Regular.woff, head and OS/2
+//   Inter is 105.39% the width of Arial
+//     measured with canvas measureText over a sample of running text
+//
+// The overrides are divided by the size-adjust ratio: size-adjust rescales the
+// em box, and a percentage expressed against font-size has to compensate for
+// that or the line box comes out too tall.
+//
+// Arial, Helvetica and Liberation Sans share metrics, which is why one set of
+// numbers covers the three platforms.
+@font-face {
+  font-family: "Inter fallback";
+  src: local("Arial"), local("Helvetica"), local("Liberation Sans");
+  size-adjust: 105.39%;
+  ascent-override: 91.92%;
+  descent-override: 22.91%;
+  line-gap-override: 0%;
+}
+
 @font-face {
   font-family: "Inter";
   font-style:  normal;
