@@ -19,7 +19,7 @@ blog de quelqu'un.
 
 ## Le code
 
-Coloré par PrismJS, le langage venant de la clôture du bloc :
+Coloré par Chroma à la construction du site, le langage venant de la clôture du bloc :
 
 ```go
 func main() {

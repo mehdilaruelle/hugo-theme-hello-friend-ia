@@ -75,7 +75,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 
 - Theming: **dark/light mode**, depending on your system preferences or the users choice
 - Great reading experience thanks to [**Inter font**](https://rsms.me/inter/), made by [Rasmus Andersson](https://rsms.me/about/)
-- Nice code highlighting thanks to [**PrismJS**](https://prismjs.com)
+- Nice code highlighting, server side, with Hugo's built-in [**Chroma**](https://github.com/alecthomas/chroma)
 - An easy way to modify the theme with Hugo tooling
 - Fully responsive
 - Support for audio in posts (thanks to [@talbotp](https://github.com/talbotp))
@@ -434,7 +434,8 @@ ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -frames:v 1 demo.jpg
 
 ### Code highlighting
 
-By default the theme is using PrismJS to color your code syntax. All you need to do is to wrap you code like this:
+Hugo colours your code as it builds the page, with its built-in Chroma
+highlighter. All you need to do is to wrap your code like this:
 
 <pre>
 ``` html
@@ -442,8 +443,23 @@ By default the theme is using PrismJS to color your code syntax. All you need to
 ```
 </pre>
 
-Prism weighs 178 KB, so it is loaded on the pages that have a code block
-and nowhere else. Nothing to configure — a fence is what turns it on.
+The theme used to ship PrismJS on top of this, 178 KB of JavaScript re-doing
+work Hugo had already done at build time. It is gone, and the language label it
+wrote above each block is now drawn in CSS from the `data-lang` attribute Hugo
+emits.
+
+Chroma is configured in your site config rather than in the theme, and it is
+worth setting a style:
+
+```toml
+[markup.highlight]
+  codeFences = true
+  style      = "monokai"
+```
+
+The [style gallery](https://xyproto.github.io/splash/docs/) shows what is
+available. A language Chroma does not know is rendered as plain text in the
+page's own colours, which stays readable in either theme.
 
 ### Favicon
 
