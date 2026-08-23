@@ -243,3 +243,6 @@
   [[module.mounts]]
     source = "../exampleSite/assets"
     target = "assets"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
