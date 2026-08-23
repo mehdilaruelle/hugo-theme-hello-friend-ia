@@ -9,13 +9,13 @@
        still registers its DOMContentLoaded handler after Prism does. */ -}}
 {{- if .Page.Store.Get "hasCode" }}
 {{- with resources.Get "js/prism.js" | resources.Minify | resources.Fingerprint "sha512" }}
-<script type="text/javascript" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+<script type="text/javascript" defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
 {{- end }}
 {{- end }}
 {{- /* The copy button reads its labels from this tag. The files are
        concatenated, so document.currentScript is this element for all of
        them. */ -}}
-<script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"
+<script type="text/javascript" defer src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"
         data-label="{{ i18n "copyCode" | default "Copy" }}"
         data-label-done="{{ i18n "copyCodeDone" | default "Copied" }}"
         data-label-failed="{{ i18n "copyCodeFailed" | default "Press Ctrl+C" }}"></script>
