@@ -302,6 +302,36 @@ pre[class*="language-"] {
   font-feature-settings: normal;
 }
 
+// prism-twilight paints code white with a black text-shadow, which is right on
+// the dark background it ships with and invisible on a light one. A language
+// Prism knows survives it, because the tokens it writes carry their own
+// colours. A language it does not know gets no tokens at all, so the bare white
+// is all that is left: a VTL block came out as pale grey on pale grey.
+//
+// The colour is the one the page already uses for text, so it follows the
+// theme rather than guessing at a palette.
+// A page with no defaultTheme and no toggle never gets data-theme at all, and
+// still turns light through prefers-color-scheme, so both have to be covered.
+// The explicit attribute comes last so a reader choosing dark on such a page
+// is not overridden by their system saying light.
+@mixin readable-code-on-light {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: $light-color;
+    text-shadow: none;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme=dark]) {
+    @include readable-code-on-light;
+  }
+}
+
+[data-theme=light] {
+  @include readable-code-on-light;
+}
+
 blockquote {
   border-inline-start: 3px solid #3eb0ef;
   margin: 40px;
