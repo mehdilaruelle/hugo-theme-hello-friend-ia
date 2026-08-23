@@ -65,8 +65,19 @@
 {{- with $jobTitle -}}
   {{- $person = merge $person (dict "jobTitle" .) -}}
 {{- end -}}
+{{- /*
+  The portrait as a URL that exists. Resolving it as a resource is what
+  publishes it: home.html renders a resized copy, and the original is emitted
+  only if something asks for it. Taking the path as a string instead would
+  name a file Hugo never wrote. A portrait outside assets/ is not a resource,
+  and is published by Hugo as an ordinary static file, so the path stands.
+*/ -}}
 {{- with site.Params.portrait.path -}}
-  {{- $person = merge $person (dict "image" (. | absURL)) -}}
+  {{- $portrait := . | absURL -}}
+  {{- with or (resources.Get (printf "_static%s" .)) (resources.Get .) -}}
+    {{- $portrait = .Permalink -}}
+  {{- end -}}
+  {{- $person = merge $person (dict "image" $portrait) -}}
 {{- end -}}
 {{- with $sameAs -}}
   {{- $person = merge $person (dict "sameAs" .) -}}

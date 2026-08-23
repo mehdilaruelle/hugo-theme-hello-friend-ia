@@ -252,17 +252,20 @@ pagination.pagerSize     = 10
 
 ### Where to put the portrait
 
-The front page portrait is measured and resized like any other image, so it
-goes out with `width` and `height` and at twice the size it is displayed at,
-in WebP. Without the dimensions nothing reserves its space, and the title, the
-subtitle and everything under them move when the file arrives, which is a
+The front page portrait is measured like any other image, so it goes out with
+`width` and `height`. Without them nothing reserves its space, and the title,
+the subtitle and everything under them move when the file arrives, which is a
 layout shift on the page that gets looked at most.
+
+A portrait wider than the cap is also resized to it and converted to WebP. One
+already at or below it is left in the format you saved it in, and only gains
+its dimensions.
 
 For any of that to happen the file has to be somewhere Hugo can read as a
 resource, which means `assets/`:
 
-```
-assets/img/portrait.png     measured, resized, given its dimensions
+```text
+assets/img/portrait.png     measured, resized if oversized, given its dimensions
 static/img/portrait.png     emitted as it is, with none of them
 ```
 
