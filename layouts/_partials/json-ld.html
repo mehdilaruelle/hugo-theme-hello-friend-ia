@@ -117,7 +117,7 @@
       "name" (.Title | plainify)
       "inLanguage" .Language.Lang
     -}}
-    {{- with .Description -}}
+    {{- with partial "description.html" . -}}
       {{- $data = merge $data (dict "description" .) -}}
     {{- end -}}
     {{- /* The same pages, in the same order, as list.html puts on the screen:
