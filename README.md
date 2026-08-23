@@ -54,6 +54,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - [How to start](#how-to-start)
 - [How to configure](#how-to-configure)
 - [More](#more-things)
+  - [The font, and the fallback](#the-font-and-the-fallback-that-matches-it)
   - [Where to put the portrait](#where-to-put-the-portrait)
   - [Front page content](#front-page-content)
   - [Built in shortcodes](#built-in-shortcodes)
@@ -268,6 +269,60 @@ pagination.pagerSize     = 10
 ```
 
 ## More things
+
+### The font, and the fallback that matches it
+
+Inter loads with `font-display: swap`, so a page is painted in whatever the
+system offers and repainted in Inter. Two fonts with different metrics take
+different amounts of room, so that second paint used to move everything under
+the text. The theme declares a fallback face told to occupy exactly the space
+Inter will, so the swap costs nothing, and preloads the regular weight so it
+happens sooner.
+
+The defaults are measured from the font shipped here, not copied from an
+article:
+
+```text
+unitsPerEm 2816, winAscent 2728, winDescent 680, lineGap 0
+  read from static/fonts/Inter-Regular.woff, head and OS/2
+Inter is 105.39% the width of Arial
+  measured with canvas measureText over a sample of running text
+```
+
+**Replace the font files and keep the family name, and these numbers describe a
+font that is no longer there** — which shifts the page rather than steadying it.
+Nothing can detect that, so it is yours to override:
+
+```toml
+[params.fontFallback]
+  sizeAdjust      = "105.39%"
+  ascentOverride  = "91.92%"
+  descentOverride = "22.91%"
+  lineGapOverride = "0%"
+  local           = ["Arial", "Helvetica", "Liberation Sans"]
+```
+
+or to switch off with `fontFallback = false` under `params`, which drops the
+face and leaves the swap as it was.
+
+`.github/scripts/font-metrics.mjs` reads the first four numbers out of any WOFF:
+
+```bash
+node .github/scripts/font-metrics.mjs static/fonts/Inter-Regular.woff
+```
+
+The width ratio needs a rendering engine rather than a parser, so measure it in
+a browser with the font loaded, and divide the overrides by it — `size-adjust`
+rescales the em box, and a percentage against `font-size` has to compensate:
+
+```js
+const c = document.createElement("canvas").getContext("2d")
+const w = f => { c.font = "100px " + f; return c.measureText(sample).width }
+w("inter") / w("Arial")
+```
+
+A missing local font is safe: the face has no source, the browser skips it, and
+the stack falls through to what it used before.
 
 ### Where to put the portrait
 
