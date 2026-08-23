@@ -198,7 +198,7 @@ Note: There are more options to configure. Take a look into the `config.toml` in
 ``` toml
 baseurl      = "localhost"
 title        = "My Blog"
-locale       = "en-us"
+locale       = "en-US"
 theme        = "hello-friend-ng"
 pagination.pagerSize     = 10
 
