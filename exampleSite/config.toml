@@ -1,6 +1,6 @@
 baseURL = "https://example.com"
 title   = "Hello Friend NG"
-locale  = "en-us"
+locale  = "en-US"
 theme   = "hello-friend-ng"
 
 # Shown in the footer, and in the feed's <copyright>. Markup is allowed: the

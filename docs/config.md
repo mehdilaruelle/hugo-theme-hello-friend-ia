@@ -35,7 +35,7 @@ rest — dates, feature switches, colours — at the root where it is written on
 ```toml
 [languages.en]
   weight = 1
-  locale = "en-us"
+  locale = "en-US"
   label  = "English"
 [languages.en.params]
   subtitle     = "Hello Friend NG Theme"
@@ -44,7 +44,7 @@ rest — dates, feature switches, colours — at the root where it is written on
 
 [languages.fr]
   weight = 2
-  locale = "fr-fr"
+  locale = "fr-FR"
   label  = "Français"
 [languages.fr.params]
   subtitle     = "Thème Hello Friend NG"
@@ -69,13 +69,13 @@ Set `locale` on every language. The root `locale` is only the default, so
 without it each feed and each `og:locale` announces the same language whatever
 the page is in.
 
-Give it a territory — `en-us`, not `en`. The value goes straight into the feed's
+Give it a territory — `en-US`, not `en`. The value goes straight into the feed's
 `<language>` and into `og:locale`, and Open Graph expects `language_TERRITORY`.
 A language with no obvious country still needs one picked: Modern Standard
 Arabic is `ar-001` in CLDR, but `001` is a UN region code rather than a
-two-letter country, so `og:locale` comes out as the invalid `ar_001`. `ar-sa`
+two-letter country, so `og:locale` comes out as the invalid `ar_001`. `ar-SA`
 is valid everywhere, and no more of an approximation than calling English
-`en-us`.
+`en-US`.
 
 The two demo sites are the worked examples: `exampleSite/` is the single
 language shape, `showcaseSite/` the multilingual one, in four languages.
@@ -120,7 +120,7 @@ Set `direction` on any language that reads right to left:
 ```toml
 [languages.ar]
   weight = 3
-  locale = "ar"
+  locale = "ar-SA"
   label  = "العربية"
   direction = "rtl"
 ```
