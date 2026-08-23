@@ -37,7 +37,13 @@
     {{- $description = i18n "termDescription" (dict "Term" .Data.Term) -}}
   {{- end -}}
 {{- else -}}
-  {{- $description = .Summary | plainify -}}
+  {{- /* The summary runs to whatever Hugo decided, newlines and all, and went
+         out whole: 549 characters on the exampleSite, six of its twenty
+         descriptions carrying a line break. Google shows about 155 and reads
+         none of the rest, so it is trimmed to a length a result can hold and
+         flattened to one line. A description written by hand is left exactly
+         as written. */ -}}
+  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 160 "" -}}
 {{- end -}}
 {{- if not $description -}}
   {{- $description = .Site.Params.description | plainify -}}
