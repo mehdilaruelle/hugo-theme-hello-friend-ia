@@ -54,6 +54,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - [How to start](#how-to-start)
 - [How to configure](#how-to-configure)
 - [More](#more-things)
+  - [Where to put the portrait](#where-to-put-the-portrait)
   - [Front page content](#front-page-content)
   - [Built in shortcodes](#built-in-shortcodes)
     - [image](#image)
@@ -248,6 +249,30 @@ pagination.pagerSize     = 10
 ```
 
 ## More things
+
+### Where to put the portrait
+
+The front page portrait is measured and resized like any other image, so it
+goes out with `width` and `height` and at twice the size it is displayed at,
+in WebP. Without the dimensions nothing reserves its space, and the title, the
+subtitle and everything under them move when the file arrives, which is a
+layout shift on the page that gets looked at most.
+
+For any of that to happen the file has to be somewhere Hugo can read as a
+resource, which means `assets/`:
+
+```
+assets/img/portrait.png     measured, resized, given its dimensions
+static/img/portrait.png     emitted as it is, with none of them
+```
+
+Its URL does not change, and it stays served at that URL for whatever else
+points at it, `params.images` and your `og:image` included. Nothing breaks if
+you leave it in `static/`: the portrait is simply emitted unprocessed, as it
+was before.
+
+The cap is twice `params.portrait.maxWidth` when that is given in pixels, and
+512 otherwise.
 
 ### Front page content
 
