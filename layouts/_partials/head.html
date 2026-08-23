@@ -152,7 +152,11 @@
          why the mermaid initialiser is a file too. It also keeps this to one
          request and one fingerprint. */ -}}
   {{- with partial "font-fallback.html" . }}
-    {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat "main.css" -}}
+    {{- /* The target path is the cache key for Concat, so it carries a digest
+           of the face: two languages configuring different metrics would
+           otherwise be handed whichever bundle was built first. */ -}}
+    {{- $key := printf "main-%s.css" (substr (sha256 .) 0 8) -}}
+    {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat $key -}}
   {{- end -}}
   {{- with $css | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
