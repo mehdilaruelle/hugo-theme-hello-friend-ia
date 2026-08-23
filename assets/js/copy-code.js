@@ -35,7 +35,15 @@
       button.addEventListener('click', function () {
         // The button lives inside the pre, so its own label would otherwise be
         // copied along with the code.
-        var code = pre.querySelector('code').innerText;
+        //
+        // textContent, not innerText. Chroma wraps each line of a highlighted
+        // block in a span it styles display: flex, which makes every line a
+        // block-level box, and innerText inserts a line break at each of those
+        // boundaries on top of the newline already in the source. That put a
+        // blank line between every line of copied code. It only showed once
+        // Prism was gone: Prism used to replace the block's markup with its
+        // own, flex spans included. textContent reads the source as written.
+        var code = pre.querySelector('code').textContent;
 
         navigator.clipboard.writeText(code).then(
           function () {
