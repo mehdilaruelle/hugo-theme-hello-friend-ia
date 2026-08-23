@@ -1,37 +1,78 @@
 {{- /*
-  The fallback face, as CSS text, for whoever wants to put it somewhere.
+  The fallback faces, as CSS text, for whoever wants to put them somewhere.
 
   Inter loads with font-display: swap, so a page is painted in whatever the
   system offers and repainted in Inter. Two fonts with different metrics take
   different amounts of room, so that second paint moves everything under the
   text. Matched metrics make the swap free.
 
-  The defaults are measured from the font this theme ships, not copied from an
-  article: unitsPerEm 2816, winAscent 2728, winDescent 680 out of
-  static/fonts/Inter-Regular.woff, and Inter measured at 105.39% the width of
-  Arial. .github/scripts/font-metrics.mjs is how they were read, and how to
-  read them again.
+  There is one face per weight the theme asks Inter for, because a fallback
+  family with a single face is matched for every weight and the browser is left
+  to synthesise the rest. Headings are the visible case: h1 to h6 keep the
+  browser's own font-weight: bold, which resolves to Inter Bold, and against a
+  single regular face they came out 3.7% too narrow on average and 6% at worst.
+  Every one of them then widened when Inter arrived.
+
+  The defaults are measured from the fonts this theme ships, not copied from an
+  article: unitsPerEm 2816, winAscent 2728, winDescent 680, which the three
+  weights share. .github/scripts/font-metrics.mjs is how they were read, and
+  how to read them again.
+
+  The width ratios were measured against the local font each face names first,
+  over ten headings and pangrams in English and French: Inter 105.39% of Arial,
+  Inter Medium 100.16% of Arial Bold, Inter Bold 102.33% of Arial Bold. The
+  overrides are then divided by the ratio, since size-adjust rescales the em
+  box and a percentage against font-size has to compensate.
 
   Which is the catch worth knowing: replace the font files and keep the family
   name, and these numbers describe a font that is no longer there. Override
-  them, or set params.fontFallback to false to drop the face entirely. See the
+  them, per face, or set params.fontFallback to false to drop them all. See the
   README.
 
-  Returns the empty string when the site has turned it off, so the caller can
+  Returns the empty string when the site has turned them off, so the caller can
   concatenate nothing rather than an empty file.
 */ -}}
 {{- $fallback := site.Params.fontFallback | default dict -}}
 {{- $css := "" -}}
 {{- if ne $fallback false -}}
-  {{- $sizeAdjust := $fallback.sizeAdjust | default "105.39%" -}}
-  {{- $ascent := $fallback.ascentOverride | default "91.92%" -}}
-  {{- $descent := $fallback.descentOverride | default "22.91%" -}}
-  {{- $lineGap := $fallback.lineGapOverride | default "0%" -}}
-  {{- $local := $fallback.local | default (slice "Arial" "Helvetica" "Liberation Sans") -}}
-  {{- $src := slice -}}
-  {{- range $local -}}
-    {{- $src = $src | append (printf "local(\"%s\")" .) -}}
+  {{- $bold := slice "Arial Bold" "Arial-BoldMT" "Helvetica Bold" "Helvetica-Bold" "Liberation Sans Bold" -}}
+  {{- $faces := slice
+    (dict "key" "" "weight" ""
+      "sizeAdjust" "105.39%" "ascentOverride" "91.92%" "descentOverride" "22.91%" "lineGapOverride" "0%"
+      "local" (slice "Arial" "Helvetica" "Liberation Sans"))
+    (dict "key" "semiBold" "weight" "600"
+      "sizeAdjust" "100.16%" "ascentOverride" "96.73%" "descentOverride" "24.11%" "lineGapOverride" "0%"
+      "local" $bold)
+    (dict "key" "bold" "weight" "700 900"
+      "sizeAdjust" "102.33%" "ascentOverride" "94.67%" "descentOverride" "23.60%" "lineGapOverride" "0%"
+      "local" $bold)
+  -}}
+  {{- range $faces -}}
+    {{- /* The regular face keeps reading the keys straight off params, which is
+           where a site that already overrides it wrote them. The other two read
+           a table of their own, and either can be set to false on its own to
+           leave that weight to the browser. */ -}}
+    {{- $over := $fallback -}}
+    {{- with .key -}}
+      {{- $over = index $fallback . -}}
+    {{- end -}}
+    {{- if ne $over false -}}
+      {{- $over = $over | default dict -}}
+      {{- $sizeAdjust := $over.sizeAdjust | default .sizeAdjust -}}
+      {{- $ascent := $over.ascentOverride | default .ascentOverride -}}
+      {{- $descent := $over.descentOverride | default .descentOverride -}}
+      {{- $lineGap := $over.lineGapOverride | default .lineGapOverride -}}
+      {{- $local := $over.local | default .local -}}
+      {{- $src := slice -}}
+      {{- range $local -}}
+        {{- $src = $src | append (printf "local(\"%s\")" .) -}}
+      {{- end -}}
+      {{- $weight := "" -}}
+      {{- with .weight -}}
+        {{- $weight = printf "font-weight:%s;" . -}}
+      {{- end -}}
+      {{- $css = printf "%s@font-face{font-family:\"Inter fallback\";%ssrc:%s;size-adjust:%s;ascent-override:%s;descent-override:%s;line-gap-override:%s}" $css $weight (delimit $src ",") $sizeAdjust $ascent $descent $lineGap -}}
+    {{- end -}}
   {{- end -}}
-  {{- $css = printf "@font-face{font-family:\"Inter fallback\";src:%s;size-adjust:%s;ascent-override:%s;descent-override:%s;line-gap-override:%s}" (delimit $src ",") $sizeAdjust $ascent $descent $lineGap -}}
 {{- end -}}
 {{- return $css -}}
