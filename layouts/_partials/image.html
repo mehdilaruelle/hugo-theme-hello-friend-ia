@@ -68,14 +68,20 @@
     {{- if lt . $ceiling -}}{{- $offered = $offered | append . -}}{{- end -}}
   {{- end -}}
   {{- $offered = $offered | append $ceiling -}}
-  {{- range $offered -}}
-    {{- $copy := $img.Resize (printf "%dx q85 webp" .) -}}
-    {{- $srcset = $srcset | append (printf "%s %dw" $copy.RelPermalink $copy.Width) -}}
-    {{- if eq . $ceiling -}}{{- $rendered = $copy -}}{{- end -}}
+  {{- /* One width, and it is the source width: there is nothing to choose
+         between and nothing to shrink, so the file is left alone. Resizing it
+         anyway would re-encode a picture nobody asked to change, for a srcset
+         that would then be dropped as saying nothing. */ -}}
+  {{- if and (eq (len $offered) 1) (eq $ceiling $img.Width) -}}
+    {{- $srcset = slice -}}
+  {{- else -}}
+    {{- range $offered -}}
+      {{- $copy := $img.Resize (printf "%dx q85 webp" .) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $copy.RelPermalink $copy.Width) -}}
+      {{- if eq . $ceiling -}}{{- $rendered = $copy -}}{{- end -}}
+    {{- end -}}
+    {{- if eq (len $offered) 1 -}}{{- $srcset = slice -}}{{- end -}}
   {{- end -}}
-  {{- /* One width is the picture at its own size: nothing to choose between,
-         so the attribute would only repeat what src already says. */ -}}
-  {{- if eq (len $offered) 1 -}}{{- $srcset = slice -}}{{- end -}}
 {{- end -}}
 
 {{- $url := $src -}}
