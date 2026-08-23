@@ -94,7 +94,10 @@
             <line x1="8" y1="2" x2="8" y2="6"></line>
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+          {{- /* .Local, like the text below it: the visible date is rendered in
+                 the build machine's zone, and a datetime in another offset can
+                 name a different calendar day for anything near midnight. */ -}}
+          <time datetime="{{ .Date.Local.Format "2006-01-02T15:04:05Z07:00" }}">
             {{- if .Site.Params.dateformNumTime }}
               {{ dateFormat .Site.Params.dateformNumTime .Date.Local }}
             {{- else }}
