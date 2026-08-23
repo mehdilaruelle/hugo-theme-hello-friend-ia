@@ -12,9 +12,39 @@
     <div class="content-center">
         <main id="main">
             <div>
-                {{ if .Site.Params.Portrait.Path }}
-                <img src="{{ urls.JoinPath .Site.BaseURL .Site.Params.Portrait.Path }}" class="circle" alt="{{ .Site.Params.Portrait.Alt }}" style="max-width:{{ .Site.Params.Portrait.MaxWidth }}" />
-                {{ end }}
+                {{- /*
+                  The portrait went out without width or height, so nothing
+                  reserved its space and everything under it moved when the
+                  file arrived. On the front page that is the title, the
+                  subtitle and the whole content block, which is a layout
+                  shift measured in tenths.
+
+                  image.html already resolves, measures and resizes, and
+                  refuses to do any of it to an SVG or an animated GIF. Two
+                  things differ here: the portrait is above the fold, so it
+                  loads eagerly rather than lazily, and it is shown small, so
+                  it is capped well below the width an article image gets.
+                */ -}}
+                {{- /* Twice the width it is shown at, so it is sharp on a
+                       dense screen and no larger. Only a value given in px can
+                       be doubled; anything else falls back to a size generous
+                       for a portrait. */ -}}
+                {{- $cap := 512 -}}
+                {{- with site.Params.portrait.maxWidth -}}
+                  {{- if findRE "^[0-9]+px$" . -}}
+                    {{- $cap = mul (int (replaceRE "px$" "" .)) 2 -}}
+                  {{- end -}}
+                {{- end -}}
+                {{- with .Site.Params.Portrait.Path }}
+                {{ partial "image.html" (dict
+                  "src" .
+                  "alt" $.Site.Params.Portrait.Alt
+                  "position" "circle"
+                  "style" (printf "max-width:%s" $.Site.Params.Portrait.MaxWidth)
+                  "loading" "eager"
+                  "maxWidth" $cap
+                  "page" $) }}
+                {{- end }}
 
                 <h1>{{ .Site.Title }}</h1>
 

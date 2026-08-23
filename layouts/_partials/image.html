@@ -8,12 +8,15 @@
   or assets/. A site whose images sit in static/ can mount that directory into
   assets to opt in; without it the image is still emitted, just unprocessed.
 
-  Accepts: src, alt, position, style, page.
+  Accepts: src, alt, position, style, page, and two options a caller above the
+  fold needs: loading, to say eager where lazy would delay the largest paint,
+  and maxWidth, to cap a picture that is never shown at the width articles get.
 */ -}}
 
 {{- $src := .src -}}
 {{- $alt := .alt | default "" -}}
 {{- $page := .page -}}
+{{- $loading := .loading | default "lazy" -}}
 {{- $remote := partial "is-remote.html" $src -}}
 
 {{- $img := "" -}}
@@ -35,7 +38,7 @@
        A format that carries dimensions is still only answering for its kind.
        Where the file itself will not give them up Hugo returns 0, and
        width="0" collapses the picture, so the number is checked too. */ -}}
-{{- $maxWidth := site.Params.imageMaxWidth | default 1400 -}}
+{{- $maxWidth := .maxWidth | default site.Params.imageMaxWidth | default 1400 -}}
 {{- $rendered := $img -}}
 {{- $measurable := false -}}
 {{- if $img -}}{{- if reflect.IsImageResourceWithMeta $img -}}
@@ -55,7 +58,7 @@
 {{- end -}}
 
 {{- if $src -}}
-  <img src="{{ $url | safeURL }}" loading="lazy" decoding="async"
+  <img src="{{ $url | safeURL }}" loading="{{ $loading }}" decoding="async"
     {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }}
     {{- with $alt }} alt="{{ . | plainify }}"{{ end }}
     {{- with .position }} class="{{ . }}"{{ end }}
