@@ -94,3 +94,6 @@ other = "Every post filed under “{{ .Term }}”."
 
 [toggleTheme]
 other = "Dark theme"
+
+[pageNumber]
+other = "page {{ .Number }}"

@@ -87,14 +87,35 @@
 {{- end }}
 {{- end }}
 
+{{- /*
+  The title has one job: say which page this is, in the width a search result
+  gives it, which is around 70 characters.
+
+  The subtitle describes the site, so it belongs on the front page, where the
+  site is what the page is about. Everywhere else it was 37 characters spent
+  after the part that identifies the page, and it pushed the page's own words
+  past the cut: on one real site 49 of 127 titles ran over, the longest at 143
+  characters. Without it, 12 do, and those are long article titles rather than
+  anything the theme added.
+
+  A pager is named as one from page two onward. Each pager is its own canonical
+  since the pagination fix, so each arrives at an index on its own, and they
+  used to arrive with nothing at all to tell them apart: six pages here were
+  called "Blog".
+*/ -}}
 {{ block "title" . }}
-    <title>
-        {{ if .IsHome }}
-            {{ $.Site.Title }} {{ with $.Site.Params.Subtitle }} — {{ . }} {{ end }}
-        {{ else }}
-            {{ .Title }} :: {{ $.Site.Title }} {{ with $.Site.Params.Subtitle }} — {{ . }}{{ end }}
-        {{ end }}
-    </title>
+    {{- $title := printf "%s :: %s" .Title site.Title -}}
+    {{- if .IsHome -}}
+      {{- $title = site.Title -}}
+      {{- with site.Params.Subtitle }}{{ $title = printf "%s — %s" $title . }}{{ end -}}
+    {{- else if in (slice "section" "taxonomy" "term") .Kind -}}
+      {{- with .Paginator -}}
+        {{- if gt .PageNumber 1 -}}
+          {{- $title = printf "%s (%s) :: %s" $.Title (i18n "pageNumber" (dict "Number" .PageNumber) | default (printf "page %d" .PageNumber)) site.Title -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end }}
+    <title>{{ $title }}</title>
 {{ end }}
 
 <!-- CSS -->

@@ -95,3 +95,6 @@ other = "「{{ .Term }}」に分類された記事すべて。"
 
 [toggleTheme]
 other = "ダークテーマ"
+
+[pageNumber]
+other = "{{ .Number }} ページ目"

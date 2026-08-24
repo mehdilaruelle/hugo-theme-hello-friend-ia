@@ -94,3 +94,6 @@ other = "Tous les articles classés sous « {{ .Term }} »."
 
 [toggleTheme]
 other = "Thème sombre"
+
+[pageNumber]
+other = "page {{ .Number }}"
