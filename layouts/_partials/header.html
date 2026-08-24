@@ -14,7 +14,8 @@
             {{- end }}
 
             {{- if .Site.Params.EnableThemeToggle }}
-                <span class="theme-toggle not-selectable">{{ partial "theme-toggle-icon.html" . }}</span>
+                <button type="button" class="theme-toggle not-selectable" aria-pressed="false"
+                        aria-label="{{ i18n "toggleTheme" | default "Dark theme" }}">{{ partial "theme-toggle-icon.html" . }}</button>
             {{- end}}
         </span>
     </span>

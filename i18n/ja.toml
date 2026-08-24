@@ -92,3 +92,6 @@ other = "「{{ .Term }}」カテゴリーの記事すべて。"
 
 [termDescription]
 other = "「{{ .Term }}」に分類された記事すべて。"
+
+[toggleTheme]
+other = "ダークテーマ"

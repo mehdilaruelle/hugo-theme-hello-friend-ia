@@ -45,12 +45,36 @@
   }
 }
 
+// A button rather than a span, because it is a control: a span is not in the
+// tab order, has no role, takes no accessible name and never sees a key press,
+// so the theme could only be changed with a mouse and there is no second way
+// to change it anywhere on the site. A button is focusable and activated by
+// Enter and Space for free, which is why no key handler was added with it.
+//
+// The reset is what a span gave for nothing. The focus ring is not part of the
+// reset: it is the only thing telling a keyboard visitor where they are.
 .theme-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   cursor: pointer;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  // background-color rather than the background shorthand: compressed output
+  // writes `background: none` as `background: 0 0`, which sets the position and
+  // leaves the browser's own ButtonFace showing behind the icon.
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid #67a2c9;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
 }
 
 .theme-toggler {

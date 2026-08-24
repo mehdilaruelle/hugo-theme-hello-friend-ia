@@ -91,3 +91,6 @@ other = "Every post in the category “{{ .Term }}”."
 [termDescription]
 other = "Every post filed under “{{ .Term }}”."
 
+
+[toggleTheme]
+other = "Dark theme"

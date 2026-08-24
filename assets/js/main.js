@@ -38,6 +38,15 @@ function forgetTheme() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
+  // The button is labelled "Dark theme" and pressed when the dark theme is on,
+  // so a screen reader announces the state rather than a label that changes
+  // under the reader every time it is used. Set here rather than in
+  // switchTheme, so the first paint is described correctly too: the theme can
+  // come from storage, from params.defaultTheme or from the system, and this
+  // is the one place all three arrive at.
+  if (themeToggle) {
+    themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+  }
 }
 
 // Read on every call: a choice made since page load has to win.

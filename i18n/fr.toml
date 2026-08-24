@@ -91,3 +91,6 @@ other = "Tous les articles de la catégorie « {{ .Term }} »."
 [termDescription]
 other = "Tous les articles classés sous « {{ .Term }} »."
 
+
+[toggleTheme]
+other = "Thème sombre"
