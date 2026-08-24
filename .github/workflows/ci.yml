@@ -75,14 +75,14 @@ jobs:
 
       - name: Build
         working-directory: hello-friend-ng/exampleSite
-        run: hugo --themesDir ../.. --gc ${{ matrix.flags }}
+        run: hugo --themesDir ../.. --gc --minify ${{ matrix.flags }}
 
       # The showcase turns on everything the default demo leaves off, so a
       # template change that only breaks an optional feature still fails here.
       - name: Build the showcase
         working-directory: hello-friend-ng/showcaseSite
         run: |
-          hugo --themesDir ../.. --gc ${{ matrix.flags }} \
+          hugo --themesDir ../.. --gc --minify ${{ matrix.flags }} \
             --config ../exampleSite/config.toml,config.toml
 
   latest:
@@ -119,10 +119,10 @@ jobs:
 
       - name: Build
         working-directory: hello-friend-ng/exampleSite
-        run: hugo --themesDir ../.. --gc --panicOnWarning
+        run: hugo --themesDir ../.. --gc --minify --panicOnWarning
 
       - name: Build the showcase
         working-directory: hello-friend-ng/showcaseSite
         run: |
-          hugo --themesDir ../.. --gc --panicOnWarning \
+          hugo --themesDir ../.. --gc --minify --panicOnWarning \
             --config ../exampleSite/config.toml,config.toml
