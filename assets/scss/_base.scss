@@ -233,6 +233,10 @@ em, i, strong {
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
   font-display: auto;
   font-feature-settings: normal;
+  // Same reason as the block below. isolate so that fixing the direction here
+  // does not reorder the RTL sentence around it.
+  direction: ltr;
+  unicode-bidi: isolate;
   padding: 1px 6px;
   margin: 0 2px;
   border-radius: 5px;
@@ -259,6 +263,13 @@ em, i, strong {
 
 pre {
   margin: 10px auto;
+
+  // Code reads left to right whatever language surrounds it. Inherited rtl
+  // reached Chroma's per-line spans, which are display: flex, and laid their
+  // tokens out right to left: half the lines of a Go snippet came out reversed
+  // on the Arabic demo.
+  direction: ltr;
+  text-align: left;
 
   // Prism's stylesheet used to paint every code block #141414, whatever the
   // theme. The theme's own colour was only applied through data-theme, so a
