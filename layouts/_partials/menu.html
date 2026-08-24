@@ -3,8 +3,13 @@
         {{- $currentPage := . -}}
         {{ range .Site.Menus.main -}}
             {{ if .HasChildren }}
-                <div class="submenu">
-                    <li class="dropdown">
+                {{- /* li outside, div inside. A ul takes li, script and
+                       template and nothing else, and this was a div holding an
+                       li, which every browser recovers from and no parser
+                       should have to. Swapping the two nests both legally and
+                       leaves every selector pointing at the same box. */ -}}
+                <li class="submenu">
+                    <div class="dropdown">
                     {{- /* The entry's own url, not javascript:void(0).
 
                            A javascript: URL is blocked by any policy that does
@@ -30,8 +35,8 @@
                         <a href="{{ .URL | relLangURL }}">{{ .Name }}</a>
                     {{ end }}
                     </div>
-                    </li>
-                </div>
+                    </div>
+                </li>
             {{ else }}
                 <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
             {{ end }}

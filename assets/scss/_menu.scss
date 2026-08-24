@@ -116,7 +116,9 @@
     text-decoration: none;
   }
 
-  li.dropdown {
+  // The dropdown is a div inside the li now, rather than the li itself, so the
+  // selector no longer names the element. The box it points at has not moved.
+  .dropdown {
     display: inline-block;
   }
 
