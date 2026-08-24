@@ -1,0 +1,27 @@
+{{- /*
+  i18n with a fallback that survives enableMissingTranslationPlaceholders.
+
+  With that setting on, a missing key renders "[i18n] key" rather than the
+  empty string. That is non-empty, so `i18n "x" | default "X"` never reaches
+  its default and the placeholder goes to the page: a German site shipped
+  aria-label="[i18n] toggleTheme" and data-label="[i18n] copyCode".
+
+  Four of the theme's twenty-one translation tables carry the theme's own keys,
+  so on the other seventeen every one of them would.
+
+  Call with a key and a fallback, and args for a key that interpolates:
+
+    partial "i18n.html" (dict "key" "copyCode" "fallback" "Copy")
+    partial "i18n.html" (dict "key" "pageNumber" "fallback" "page 2"
+                              "args" (dict "Number" 2))
+*/ -}}
+{{- $t := "" -}}
+{{- with .args -}}
+  {{- $t = i18n $.key . -}}
+{{- else -}}
+  {{- $t = i18n .key -}}
+{{- end -}}
+{{- if or (not $t) (hasPrefix $t "[i18n]") -}}
+  {{- $t = .fallback -}}
+{{- end -}}
+{{- return $t -}}
