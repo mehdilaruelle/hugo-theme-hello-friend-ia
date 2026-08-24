@@ -233,10 +233,8 @@ em, i, strong {
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
   font-display: auto;
   font-feature-settings: normal;
-  // Same reason as the block below, and isolate so that fixing the direction
-  // inside the span does not disturb the Arabic sentence it sits in. Without
-  // it a snippet that opens or closes on punctuation, `--flag` or `[]string`,
-  // has that punctuation reordered by the bidi algorithm.
+  // Same reason as the block below. isolate so that fixing the direction here
+  // does not reorder the RTL sentence around it.
   direction: ltr;
   unicode-bidi: isolate;
   padding: 1px 6px;
@@ -266,18 +264,10 @@ em, i, strong {
 pre {
   margin: 10px auto;
 
-  // Source code reads left to right whatever language surrounds it, so the
-  // block opts out of the page's direction rather than inheriting it.
-  //
-  // On an RTL page the inherited rtl reached Chroma's per-line spans, which are
-  // display: flex, and turned every token into a flex item laid out right to
-  // left. Measured on the Arabic showcase, two of four sampled Go lines came
-  // out with their tokens in reverse: `func main() {` put its first token at
-  // x=922 and its last at x=885.
-  //
-  // The copy button and the language label are positioned with logical
-  // properties against this box, so they follow it back to the right-hand side
-  // of the block, which is where they sit on every other page.
+  // Code reads left to right whatever language surrounds it. Inherited rtl
+  // reached Chroma's per-line spans, which are display: flex, and laid their
+  // tokens out right to left: half the lines of a Go snippet came out reversed
+  // on the Arabic demo.
   direction: ltr;
   text-align: left;
 
