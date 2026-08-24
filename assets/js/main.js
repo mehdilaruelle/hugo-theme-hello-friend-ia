@@ -78,6 +78,10 @@ function switchTheme() {
 // Event listener
 if (themeToggle) {
   themeToggle.addEventListener("click", switchTheme, false);
+  // Rendered disabled, so that a page served without this script does not put
+  // a control in the tab order that cannot do anything. Enabled only now that
+  // it can.
+  themeToggle.removeAttribute("disabled");
   // Follow the system only while the visitor has expressed no preference.
   window
     .matchMedia("(prefers-color-scheme: dark)")

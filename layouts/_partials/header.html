@@ -14,7 +14,13 @@
             {{- end }}
 
             {{- if .Site.Params.EnableThemeToggle }}
-                <button type="button" class="theme-toggle not-selectable" aria-pressed="false"
+                {{- /* disabled until main.js has wired it up. Switching theme
+                       is entirely the script's job, so without it the button
+                       can do nothing, and a focusable control that does
+                       nothing is worse than the span this replaced: it was at
+                       least not a tab stop. disabled rather than hidden so the
+                       header does not shift when the script enables it. */ -}}
+                <button type="button" class="theme-toggle not-selectable" aria-pressed="false" disabled
                         aria-label="{{ i18n "toggleTheme" | default "Dark theme" }}">{{ partial "theme-toggle-icon.html" . }}</button>
             {{- end}}
         </span>
