@@ -261,6 +261,25 @@ em, i, strong {
   }
 }
 
+// A notice keeps its light ground in both themes. The chip inside took the
+// page's instead, so dark mode put dark text on a dark chip, at 1.12:1. Same
+// data-theme selectors as the rule above, to outrank it on specificity.
+.notice :not(pre) > code {
+  background: $light-background-secondary;
+
+  @media (prefers-color-scheme: dark) {
+    background: $light-background-secondary;
+  }
+
+  [data-theme=dark] & {
+    background: $light-background-secondary;
+  }
+
+  [data-theme=light] & {
+    background: $light-background-secondary;
+  }
+}
+
 pre {
   margin: 10px auto;
 
