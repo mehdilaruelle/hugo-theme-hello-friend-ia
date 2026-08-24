@@ -7,9 +7,9 @@
        concatenated, so document.currentScript is this element for all of
        them. */ -}}
 <script type="text/javascript" defer src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"
-        data-label="{{ i18n "copyCode" | default "Copy" }}"
-        data-label-done="{{ i18n "copyCodeDone" | default "Copied" }}"
-        data-label-failed="{{ i18n "copyCodeFailed" | default "Press Ctrl+C" }}"></script>
+        data-label="{{ partial "i18n.html" (dict "key" "copyCode" "fallback" "Copy") }}"
+        data-label-done="{{ partial "i18n.html" (dict "key" "copyCodeDone" "fallback" "Copied") }}"
+        data-label-failed="{{ partial "i18n.html" (dict "key" "copyCodeFailed" "fallback" "Press Ctrl+C") }}"></script>
 
 {{- /* Search, on the page that has it and nowhere else. The index can run to
        hundreds of kilobytes, so a page with no search box asks for neither the

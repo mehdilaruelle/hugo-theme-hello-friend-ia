@@ -1,0 +1,21 @@
+{{- /*
+  i18n with a fallback that survives enableMissingTranslationPlaceholders.
+
+  With that setting on, a missing key renders "[i18n] key" rather than the
+  empty string, so `i18n "x" | default "X"` never reaches its default and the
+  placeholder goes out to the visitor.
+
+    partial "i18n.html" (dict "key" "copyCode" "fallback" "Copy")
+    partial "i18n.html" (dict "key" "pageNumber" "fallback" "page 2"
+                              "args" (dict "Number" 2))
+*/ -}}
+{{- $t := "" -}}
+{{- with .args -}}
+  {{- $t = i18n $.key . -}}
+{{- else -}}
+  {{- $t = i18n .key -}}
+{{- end -}}
+{{- if or (not $t) (hasPrefix $t "[i18n]") -}}
+  {{- $t = .fallback -}}
+{{- end -}}
+{{- return $t -}}
