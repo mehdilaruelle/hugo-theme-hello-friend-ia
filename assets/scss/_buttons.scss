@@ -6,18 +6,7 @@
   margin-right: auto;
 }
 
-// The bare element selector is here for buttons written in content, so they
-// look like the .button ones without needing the class. The theme toggle is a
-// button because it is a control, not because it wants a pill: it opts out
-// here rather than out-specifying [data-theme=dark] button, which sits one
-// step above a class and would otherwise paint the header icon on a slab.
-//
-// :where() and not a bare :not(), because :not() takes the specificity of its
-// argument. A plain button:not(.theme-toggle) is a class heavier than button,
-// which is enough to start winning against .copy-code and take over its
-// padding and corners. :where() contributes nothing, so this stays an element
-// selector and every other button keeps the rules it already had.
-button:where(:not(.theme-toggle)),
+button,
 .button,
 a.button {
   position: relative;
