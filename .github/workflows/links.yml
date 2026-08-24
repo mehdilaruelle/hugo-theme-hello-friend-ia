@@ -45,7 +45,7 @@ jobs:
       # served from one.
       - name: Build under a subpath
         working-directory: hello-friend-ng/exampleSite
-        run: hugo --themesDir ../.. --gc --baseURL "https://example.com/subpath/"
+        run: hugo --themesDir ../.. --gc --minify --baseURL "https://example.com/subpath/"
 
       - name: Check every internal link and asset
         working-directory: hello-friend-ng/exampleSite
@@ -57,7 +57,7 @@ jobs:
       - name: Build the showcase under a subpath
         working-directory: hello-friend-ng/showcaseSite
         run: |
-          hugo --themesDir ../.. --gc --config ../exampleSite/config.toml,config.toml \
+          hugo --themesDir ../.. --gc --minify --config ../exampleSite/config.toml,config.toml \
             --baseURL "https://example.com/subpath/showcase/"
 
       - name: Check every internal link and asset in the showcase
