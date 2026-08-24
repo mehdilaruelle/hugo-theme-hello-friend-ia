@@ -49,6 +49,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 
 - [Differences from upstream](#differences-from-upstream)
 - [Features](#features)
+  - [Speed](#speed)
 - [SEO](#seo)
 - [Requirements](#requirements)
 - [How to start](#how-to-start)
@@ -87,6 +88,51 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Support for [utterances](https://utteranc.es/) comment system
 - Front page content from `content/_index.md`, see [Front page content](#front-page-content)
 - JSON-LD structured data, breadcrumbs and a complete `hreflang` set, see [SEO](#seo)
+- 100 on accessibility, best practices and SEO on both demo sites, see [Speed](#speed)
+
+### Speed
+
+Both demo sites are measured, not a private one, so you can re-run these
+yourself. On desktop the theme scores **100 on all four categories**:
+
+| | performance | accessibility | best practices | SEO |
+| --- | --- | --- | --- | --- |
+| [demo, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/uxw8hcmp4h?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [demo, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/uxw8hcmp4h?form_factor=mobile) | 99 | 100 | 100 | 100 |
+| [showcase, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/ofldcv5wdb?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [showcase, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/ofldcv5wdb?form_factor=mobile) | 97 | 100 | 100 | 100 |
+
+Measured on 25 August 2026. **Accessibility, best practices and SEO are 100
+everywhere**, and those are the three the theme has most say over.
+
+The mobile performance points are worth being specific about, because the
+report says where they go. The demo loses one on Largest Contentful Paint, at
+2.0 s, and the insights behind it are `Use efficient cache lifetimes` and
+`Document request latency`: GitHub Pages serves these with a ten-minute cache
+and its own time to first byte. That point is the host, not the theme, and 99
+is the ceiling here.
+
+The showcase loses the same point and two more on Speed Index, because its
+front page carries a `content/_index.md` block above the fold and the demo's
+does not. That is the showcase doing its job: it turns every option on, and
+this is what one of them costs on a slow connection.
+
+None of it is layout: **Cumulative Layout Shift is 0 on all four**, and Total
+Blocking Time is 0 ms.
+
+Your content, your images and anything you add have as much say in the result
+as the theme does. What the theme contributes is the part it controls:
+
+- **No client-side highlighter.** Hugo colours code at build time with Chroma,
+  so a page with code ships no JavaScript for it. See
+  [Code highlighting](#code-highlighting).
+- **A metric-matched fallback font, one face per weight**, so the swap to
+  Inter moves nothing. See [The font](#the-font-and-the-fallbacks-that-match-it).
+- **Images measured and resized**, with `width`, `height` and a `srcset`, so
+  nothing reflows when a picture arrives. See
+  [Where to put the portrait](#where-to-put-the-portrait).
+- **KaTeX and Mermaid are opt-in per page**, so a page without a formula or a
+  diagram fetches neither.
 
 ## SEO
 
