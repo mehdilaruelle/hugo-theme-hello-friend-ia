@@ -1,9 +1,37 @@
 @use "variables" as *;
 
+// The footer never switched colour with the theme: one grey served both, and
+// #999 sits at 2.85:1 on the light ground and 5.9:1 on the dark one. The light
+// side was what kept the demo off 100 for accessibility, since the site follows
+// prefers-color-scheme and the audit runs in light.
+//
+// The same shape as every other component here: the default and the media
+// queries for a page that never gets data-theme, then the attribute for a
+// reader who has chosen.
+@mixin footer-colour {
+  color: $light-color-secondary;
+
+  @media (prefers-color-scheme: dark) {
+    color: $dark-color-secondary;
+  }
+
+  @media (prefers-color-scheme: light) {
+    color: $light-color-secondary;
+  }
+
+  [data-theme=dark] & {
+    color: $dark-color-secondary;
+  }
+
+  [data-theme=light] & {
+    color: $light-color-secondary;
+  }
+}
+
 .footer {
   padding: 40px 20px;
   flex-grow: 0;
-  color: $light-color-secondary;
+  @include footer-colour;
 
   &__inner {
     display: flex;
@@ -23,7 +51,7 @@
     flex-direction: row;
     align-items: center;
     font-size: 1rem;
-    color: $light-color-secondary;
+    @include footer-colour;
 
     @media #{$media-size-tablet} {
       flex-direction: column;

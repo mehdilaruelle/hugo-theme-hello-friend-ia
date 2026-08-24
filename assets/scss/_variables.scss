@@ -6,7 +6,11 @@ $light-background-secondary: #eaeaea;
 $light-background-header: #fafafa;
 $light-color: #222;
 $light-color-variant: black;
-$light-color-secondary: #999;
+// 4.5:1 on the two light grounds it is used on, #fff for the footer and the
+// post navigation, #fafafa for the language links. At #999 those were 2.85:1
+// and 2.73:1, which is what kept the demo off 100 for accessibility: the site
+// follows prefers-color-scheme and the audit runs in light.
+$light-color-secondary: #6f6f6f;
 $light-border-color: #dcdcdc;
 $light-table-color: #dcdcdc;
 
