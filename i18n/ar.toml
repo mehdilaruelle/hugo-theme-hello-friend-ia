@@ -106,3 +106,6 @@ other = "كل المقالات في تصنيف «{{ .Term }}»."
 
 [termDescription]
 other = "كل المقالات المصنّفة تحت «{{ .Term }}»."
+
+[toggleTheme]
+other = "المظهر الداكن"
