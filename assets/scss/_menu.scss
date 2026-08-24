@@ -161,7 +161,20 @@
     }
   }
 
+  // Hover was the only way in. A keyboard cannot hover, so tabbing to the
+  // parent left the panel closed and its children unreachable; a touch screen
+  // has no hover at all, so the same was true on a phone.
+  //
+  // :focus-within covers both. Tabbing into the parent opens it, tabbing past
+  // the last child closes it, and a tap that focuses the parent opens it too.
+  // Written as separate rules rather than one selector list: a browser that
+  // does not know :focus-within would drop the whole list and take the hover
+  // rule with it.
   .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown:focus-within .dropdown-content {
     display: block;
   }
 }
