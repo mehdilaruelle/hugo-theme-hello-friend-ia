@@ -417,6 +417,11 @@ in place of `homeSubtitle` — that line is written to be read on the page, and 
 search result gives you more room than it uses. Without one, `homeSubtitle`
 stays the fallback.
 
+The [showcase](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/showcase/)
+has one, in all four of its languages. The
+[default demo](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)
+has none, so the two sites show the front page with it and without.
+
 ### Built-in shortcodes
 
 Of course you are able to use all default shortcodes from hugo (https://gohugo.io/content-management/shortcodes/).
