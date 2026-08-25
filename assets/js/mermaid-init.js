@@ -18,62 +18,82 @@
       (!root.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
   }
 
-  // Mermaid replaces the source with an SVG, so the source has to be kept to
-  // draw it a second time. Read now, while it is still on the page.
+  // The source is kept because Mermaid replaces it with the SVG, leaving
+  // nothing to draw a second time.
+  //
+  // innerHTML and not textContent: the render hook emits the block through
+  // safeHTML, so a label may carry markup, and Mermaid reads innerHTML for
+  // exactly that reason. Flattening it would redraw a different diagram,
+  // turning one<br>two into onetwo on the first theme change.
   var blocks = [].slice.call(document.querySelectorAll('.mermaid'));
-  var sources = blocks.map(function (el) { return el.textContent; });
+  var sources = blocks.map(function (el) { return el.innerHTML; });
 
   import(src).then(function (module) {
     var mermaid = module.default;
 
-    function draw() {
+    // What is on screen, as opposed to what the page now asks for. null until
+    // the first draw, so the first sync always renders.
+    var rendered = null;
+    var running = false;
+
+    function sync() {
+      if (running) return;
+      var want = isDark();
+      if (rendered === want) return;
+      running = true;
+
+      if (rendered !== null) {
+        blocks.forEach(function (el, i) {
+          el.removeAttribute('data-processed');
+          el.innerHTML = sources[i];
+        });
+      }
+
       // startOnLoad hangs off DOMContentLoaded, which has already fired by the
       // time a dynamic import resolves — the diagram would never be drawn.
       // Render explicitly instead.
       mermaid.initialize({
         startOnLoad: false,
-        theme: isDark() ? 'dark' : 'base',
-        darkMode: isDark(),
+        theme: want ? 'dark' : 'base',
+        darkMode: want,
         themeVariables: { tertiaryColor: '#dee3ed' }
       });
-      return mermaid.run();
-    }
 
-    function redraw() {
-      blocks.forEach(function (el, i) {
-        el.removeAttribute('data-processed');
-        el.textContent = sources[i];
-      });
-      return draw();
-    }
-
-    draw().then(function () {
-      // A diagram drawn for one theme is not readable on the other. Mermaid's
-      // dark theme labels in #ccc, and on the light theme's node fill that is
-      // 1.33:1. It was drawn once at load and never again, so a reader who
-      // arrived dark and switched to light could not read it.
-      //
-      // An observer rather than a hook into the toggle: it also catches a site
-      // that sets data-theme some other way, and it keeps this file from
-      // knowing anything about main.js.
-      var last = isDark();
-
-      new MutationObserver(function () {
-        if (isDark() === last) return;
-        last = isDark();
-        redraw();
-      }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-
-      // And the system preference, for a page that never gets data-theme.
-      var query = window.matchMedia('(prefers-color-scheme: dark)');
-      if (query.addEventListener) {
-        query.addEventListener('change', function () {
-          if (root.dataset.theme) return;
-          if (isDark() === last) return;
-          last = isDark();
-          redraw();
+      mermaid.run()
+        // A diagram that does not parse is Mermaid's to report, and it draws
+        // its own error into the block. Swallowing the rejection is what keeps
+        // one bad diagram from freezing every other one at whichever theme the
+        // page happened to load in.
+        .catch(function () {})
+        .then(function () {
+          rendered = want;
+          running = false;
+          // The theme may have changed while that was in flight.
+          sync();
         });
-      }
+    }
+
+    // Observed before the first draw rather than after it. A reader switching
+    // during the initial render would otherwise change the attribute with
+    // nothing listening, and the diagram would sit at the wrong theme until
+    // the next switch.
+    //
+    // An observer rather than a hook into main.js: it also catches a site that
+    // sets data-theme some other way, and this file keeps knowing nothing
+    // about the toggle.
+    new MutationObserver(sync).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-theme']
     });
+
+    // And the system preference, for a page that never gets the attribute.
+    var query = window.matchMedia('(prefers-color-scheme: dark)');
+    if (query.addEventListener) {
+      query.addEventListener('change', function () {
+        if (!root.dataset.theme) sync();
+      });
+    }
+
+    sync();
   });
 })();
