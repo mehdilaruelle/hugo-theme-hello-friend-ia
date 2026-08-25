@@ -34,13 +34,16 @@
     thead {
       tr {
         text-align: start;
+        // The header band is the one place the dark theme's body colour is not
+        // dark enough a ground to sit on: $dark-color on $dark-table-color is
+        // 3.53:1. The variant is white, which is 8.23:1 on the same band.
         // Default
         background-color: $light-table-color;
         color: $light-color;
 
         @media (prefers-color-scheme: dark) {
           background-color: $dark-table-color;
-          color: $dark-color;
+          color: $dark-color-variant;
         }
       
         @media (prefers-color-scheme: light) {
@@ -50,7 +53,7 @@
       
         [data-theme=dark] & {
           background-color: $dark-table-color;
-          color: $dark-color;
+          color: $dark-color-variant;
         }
       
         [data-theme=light] & {
