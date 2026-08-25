@@ -1,4 +1,5 @@
-// Initialises Mermaid on pages that carry a diagram.
+// Initialises Mermaid on pages that carry a diagram, and re-draws it when the
+// reader changes theme.
 //
 // In a file rather than an inline module, so a site with a strict CSP does not
 // have to allow script-src 'unsafe-inline' for its diagram pages. The import is
@@ -10,20 +11,89 @@
   var src = script && script.dataset.mermaidSrc;
   if (!src) return;
 
-  var dark = document.documentElement.dataset.theme === 'dark' ||
-    (!document.documentElement.dataset.theme &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var root = document.documentElement;
+
+  function isDark() {
+    return root.dataset.theme === 'dark' ||
+      (!root.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  // The source is kept because Mermaid replaces it with the SVG, leaving
+  // nothing to draw a second time.
+  //
+  // innerHTML and not textContent: the render hook emits the block through
+  // safeHTML, so a label may carry markup, and Mermaid reads innerHTML for
+  // exactly that reason. Flattening it would redraw a different diagram,
+  // turning one<br>two into onetwo on the first theme change.
+  var blocks = [].slice.call(document.querySelectorAll('.mermaid'));
+  var sources = blocks.map(function (el) { return el.innerHTML; });
 
   import(src).then(function (module) {
-    // startOnLoad hangs off DOMContentLoaded, which has already fired by the
-    // time a dynamic import resolves — the diagram would never be drawn. Render
-    // explicitly instead.
-    module.default.initialize({
-      startOnLoad: false,
-      theme: dark ? 'dark' : 'base',
-      darkMode: dark,
-      themeVariables: { tertiaryColor: '#dee3ed' }
+    var mermaid = module.default;
+
+    // What is on screen, as opposed to what the page now asks for. null until
+    // the first draw, so the first sync always renders.
+    var rendered = null;
+    var running = false;
+
+    function sync() {
+      if (running) return;
+      var want = isDark();
+      if (rendered === want) return;
+      running = true;
+
+      if (rendered !== null) {
+        blocks.forEach(function (el, i) {
+          el.removeAttribute('data-processed');
+          el.innerHTML = sources[i];
+        });
+      }
+
+      // startOnLoad hangs off DOMContentLoaded, which has already fired by the
+      // time a dynamic import resolves — the diagram would never be drawn.
+      // Render explicitly instead.
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: want ? 'dark' : 'base',
+        darkMode: want,
+        themeVariables: { tertiaryColor: '#dee3ed' }
+      });
+
+      mermaid.run()
+        // A diagram that does not parse is Mermaid's to report, and it draws
+        // its own error into the block. Swallowing the rejection is what keeps
+        // one bad diagram from freezing every other one at whichever theme the
+        // page happened to load in.
+        .catch(function () {})
+        .then(function () {
+          rendered = want;
+          running = false;
+          // The theme may have changed while that was in flight.
+          sync();
+        });
+    }
+
+    // Observed before the first draw rather than after it. A reader switching
+    // during the initial render would otherwise change the attribute with
+    // nothing listening, and the diagram would sit at the wrong theme until
+    // the next switch.
+    //
+    // An observer rather than a hook into main.js: it also catches a site that
+    // sets data-theme some other way, and this file keeps knowing nothing
+    // about the toggle.
+    new MutationObserver(sync).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-theme']
     });
-    return module.default.run();
+
+    // And the system preference, for a page that never gets the attribute.
+    var query = window.matchMedia('(prefers-color-scheme: dark)');
+    if (query.addEventListener) {
+      query.addEventListener('change', function () {
+        if (!root.dataset.theme) sync();
+      });
+    }
+
+    sync();
   });
 })();
