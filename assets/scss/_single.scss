@@ -56,9 +56,16 @@
     }
   }
 
+  // grey is #808080 in both themes and fails AA on each, 3.95:1 light and
+  // 3.94:1 dark. The secondary colours pass at 5.02 and 7.48.
   &-excerpt {
-    color: grey;
     font-style: italic;
+    color: $light-color-secondary;
+
+    @media (prefers-color-scheme: dark) { color: $dark-color-secondary; }
+    @media (prefers-color-scheme: light) { color: $light-color-secondary; }
+    [data-theme=dark] & { color: $dark-color-secondary; }
+    [data-theme=light] & { color: $light-color-secondary; }
   }
 
   &-info {
