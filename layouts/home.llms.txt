@@ -3,6 +3,12 @@
 {{- with .OutputFormats.Get "md" }}{{ $u = .Permalink }}{{ end -}}
 {{- $u -}}
 {{- end -}}
+{{- /* A title sits inside a Markdown link label, where [ ] and \ are syntax.
+       An unescaped ] closes the label early and the rest of the title lands
+       outside the link. */ -}}
+{{- define "partials/inline/label" -}}
+  {{- .Title | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
+{{- end -}}
 {{- define "partials/inline/note" -}}
   {{- $n := .Description | default .Summary -}}
   {{- with $n -}}
@@ -27,13 +33,13 @@
 ## {{ i18n "posts" | default "Posts" }}
 
 {{ range . -}}
-- [{{ .Title }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end }}
 {{- with $other }}
 ## {{ i18n "pages" | default "Pages" }}
 
 {{ range . -}}
-- [{{ .Title }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end -}}
