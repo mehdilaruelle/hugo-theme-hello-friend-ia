@@ -109,14 +109,32 @@ engine can recognise is the evidence tying it to the same person elsewhere, so
 the author of the site is described as a `Person` carrying `sameAs` — every
 `params.social` URL, which is the same claim `rel="me"` already makes on the
 links themselves. An email entry is an address rather than a profile and is left
-out. `params.portrait.path` becomes the image, and `params.author.jobTitle`, if
-you set one, the job title:
+out. `params.portrait.path` becomes the image, and `params.author` carries the
+rest: a job title, a sentence of description, the subjects the author works in,
+and the qualifications behind them.
 
 ```toml
 [params.author]
-  name     = "Jane Doe"
-  jobTitle = "Platform Engineer"
+  name        = "Jane Doe"
+  jobTitle    = "Platform Engineer"
+  description = "Writes about Hugo, and about the parts of the web that hold still."
+  knowsAbout  = ["Hugo", "Static site generators", "Web typography"]
+
+  [[params.author.credentials]]
+    name     = "Certified Hugo Themer"
+    category = "certification"
+    url      = "https://gohugo.io/"
 ```
+
+`knowsAbout` and `credentials` are the two that say something a name and a job
+title do not. Each entry under `credentials` becomes an
+`EducationalOccupationalCredential`, where `name` is the only field that has to
+be there: `category` becomes `credentialCategory`, and `url` points at whoever
+issued it, which is the difference between a claim and one somebody can check.
+An entry with no name is dropped rather than emitted empty.
+
+All of it is optional, and a site setting none of it emits exactly the `Person`
+it emitted before.
 
 The same `Person` is the author of every article, under one `@id`, so it reads
 as one person rather than as a name repeated. An article that names its own

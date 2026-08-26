@@ -40,6 +40,25 @@
   customCSS = ["css/custom.css"]
   customJS  = ["js/custom.js"]
 
+  # The author as an entity rather than a name. knowsAbout says what she works
+  # in and hasCredential what backs it up; both land in the Person node that the
+  # home page, every article and the about page already share under one @id.
+  #
+  # The exampleSite gives her a name and a job title, and Hugo merges tables
+  # across configuration files, so only what is new has to be named here.
+  [params.author]
+    description = "Writes about Hugo, and about the parts of the web that hold still."
+    knowsAbout  = ["Hugo", "Static site generators", "Web typography"]
+
+    [[params.author.credentials]]
+      name     = "Certified Hugo Themer"
+      category = "certification"
+      url      = "https://gohugo.io/"
+
+    [[params.author.credentials]]
+      name     = "MSc Typography"
+      category = "degree"
+
   # The logo cursor, which nothing exercised before. logoCursorPathname appends
   # the current path to the logo text, so it changes as you move around.
   [params.logo]

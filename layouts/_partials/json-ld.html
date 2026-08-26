@@ -27,12 +27,46 @@
   recognise is the evidence tying it to the same person elsewhere. sameAs
   carries the social profiles for that — the same claim rel="me" already makes
   on the links themselves. mailto: is an address, not a profile, so it is left
-  out. jobTitle comes from params.author when it is written as a map.
+  out.
+
+  jobTitle, description, knowsAbout and hasCredential all come from
+  params.author when it is written as a map. The last two are what separate a
+  name from an authority a search engine can weigh: the subjects the author
+  works in, and the qualifications behind them.
 */ -}}
 {{- $jobTitle := "" -}}
+{{- $personDescription := "" -}}
+{{- $knowsAbout := slice -}}
+{{- $credentials := slice -}}
 {{- with site.Params.author -}}
   {{- if reflect.IsMap . -}}
     {{- $jobTitle = .jobTitle -}}
+    {{- $personDescription = .description -}}
+    {{- with .knowsAbout -}}
+      {{- $knowsAbout = . -}}
+    {{- end -}}
+    {{- /*
+      A credential is an object rather than a string because schema.org models
+      it as one: credentialCategory says what kind of thing it is, and url
+      points at whoever issued it — which is the difference between a claim and
+      one somebody can check. An entry with no name has nothing to say, so it is
+      dropped rather than emitted empty.
+    */ -}}
+    {{- range .credentials -}}
+      {{- $name := .name -}}
+      {{- $category := .category -}}
+      {{- $url := .url -}}
+      {{- with $name -}}
+        {{- $credential := dict "@type" "EducationalOccupationalCredential" "name" $name -}}
+        {{- with $category -}}
+          {{- $credential = merge $credential (dict "credentialCategory" .) -}}
+        {{- end -}}
+        {{- with $url -}}
+          {{- $credential = merge $credential (dict "url" (. | absURL)) -}}
+        {{- end -}}
+        {{- $credentials = $credentials | append $credential -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -51,6 +85,15 @@
 {{- end -}}
 {{- with $jobTitle -}}
   {{- $person = merge $person (dict "jobTitle" .) -}}
+{{- end -}}
+{{- with $personDescription -}}
+  {{- $person = merge $person (dict "description" .) -}}
+{{- end -}}
+{{- with $knowsAbout -}}
+  {{- $person = merge $person (dict "knowsAbout" .) -}}
+{{- end -}}
+{{- with $credentials -}}
+  {{- $person = merge $person (dict "hasCredential" .) -}}
 {{- end -}}
 {{- /*
   The portrait as a URL that exists. Resolving it as a resource is what
