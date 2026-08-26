@@ -30,8 +30,21 @@
                         <ul class="posts-list">
                             {{ range .Pages }}
                                 {{- $thumbnail := and .Site.Params.enableThumbnails .Params.cover }}
+                                {{- /*
+                                  The line under the title, off unless
+                                  params.enableListExcerpts is set. A page's own
+                                  description comes first, because that is a
+                                  sentence somebody wrote to introduce the post.
+                                  .Summary is Hugo's guess at one, so it is the
+                                  fallback rather than the source, and it is cut
+                                  to a length that stays a line or two.
+                                */ -}}
+                                {{- $excerpt := "" }}
+                                {{- if .Site.Params.enableListExcerpts }}
+                                    {{- $excerpt = .Description | default (.Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 200) }}
+                                {{- end }}
                                 <li class="post-item">
-                                    <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}">
+                                    <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
                                             {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
                                         {{- end }}
@@ -43,6 +56,9 @@
                                                 {{ time.Format "Jan 2" .Date }}
                                             {{ end }}
                                         </time>
+                                        {{- with $excerpt }}
+                                            <span class="post-excerpt">{{ . }}</span>
+                                        {{- end }}
                                     </a>
                                 </li>
                             {{ end }}
