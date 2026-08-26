@@ -110,20 +110,14 @@
   }
 
   // Excerpts, off unless params.enableListExcerpts is set. Scoped to the
-  // modifier class for the same reason the thumbnail above is: the row is one
-  // flex line, and letting every list wrap would drop the date under any title
-  // long enough to fill the row.
+  // modifier class: wrapping every list would drop the date under a long title.
   .post-item-inner--excerpt {
     flex-wrap: wrap;
   }
 
-  // A full basis is what puts the excerpt on its own line, under the title and
-  // the date rather than beside them.
-  //
-  // Colour and italics are not repeated here. The .post-excerpt rule in
-  // _single.scss already styles this exact text on the article page, at a
-  // contrast that passes AA in both themes, and a list showing it differently
-  // would be the surprise rather than the consistency.
+  // The full basis is what puts the excerpt on its own line. Colour and italics
+  // come from .post-excerpt in _single.scss, which already styles this text on
+  // the article page at a contrast that passes AA in both themes.
   .post-excerpt {
     flex-basis: 100%;
     margin-top: 2px;
@@ -131,9 +125,8 @@
     line-height: 1.5;
   }
 
-  // With a thumbnail in the row the title starts past it, and an excerpt at
-  // the row edge would begin to the left of the title it belongs to. The
-  // indent is the thumbnail plus its margin, so the two line up.
+  // The thumbnail plus its margin, so the excerpt lines up with the title
+  // rather than with the picture beside it.
   .post-item-inner--thumbnail .post-excerpt {
     margin-inline-start: 68px;
   }

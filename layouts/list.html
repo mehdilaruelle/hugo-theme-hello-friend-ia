@@ -31,13 +31,10 @@
                             {{ range .Pages }}
                                 {{- $thumbnail := and .Site.Params.enableThumbnails .Params.cover }}
                                 {{- /*
-                                  The line under the title, off unless
-                                  params.enableListExcerpts is set. A page's own
-                                  description comes first, because that is a
-                                  sentence somebody wrote to introduce the post.
-                                  .Summary is Hugo's guess at one, so it is the
-                                  fallback rather than the source, and it is cut
-                                  to a length that stays a line or two.
+                                  Off unless params.enableListExcerpts is set.
+                                  The description first, since somebody wrote it
+                                  to introduce the post; .Summary is a fallback,
+                                  cut to a length that stays a line or two.
                                 */ -}}
                                 {{- $excerpt := "" }}
                                 {{- if .Site.Params.enableListExcerpts }}
