@@ -218,8 +218,10 @@
     locale = "ar-SA"
     label  = "العربية"
     direction = "rtl"
+  # Day before month here, unlike Japanese: Hugo localises the month name but
+  # never the order, which the layout string fixes.
   [languages.ar.params]
-    dateformShort = "January 2"
+    dateformShort = "2 January"
     subtitle     = "عرض الميزات"
     description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
     homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
