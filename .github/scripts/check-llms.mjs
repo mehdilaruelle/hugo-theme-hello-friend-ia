@@ -33,7 +33,10 @@ for (const [lang, prefix] of Object.entries(langs)) {
   const entities = s.match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
   if (entities) fail(`${lang}: ${entities.length} HTML entities, e.g. ${entities[0]}`);
 
-  const links = [...s.matchAll(/^- \[[^\]]*\]\(([^)]+)\)/gm)].map((m) => m[1]);
+  // The template escapes [ ] and \ inside a label, so a title carrying a ]
+  // arrives as \]. A class that stops at the first ] never reaches the URL,
+  // and the link goes unchecked.
+  const links = [...s.matchAll(/^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm)].map((m) => m[1]);
   if (!links.length) fail(`${lang}: no links`);
   for (const url of links) {
     if (!url.startsWith(base)) { fail(`${lang}: ${url} is outside ${base}`); continue; }
@@ -52,7 +55,10 @@ for (const f of mds) {
   if (!s.startsWith("# ")) fail(`${f}: does not open with a heading`);
   if (/^(\+\+\+|---)$/m.test(s.split("\n")[0])) fail(`${f}: front matter leaked`);
   if (s.includes("{{<") || s.includes("{{%")) fail(`${f}: an unrendered shortcode`);
-  if (!s.includes(base)) fail(`${f}: no canonical URL`);
+  // The canonical URL is the last line. Looking for it anywhere passes on a
+  // page that merely links to the site somewhere in its body.
+  const last = s.trimEnd().split("\n").pop().trim();
+  if (!last.split(/\s+/).pop().startsWith(base)) fail(`${f}: does not end with a canonical URL`);
 }
 if (bad === beforeMd) console.log(`  md       ${mds.length} pages, each a heading then prose`);
 
