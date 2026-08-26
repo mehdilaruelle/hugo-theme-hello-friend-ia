@@ -47,22 +47,38 @@
     {{- end -}}
     {{- /*
       A credential is an object rather than a string because schema.org models
-      it as one: credentialCategory says what kind of thing it is, and url
-      points at whoever issued it — which is the difference between a claim and
-      one somebody can check. An entry with no name has nothing to say, so it is
-      dropped rather than emitted empty.
+      it as one. credentialCategory says what kind of thing it is. url is the
+      credential itself — the badge, the certificate, the page that shows it —
+      because that is what url means on any Thing; the body that awarded it is a
+      different claim and goes in recognizedBy, which is the property schema.org
+      has for exactly that. Putting an issuer homepage in url would tell a
+      crawler the homepage is the credential, and would say the same of every
+      credential from that issuer. An entry with no name has nothing to say, so
+      it is dropped rather than emitted empty.
     */ -}}
     {{- range .credentials -}}
       {{- $name := .name -}}
       {{- $category := .category -}}
       {{- $url := .url -}}
+      {{- $issuer := .issuer -}}
       {{- with $name -}}
         {{- $credential := dict "@type" "EducationalOccupationalCredential" "name" $name -}}
         {{- with $category -}}
           {{- $credential = merge $credential (dict "credentialCategory" .) -}}
         {{- end -}}
+        {{- /* absURL resolves a rooted path against the host and drops the base
+               URL path with it, so a credential page came out at the domain root
+               on a site served from a subpath. is-remote.html is the one place
+               that decides whether a URL is ours to join. */ -}}
         {{- with $url -}}
-          {{- $credential = merge $credential (dict "url" (. | absURL)) -}}
+          {{- $resolved := . -}}
+          {{- if not (partial "is-remote.html" $resolved) -}}
+            {{- $resolved = urls.JoinPath site.BaseURL $resolved -}}
+          {{- end -}}
+          {{- $credential = merge $credential (dict "url" $resolved) -}}
+        {{- end -}}
+        {{- with $issuer -}}
+          {{- $credential = merge $credential (dict "recognizedBy" (dict "@type" "Organization" "name" .)) -}}
         {{- end -}}
         {{- $credentials = $credentials | append $credential -}}
       {{- end -}}

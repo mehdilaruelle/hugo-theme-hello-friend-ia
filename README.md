@@ -123,15 +123,27 @@ and the qualifications behind them.
   [[params.author.credentials]]
     name     = "Certified Hugo Themer"
     category = "certification"
-    url      = "https://gohugo.io/"
+    url      = "https://example.com/badges/hugo-themer"
+    issuer   = "Hugo"
 ```
 
 `knowsAbout` and `credentials` are the two that say something a name and a job
 title do not. Each entry under `credentials` becomes an
 `EducationalOccupationalCredential`, where `name` is the only field that has to
-be there: `category` becomes `credentialCategory`, and `url` points at whoever
-issued it, which is the difference between a claim and one somebody can check.
-An entry with no name is dropped rather than emitted empty.
+be there:
+
+| field | becomes | what it is |
+| --- | --- | --- |
+| `name` | `name` | the qualification |
+| `category` | `credentialCategory` | what kind of thing it is |
+| `url` | `url` | the credential itself — the badge, the certificate, the page that shows it |
+| `issuer` | `recognizedBy` | the body that awarded it, as an `Organization` |
+
+`url` is the credential and not its issuer, because that is what `url` means on
+any schema.org `Thing`. An issuer homepage there would tell a crawler the
+homepage is the credential, and say the same of every credential from that
+issuer — `recognizedBy` is the property for the awarding body. An entry with no
+name is dropped rather than emitted empty.
 
 All of it is optional, and a site setting none of it emits exactly the `Person`
 it emitted before.

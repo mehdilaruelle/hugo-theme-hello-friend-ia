@@ -50,10 +50,13 @@
     description = "Writes about Hugo, and about the parts of the web that hold still."
     knowsAbout  = ["Hugo", "Static site generators", "Web typography"]
 
+    # url is the credential, not the issuer: relative on purpose, so the path
+    # that resolves it is exercised under a subpath rather than only at a root.
     [[params.author.credentials]]
       name     = "Certified Hugo Themer"
       category = "certification"
-      url      = "https://gohugo.io/"
+      url      = "/about/me/"
+      issuer   = "Hugo"
 
     [[params.author.credentials]]
       name     = "MSc Typography"
