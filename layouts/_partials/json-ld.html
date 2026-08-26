@@ -30,9 +30,7 @@
   out.
 
   jobTitle, description, knowsAbout and hasCredential all come from
-  params.author when it is written as a map. The last two are what separate a
-  name from an authority a search engine can weigh: the subjects the author
-  works in, and the qualifications behind them.
+  params.author when it is written as a map.
 */ -}}
 {{- $jobTitle := "" -}}
 {{- $personDescription := "" -}}
@@ -46,15 +44,10 @@
       {{- $knowsAbout = . -}}
     {{- end -}}
     {{- /*
-      A credential is an object rather than a string because schema.org models
-      it as one. credentialCategory says what kind of thing it is. url is the
-      credential itself — the badge, the certificate, the page that shows it —
-      because that is what url means on any Thing; the body that awarded it is a
-      different claim and goes in recognizedBy, which is the property schema.org
-      has for exactly that. Putting an issuer homepage in url would tell a
-      crawler the homepage is the credential, and would say the same of every
-      credential from that issuer. An entry with no name has nothing to say, so
-      it is dropped rather than emitted empty.
+      A credential is an object because schema.org models it as one. url is the
+      credential itself — the badge, the certificate — since that is what url
+      means on any Thing; the body that awarded it goes in recognizedBy. An
+      entry with no name is dropped rather than emitted empty.
     */ -}}
     {{- range .credentials -}}
       {{- $name := .name -}}
@@ -66,10 +59,8 @@
         {{- with $category -}}
           {{- $credential = merge $credential (dict "credentialCategory" .) -}}
         {{- end -}}
-        {{- /* absURL resolves a rooted path against the host and drops the base
-               URL path with it, so a credential page came out at the domain root
-               on a site served from a subpath. is-remote.html is the one place
-               that decides whether a URL is ours to join. */ -}}
+        {{- /* absURL drops the base URL path, so a rooted path came out at the
+               domain root on a site served from a subpath. */ -}}
         {{- with $url -}}
           {{- $resolved := . -}}
           {{- if not (partial "is-remote.html" $resolved) -}}
