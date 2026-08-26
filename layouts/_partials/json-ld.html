@@ -8,6 +8,19 @@
 
 {{- $author := partial "author.html" . -}}
 
+{{- /* The site's own author, page-independent. $person carries the site
+       owner's job title, portrait and profiles under one @id, so reading its
+       name from a page that names its own author would put two names on one
+       entity. */ -}}
+{{- $siteAuthor := "" -}}
+{{- with site.Params.author -}}
+  {{- if reflect.IsMap . -}}
+    {{- $siteAuthor = .name -}}
+  {{- else -}}
+    {{- $siteAuthor = . -}}
+  {{- end -}}
+{{- end -}}
+
 {{- $image := "" -}}
 {{- with .Params.images -}}
   {{- $image = index . 0 -}}
@@ -27,12 +40,53 @@
   recognise is the evidence tying it to the same person elsewhere. sameAs
   carries the social profiles for that — the same claim rel="me" already makes
   on the links themselves. mailto: is an address, not a profile, so it is left
-  out. jobTitle comes from params.author when it is written as a map.
+  out.
+
+  jobTitle, description, knowsAbout and hasCredential all come from
+  params.author when it is written as a map.
 */ -}}
 {{- $jobTitle := "" -}}
+{{- $personDescription := "" -}}
+{{- $knowsAbout := slice -}}
+{{- $credentials := slice -}}
 {{- with site.Params.author -}}
   {{- if reflect.IsMap . -}}
     {{- $jobTitle = .jobTitle -}}
+    {{- $personDescription = .description -}}
+    {{- with .knowsAbout -}}
+      {{- $knowsAbout = . -}}
+    {{- end -}}
+    {{- /*
+      A credential is an object because schema.org models it as one. url is the
+      credential itself — the badge, the certificate — since that is what url
+      means on any Thing; the body that awarded it goes in recognizedBy. An
+      entry with no name is dropped rather than emitted empty.
+    */ -}}
+    {{- range .credentials -}}
+      {{- $name := .name -}}
+      {{- $category := .category -}}
+      {{- $url := .url -}}
+      {{- $issuer := .issuer -}}
+      {{- with $name -}}
+        {{- $credential := dict "@type" "EducationalOccupationalCredential" "name" $name -}}
+        {{- with $category -}}
+          {{- $credential = merge $credential (dict "credentialCategory" .) -}}
+        {{- end -}}
+        {{- /* absURL drops the base URL path, so a rooted path came out at the
+               domain root on a site served from a subpath. */ -}}
+        {{- with $url -}}
+          {{- $resolved := . -}}
+          {{- if not (partial "is-remote.html" $resolved) -}}
+            {{- $resolved = urls.JoinPath site.BaseURL $resolved -}}
+          {{- end -}}
+          {{- $credential = merge $credential (dict "url" $resolved) -}}
+        {{- end -}}
+        {{- with $issuer -}}
+          {{- $credential = merge $credential (dict "recognizedBy" (dict "@type" "Organization" "name" .)) -}}
+        {{- end -}}
+        {{- $credentials = $credentials | append $credential -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -46,11 +100,20 @@
 {{- end -}}
 
 {{- $person := dict "@type" "Person" -}}
-{{- with $author -}}
+{{- with $siteAuthor -}}
   {{- $person = merge $person (dict "@id" (printf "%s#person" site.Home.Permalink) "name" . "url" site.Home.Permalink) -}}
 {{- end -}}
 {{- with $jobTitle -}}
   {{- $person = merge $person (dict "jobTitle" .) -}}
+{{- end -}}
+{{- with $personDescription -}}
+  {{- $person = merge $person (dict "description" .) -}}
+{{- end -}}
+{{- with $knowsAbout -}}
+  {{- $person = merge $person (dict "knowsAbout" .) -}}
+{{- end -}}
+{{- with $credentials -}}
+  {{- $person = merge $person (dict "hasCredential" .) -}}
 {{- end -}}
 {{- /*
   The portrait as a URL that exists. Resolving it as a resource is what
@@ -164,7 +227,7 @@
   {{- /* $person always carries at least its @type, so it cannot be the test.
          A site with no author configured has no person to point at, and a
          mainEntity holding nothing but a type says less than no mainEntity. */ -}}
-  {{- with $author -}}
+  {{- with $siteAuthor -}}
     {{- $data = merge $data (dict "mainEntity" $person) -}}
   {{- end -}}
 {{- else if and .IsPage (not .Date.IsZero) -}}
@@ -196,7 +259,36 @@
   {{- with .Params.tags -}}
     {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
   {{- end -}}
-  {{- $data = merge $data (dict "publisher" (dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink)) -}}
+  {{- /* Google documents an Organization publisher with a logo alongside the
+         name. Without one configured, the publisher is the Person the page
+         already describes in full. */ -}}
+  {{- $publisher := dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink -}}
+  {{- $logo := "" -}}
+  {{- $publisherConfigured := false -}}
+  {{- with site.Params.publisher -}}
+    {{- if reflect.IsMap . -}}
+      {{- $publisherConfigured = true -}}
+      {{- with .name -}}{{- $publisher = merge $publisher (dict "name" .) -}}{{- end -}}
+      {{- $logo = .logo -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $logo -}}
+    {{- $node := dict "@type" "ImageObject" "url" (. | absURL) -}}
+    {{- with or (resources.Get (printf "_static%s" .)) (resources.Get .) -}}
+      {{- $node = merge $node (dict "url" .Permalink) -}}
+      {{- /* Asking an SVG for its dimensions is a build error. */ -}}
+      {{- if and (eq .ResourceType "image") (ne .MediaType.SubType "svg") -}}
+        {{- $node = merge $node (dict "width" .Width "height" .Height) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $publisher = merge $publisher (dict "logo" $node) -}}
+  {{- end -}}
+  {{- /* An organisation named without a logo keeps that name: the fallback is
+         for a site that configured no publisher at all. */ -}}
+  {{- if and (not $publisherConfigured) $siteAuthor -}}
+    {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
+  {{- end -}}
+  {{- $data = merge $data (dict "publisher" $publisher) -}}
 {{- end -}}
 
 {{- /*
@@ -218,6 +310,9 @@
   is the root of the trail rather than a step on it, and a list page is already
   named by the trail of everything under it.
 
+  The section is named by its linkTitle: a section title that works in a
+  search result is too long to read as one step of a trail.
+
   The last item carries no url. Google asks for the current page to be named
   and not linked, since a breadcrumb pointing at itself is not a step.
 */ -}}
@@ -231,7 +326,7 @@
     "@type" "BreadcrumbList"
     "itemListElement" (slice
       (dict "@type" "ListItem" "position" 1 "name" (partial "i18n.html" (dict "key" "home" "fallback" "Home")) "item" site.Home.Permalink)
-      (dict "@type" "ListItem" "position" 2 "name" (.Title | plainify) "item" .Permalink)
+      (dict "@type" "ListItem" "position" 2 "name" (.LinkTitle | plainify) "item" .Permalink)
       (dict "@type" "ListItem" "position" 3 "name" ($.Title | plainify))) -}}
 <script type="application/ld+json">{{ $trail | jsonify | safeJS }}</script>
 {{- end -}}

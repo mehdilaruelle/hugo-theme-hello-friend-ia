@@ -156,25 +156,85 @@ engine can recognise is the evidence tying it to the same person elsewhere, so
 the author of the site is described as a `Person` carrying `sameAs` — every
 `params.social` URL, which is the same claim `rel="me"` already makes on the
 links themselves. An email entry is an address rather than a profile and is left
-out. `params.portrait.path` becomes the image, and `params.author.jobTitle`, if
-you set one, the job title:
+out. `params.portrait.path` becomes the image, and `params.author` carries the
+rest: a job title, a sentence of description, the subjects the author works in,
+and the qualifications behind them.
 
 ```toml
 [params.author]
-  name     = "Jane Doe"
-  jobTitle = "Platform Engineer"
+  name        = "Jane Doe"
+  jobTitle    = "Platform Engineer"
+  description = "Writes about Hugo, and about the parts of the web that hold still."
+  knowsAbout  = ["Hugo", "Static site generators", "Web typography"]
+
+  [[params.author.credentials]]
+    name     = "Certified Hugo Themer"
+    category = "certification"
+    url      = "https://example.com/badges/hugo-themer"
+    issuer   = "Hugo"
 ```
+
+`knowsAbout` and `credentials` are the two that say something a name and a job
+title do not. Each entry under `credentials` becomes an
+`EducationalOccupationalCredential`, where `name` is the only field that has to
+be there:
+
+| field | becomes | what it is |
+| --- | --- | --- |
+| `name` | `name` | the qualification |
+| `category` | `credentialCategory` | what kind of thing it is |
+| `url` | `url` | the credential itself — the badge, the certificate, the page that shows it |
+| `issuer` | `recognizedBy` | the body that awarded it, as an `Organization` |
+
+`url` is the credential and not its issuer, because that is what `url` means on
+any schema.org `Thing`. An issuer homepage there would tell a crawler the
+homepage is the credential, and say the same of every credential from that
+issuer — `recognizedBy` is the property for the awarding body. An entry with no
+name is dropped rather than emitted empty.
+
+All of it is optional, and a site setting none of it emits exactly the `Person`
+it emitted before.
 
 The same `Person` is the author of every article, under one `@id`, so it reads
 as one person rather than as a name repeated. An article that names its own
 author in its front matter gets that name and nothing else — the site owner's
 profiles and job title are not theirs to claim.
 
+**`publisher`.** A `BlogPosting` names who published it. Left alone, that is the
+site owner as the `Person` above: on a personal site the publisher is the
+person, and an `Organization` carrying nothing but the site title says less than
+the entity already described in full. A page naming its own author does not move
+the publisher, since a guest writer did not publish the site.
+
+A site published by an organisation says so, and gives the logo Google asks for
+alongside the name:
+
+```toml
+[params.publisher]
+  name = "Acme Inc."
+  logo = "/img/logo.png"
+```
+
+The logo is resolved like the portrait, from `assets/` first and then from
+`static/`, and carries its dimensions when Hugo can measure it. `name` on its
+own falls back to the site title.
+
 **`BreadcrumbList`.** A single page that sits in a section carries the trail
 to it, so a search result shows *Home › Blog › the title* in place of the bare
-URL. The section is named by its own title and the current page is named but
-not linked, which is what Google asks for. A page at the root of the site gets
-none: *Home › About* says nothing the URL did not.
+URL. The current page is named but not linked, which is what Google asks for.
+A page at the root of the site gets none: *Home › About* says nothing the URL
+did not.
+
+The section is named by its `linkTitle`, and by its title when it has none. A
+section title that works in a search result says what the section is about, and
+that is too long to read as one step of a trail:
+
+```toml
++++
+title     = "Articles on Vault, Terraform and AWS"
+linkTitle = "Blog"
++++
+```
 
 **`ProfilePage`.** An about page is not an article and has no date, so it used
 to come out with no structured data at all, which is backwards for the page

@@ -28,6 +28,7 @@
   # printing dark text over a dark picture.
   backgroundImageLight = "img/background-light.svg"
   enableThumbnails = true
+  enableListExcerpts = true
 
   # The background is a dark image, so the page should arrive dark rather than
   # settle there. The toggle still overrides this, which is the point of having
@@ -41,6 +42,28 @@
   # catches, because it resolves href and src the same way a browser does.
   customCSS = ["css/custom.css"]
   customJS  = ["js/custom.js"]
+
+  # The author as an entity rather than a name. knowsAbout says what she works
+  # in and hasCredential what backs it up; both land in the Person node that the
+  # home page, every article and the about page already share under one @id.
+  #
+  # The exampleSite gives her a name and a job title, and Hugo merges tables
+  # across configuration files, so only what is new has to be named here.
+  [params.author]
+    description = "Writes about Hugo, and about the parts of the web that hold still."
+    knowsAbout  = ["Hugo", "Static site generators", "Web typography"]
+
+    # url is the credential, not the issuer: relative on purpose, so the path
+    # that resolves it is exercised under a subpath rather than only at a root.
+    [[params.author.credentials]]
+      name     = "Certified Hugo Themer"
+      category = "certification"
+      url      = "/about/me/"
+      issuer   = "Hugo"
+
+    [[params.author.credentials]]
+      name     = "MSc Typography"
+      category = "degree"
 
   # The logo cursor, which nothing exercised before. logoCursorPathname appends
   # the current path to the logo text, so it changes as you move around.

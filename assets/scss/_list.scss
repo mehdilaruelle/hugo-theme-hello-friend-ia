@@ -108,4 +108,23 @@
     border-radius: 6px;
     object-fit: cover;
   }
+
+  // Scoped to the modifier: wrapping every list would drop the date under a
+  // long title.
+  .post-item-inner--excerpt {
+    flex-wrap: wrap;
+  }
+
+  // Colour and italics come from .post-excerpt in _single.scss.
+  .post-excerpt {
+    flex-basis: 100%;
+    margin-top: 2px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  // Thumbnail width plus its margin, so the excerpt lines up with the title.
+  .post-item-inner--thumbnail .post-excerpt {
+    margin-inline-start: 68px;
+  }
 }
