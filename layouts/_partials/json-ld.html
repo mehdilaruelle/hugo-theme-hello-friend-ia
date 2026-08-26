@@ -196,16 +196,9 @@
   {{- with .Params.tags -}}
     {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
   {{- end -}}
-  {{- /*
-    The publisher. An Organization carrying nothing but a name repeats what the
-    site is called and stops there, which is the incomplete half of the entity
-    Google documents: it asks for a logo alongside.
-
-    So a site that gives one keeps the Organization and gains the logo, resolved
-    the same way the portrait is, with its dimensions when Hugo can measure it.
-    A site that gives none is published by the Person it already describes in
-    full, under the @id the author node on this same page carries.
-  */ -}}
+  {{- /* Google documents an Organization publisher with a logo alongside the
+         name. Without one configured, the publisher is the Person the page
+         already describes in full. */ -}}
   {{- $publisher := dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink -}}
   {{- $logo := "" -}}
   {{- with site.Params.publisher -}}
@@ -218,8 +211,7 @@
     {{- $node := dict "@type" "ImageObject" "url" (. | absURL) -}}
     {{- with or (resources.Get (printf "_static%s" .)) (resources.Get .) -}}
       {{- $node = merge $node (dict "url" .Permalink) -}}
-      {{- /* An SVG has no dimensions Hugo can measure, and asking for them on
-             one is a build error rather than a blank. */ -}}
+      {{- /* Asking an SVG for its dimensions is a build error. */ -}}
       {{- if and (eq .ResourceType "image") (ne .MediaType.SubType "svg") -}}
         {{- $node = merge $node (dict "width" .Width "height" .Height) -}}
       {{- end -}}
@@ -252,10 +244,8 @@
   is the root of the trail rather than a step on it, and a list page is already
   named by the trail of everything under it.
 
-  The section is named by its linkTitle, which Hugo falls back to its title
-  when there is none. A section that earns its keep in a search result carries
-  a title saying what it is about, and that title is too long to read as one
-  step of a trail: linkTitle is where a short name for it goes.
+  The section is named by its linkTitle: a section title that works in a
+  search result is too long to read as one step of a trail.
 
   The last item carries no url. Google asks for the current page to be named
   and not linked, since a breadcrumb pointing at itself is not a step.
