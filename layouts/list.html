@@ -30,12 +30,7 @@
                         <ul class="posts-list">
                             {{ range .Pages }}
                                 {{- $thumbnail := and .Site.Params.enableThumbnails .Params.cover }}
-                                {{- /*
-                                  Off unless params.enableListExcerpts is set.
-                                  The description first, since somebody wrote it
-                                  to introduce the post; .Summary is a fallback,
-                                  cut to a length that stays a line or two.
-                                */ -}}
+                                {{- /* Description first, .Summary as a fallback, cut short. */ -}}
                                 {{- $excerpt := "" }}
                                 {{- if .Site.Params.enableListExcerpts }}
                                     {{- $excerpt = .Description | default (.Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 200) }}

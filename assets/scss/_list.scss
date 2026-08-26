@@ -109,15 +109,13 @@
     object-fit: cover;
   }
 
-  // Excerpts, off unless params.enableListExcerpts is set. Scoped to the
-  // modifier class: wrapping every list would drop the date under a long title.
+  // Scoped to the modifier: wrapping every list would drop the date under a
+  // long title.
   .post-item-inner--excerpt {
     flex-wrap: wrap;
   }
 
-  // The full basis is what puts the excerpt on its own line. Colour and italics
-  // come from .post-excerpt in _single.scss, which already styles this text on
-  // the article page at a contrast that passes AA in both themes.
+  // Colour and italics come from .post-excerpt in _single.scss.
   .post-excerpt {
     flex-basis: 100%;
     margin-top: 2px;
@@ -125,8 +123,7 @@
     line-height: 1.5;
   }
 
-  // The thumbnail plus its margin, so the excerpt lines up with the title
-  // rather than with the picture beside it.
+  // Thumbnail width plus its margin, so the excerpt lines up with the title.
   .post-item-inner--thumbnail .post-excerpt {
     margin-inline-start: 68px;
   }
