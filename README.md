@@ -189,9 +189,20 @@ own falls back to the site title.
 
 **`BreadcrumbList`.** A single page that sits in a section carries the trail
 to it, so a search result shows *Home › Blog › the title* in place of the bare
-URL. The section is named by its own title and the current page is named but
-not linked, which is what Google asks for. A page at the root of the site gets
-none: *Home › About* says nothing the URL did not.
+URL. The current page is named but not linked, which is what Google asks for.
+A page at the root of the site gets none: *Home › About* says nothing the URL
+did not.
+
+The section is named by its `linkTitle`, and by its title when it has none. A
+section title that works in a search result says what the section is about, and
+that is too long to read as one step of a trail:
+
+```toml
++++
+title     = "Articles on Vault, Terraform and AWS"
+linkTitle = "Blog"
++++
+```
 
 **`ProfilePage`.** An about page is not an article and has no date, so it used
 to come out with no structured data at all, which is backwards for the page

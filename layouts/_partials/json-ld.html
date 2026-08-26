@@ -252,6 +252,11 @@
   is the root of the trail rather than a step on it, and a list page is already
   named by the trail of everything under it.
 
+  The section is named by its linkTitle, which Hugo falls back to its title
+  when there is none. A section that earns its keep in a search result carries
+  a title saying what it is about, and that title is too long to read as one
+  step of a trail: linkTitle is where a short name for it goes.
+
   The last item carries no url. Google asks for the current page to be named
   and not linked, since a breadcrumb pointing at itself is not a step.
 */ -}}
@@ -265,7 +270,7 @@
     "@type" "BreadcrumbList"
     "itemListElement" (slice
       (dict "@type" "ListItem" "position" 1 "name" (partial "i18n.html" (dict "key" "home" "fallback" "Home")) "item" site.Home.Permalink)
-      (dict "@type" "ListItem" "position" 2 "name" (.Title | plainify) "item" .Permalink)
+      (dict "@type" "ListItem" "position" 2 "name" (.LinkTitle | plainify) "item" .Permalink)
       (dict "@type" "ListItem" "position" 3 "name" ($.Title | plainify))) -}}
 <script type="application/ld+json">{{ $trail | jsonify | safeJS }}</script>
 {{- end -}}
