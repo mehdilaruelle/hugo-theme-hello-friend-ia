@@ -196,7 +196,41 @@
   {{- with .Params.tags -}}
     {{- $data = merge $data (dict "keywords" (delimit . ", ")) -}}
   {{- end -}}
-  {{- $data = merge $data (dict "publisher" (dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink)) -}}
+  {{- /*
+    The publisher. An Organization carrying nothing but a name repeats what the
+    site is called and stops there, which is the incomplete half of the entity
+    Google documents: it asks for a logo alongside.
+
+    So a site that gives one keeps the Organization and gains the logo, resolved
+    the same way the portrait is, with its dimensions when Hugo can measure it.
+    A site that gives none is published by the Person it already describes in
+    full, under the @id the author node on this same page carries.
+  */ -}}
+  {{- $publisher := dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink -}}
+  {{- $logo := "" -}}
+  {{- with site.Params.publisher -}}
+    {{- if reflect.IsMap . -}}
+      {{- with .name -}}{{- $publisher = merge $publisher (dict "name" .) -}}{{- end -}}
+      {{- $logo = .logo -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $logo -}}
+    {{- $node := dict "@type" "ImageObject" "url" (. | absURL) -}}
+    {{- with or (resources.Get (printf "_static%s" .)) (resources.Get .) -}}
+      {{- $node = merge $node (dict "url" .Permalink) -}}
+      {{- /* An SVG has no dimensions Hugo can measure, and asking for them on
+             one is a build error rather than a blank. */ -}}
+      {{- if and (eq .ResourceType "image") (ne .MediaType.SubType "svg") -}}
+        {{- $node = merge $node (dict "width" .Width "height" .Height) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $publisher = merge $publisher (dict "logo" $node) -}}
+  {{- else -}}
+    {{- with $author -}}
+      {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $data = merge $data (dict "publisher" $publisher) -}}
 {{- end -}}
 
 {{- /*

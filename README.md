@@ -169,6 +169,24 @@ as one person rather than as a name repeated. An article that names its own
 author in its front matter gets that name and nothing else — the site owner's
 profiles and job title are not theirs to claim.
 
+**`publisher`.** A `BlogPosting` names who published it. Left alone, that is the
+`Person` above, under the same `@id` as the author on the page: on a personal
+site the publisher is the person, and an `Organization` carrying nothing but the
+site title says less than the entity already described in full.
+
+A site published by an organisation says so, and gives the logo Google asks for
+alongside the name:
+
+```toml
+[params.publisher]
+  name = "Acme Inc."
+  logo = "/img/logo.png"
+```
+
+The logo is resolved like the portrait, from `assets/` first and then from
+`static/`, and carries its dimensions when Hugo can measure it. `name` on its
+own falls back to the site title.
+
 **`BreadcrumbList`.** A single page that sits in a section carries the trail
 to it, so a search result shows *Home › Blog › the title* in place of the bare
 URL. The section is named by its own title and the current page is named but
