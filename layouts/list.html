@@ -30,8 +30,13 @@
                         <ul class="posts-list">
                             {{ range .Pages }}
                                 {{- $thumbnail := and .Site.Params.enableThumbnails .Params.cover }}
+                                {{- /* Description first, .Summary as a fallback, cut short. */ -}}
+                                {{- $excerpt := "" }}
+                                {{- if .Site.Params.enableListExcerpts }}
+                                    {{- $excerpt = .Description | default (.Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 200) }}
+                                {{- end }}
                                 <li class="post-item">
-                                    <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}">
+                                    <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
                                             {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
                                         {{- end }}
@@ -43,6 +48,9 @@
                                                 {{ time.Format "Jan 2" .Date }}
                                             {{ end }}
                                         </time>
+                                        {{- with $excerpt }}
+                                            <span class="post-excerpt">{{ . }}</span>
+                                        {{- end }}
                                     </a>
                                 </li>
                             {{ end }}

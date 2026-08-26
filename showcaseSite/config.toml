@@ -26,6 +26,7 @@
   # printing dark text over a dark picture.
   backgroundImageLight = "img/background-light.svg"
   enableThumbnails = true
+  enableListExcerpts = true
 
   # The background is a dark image, so the page should arrive dark rather than
   # settle there. The toggle still overrides this, which is the point of having

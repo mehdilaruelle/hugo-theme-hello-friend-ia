@@ -292,6 +292,26 @@ article page already uses. When it resolves to a page resource or an asset,
 Hugo's dimensions are emitted so the row reserves its space before the image
 arrives; a path under `static/` or a remote URL is used as given.
 
+## Post excerpts
+
+`params.enableListExcerpts` prints each post's description under its title in
+list pages. It is off by default, and a list without it renders exactly as it
+did before — the row stays a single line holding the title and the date.
+
+```toml
+[params]
+  enableListExcerpts = true
+```
+
+The text is the page's `description` front matter: the same sentence the
+article page prints under its title and the meta description already carries,
+so a post gains a summary on the list without anything new to write. A post
+with no description falls back to Hugo's own summary, cut to 200 characters
+rather than run to the several hundred `.Summary` can reach.
+
+Excerpts and thumbnails compose. With both on, the excerpt is indented to line
+up with the title rather than with the thumbnail beside it.
+
 ## Everything else the theme reads
 
 The options below all work and none of them were written down anywhere. Three of
