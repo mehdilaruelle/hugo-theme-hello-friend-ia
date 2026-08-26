@@ -1,9 +1,26 @@
-{{ with . }}
+{{- /*
+  A term links to the page Hugo built for it, and is named the way that page
+  names itself.
+
+  The href used to be assembled from the raw front matter string, urlized. That
+  is Hugo's routing rewritten by hand, and it agrees with Hugo only by
+  coincidence: a term page carrying a url in its front matter moves, and the
+  guess keeps pointing at where it used to be. The label had the same problem in
+  reverse — it was whatever was typed in the front matter of the first post to
+  use it, with no way to write "CI/CD" once and have every post say it.
+
+  .GetTerms hands back the term pages themselves, in front matter order, so
+  .Permalink is wherever Hugo actually put the page and .LinkTitle is whatever
+  content/<taxonomy>/<term>/_index.md calls it. A taxonomy that is not
+  configured returns nothing rather than failing, so a site with no categories
+  is unaffected.
+*/ -}}
+{{ with .GetTerms "tags" }}
     <p>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
 
         {{ range . -}}
-            <span class="tag"><a href="{{ "tags/" | absLangURL }}{{ . | urlize }}/">{{.}}</a></span>
+            <span class="tag"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></span>
         {{ end }}
     </p>
 {{ end }}
