@@ -8,6 +8,19 @@
 
 {{- $author := partial "author.html" . -}}
 
+{{- /* The site's own author, page-independent. $person carries the site
+       owner's job title, portrait and profiles under one @id, so reading its
+       name from a page that names its own author would put two names on one
+       entity. */ -}}
+{{- $siteAuthor := "" -}}
+{{- with site.Params.author -}}
+  {{- if reflect.IsMap . -}}
+    {{- $siteAuthor = .name -}}
+  {{- else -}}
+    {{- $siteAuthor = . -}}
+  {{- end -}}
+{{- end -}}
+
 {{- $image := "" -}}
 {{- with .Params.images -}}
   {{- $image = index . 0 -}}
@@ -87,7 +100,7 @@
 {{- end -}}
 
 {{- $person := dict "@type" "Person" -}}
-{{- with $author -}}
+{{- with $siteAuthor -}}
   {{- $person = merge $person (dict "@id" (printf "%s#person" site.Home.Permalink) "name" . "url" site.Home.Permalink) -}}
 {{- end -}}
 {{- with $jobTitle -}}
@@ -214,7 +227,7 @@
   {{- /* $person always carries at least its @type, so it cannot be the test.
          A site with no author configured has no person to point at, and a
          mainEntity holding nothing but a type says less than no mainEntity. */ -}}
-  {{- with $author -}}
+  {{- with $siteAuthor -}}
     {{- $data = merge $data (dict "mainEntity" $person) -}}
   {{- end -}}
 {{- else if and .IsPage (not .Date.IsZero) -}}
@@ -251,8 +264,10 @@
          already describes in full. */ -}}
   {{- $publisher := dict "@type" "Organization" "name" site.Title "url" site.Home.Permalink -}}
   {{- $logo := "" -}}
+  {{- $publisherConfigured := false -}}
   {{- with site.Params.publisher -}}
     {{- if reflect.IsMap . -}}
+      {{- $publisherConfigured = true -}}
       {{- with .name -}}{{- $publisher = merge $publisher (dict "name" .) -}}{{- end -}}
       {{- $logo = .logo -}}
     {{- end -}}
@@ -267,10 +282,11 @@
       {{- end -}}
     {{- end -}}
     {{- $publisher = merge $publisher (dict "logo" $node) -}}
-  {{- else -}}
-    {{- with $author -}}
-      {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
-    {{- end -}}
+  {{- end -}}
+  {{- /* An organisation named without a logo keeps that name: the fallback is
+         for a site that configured no publisher at all. */ -}}
+  {{- if and (not $publisherConfigured) $siteAuthor -}}
+    {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
   {{- end -}}
   {{- $data = merge $data (dict "publisher" $publisher) -}}
 {{- end -}}

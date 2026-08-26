@@ -200,9 +200,10 @@ author in its front matter gets that name and nothing else — the site owner's
 profiles and job title are not theirs to claim.
 
 **`publisher`.** A `BlogPosting` names who published it. Left alone, that is the
-`Person` above, under the same `@id` as the author on the page: on a personal
-site the publisher is the person, and an `Organization` carrying nothing but the
-site title says less than the entity already described in full.
+site owner as the `Person` above: on a personal site the publisher is the
+person, and an `Organization` carrying nothing but the site title says less than
+the entity already described in full. A page naming its own author does not move
+the publisher, since a guest writer did not publish the site.
 
 A site published by an organisation says so, and gives the logo Google asks for
 alongside the name:
