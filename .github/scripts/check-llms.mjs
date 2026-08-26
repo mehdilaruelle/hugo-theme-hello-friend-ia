@@ -1,9 +1,5 @@
-// Asserts that llms.txt and the Markdown copies are text a model can use.
-//
-// The build succeeds whatever comes out: a summary that arrived as
-// "world&rsquo;s", a link pointing at a file that was never written, or a
-// {{< image >}} left verbatim all render as a perfectly valid text file. Only
-// an assertion on the built output catches them.
+// A broken llms.txt is still a valid text file, so only an assertion on the
+// built output catches one.
 //
 //   node .github/scripts/check-llms.mjs <public-dir> <base-url>
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
@@ -33,9 +29,8 @@ for (const [lang, prefix] of Object.entries(langs)) {
   const entities = s.match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
   if (entities) fail(`${lang}: ${entities.length} HTML entities, e.g. ${entities[0]}`);
 
-  // The template escapes [ ] and \ inside a label, so a title carrying a ]
-  // arrives as \]. A class that stops at the first ] never reaches the URL,
-  // and the link goes unchecked.
+  // A title carrying a ] is escaped to \], which a class stopping at the
+  // first ] never reads past.
   const links = [...s.matchAll(/^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm)].map((m) => m[1]);
   if (!links.length) fail(`${lang}: no links`);
   for (const url of links) {
@@ -55,8 +50,7 @@ for (const f of mds) {
   if (!s.startsWith("# ")) fail(`${f}: does not open with a heading`);
   if (/^(\+\+\+|---)$/m.test(s.split("\n")[0])) fail(`${f}: front matter leaked`);
   if (s.includes("{{<") || s.includes("{{%")) fail(`${f}: an unrendered shortcode`);
-  // The canonical URL is the last line. Looking for it anywhere passes on a
-  // page that merely links to the site somewhere in its body.
+  // Anywhere in the file would pass on a page that merely links to the site.
   const last = s.trimEnd().split("\n").pop().trim();
   if (!last.split(/\s+/).pop().startsWith(base)) fail(`${f}: does not end with a canonical URL`);
 }

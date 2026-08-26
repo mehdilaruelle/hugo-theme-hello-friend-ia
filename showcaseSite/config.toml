@@ -1,6 +1,5 @@
 # Search needs the index, and the index is the home page rendered as JSON.
-# Without this Hugo emits no index and the search page says so. llms and md
-# are the theme's text formats; a site that wants neither leaves them out.
+# llms and md are the theme's text formats.
 [outputs]
   page = ["HTML", "md"]
   home = ["HTML", "RSS", "JSON", "llms"]

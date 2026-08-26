@@ -3,9 +3,7 @@
 {{- with .OutputFormats.Get "md" }}{{ $u = .Permalink }}{{ end -}}
 {{- $u -}}
 {{- end -}}
-{{- /* A title sits inside a Markdown link label, where [ ] and \ are syntax.
-       An unescaped ] closes the label early and the rest of the title lands
-       outside the link. */ -}}
+{{- /* [ ] and \ are syntax inside a link label. */ -}}
 {{- define "partials/inline/label" -}}
   {{- .Title | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
 {{- end -}}
