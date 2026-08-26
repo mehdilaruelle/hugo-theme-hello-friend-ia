@@ -98,3 +98,14 @@ other = "ダークテーマ"
 
 [pageNumber]
 other = "{{ .Number }} ページ目"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "初出"
+
+[posts]
+other = "記事"
+
+[pages]
+other = "ページ"

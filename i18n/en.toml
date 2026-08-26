@@ -97,3 +97,13 @@ other = "Dark theme"
 
 [pageNumber]
 other = "page {{ .Number }}"
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Originally published at"
+
+[posts]
+other = "Posts"
+
+[pages]
+other = "Pages"

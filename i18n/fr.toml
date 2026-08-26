@@ -97,3 +97,13 @@ other = "Thème sombre"
 
 [pageNumber]
 other = "page {{ .Number }}"
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Publié à l’origine sur"
+
+[posts]
+other = "Articles"
+
+[pages]
+other = "Pages"

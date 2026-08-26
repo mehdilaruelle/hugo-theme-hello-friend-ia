@@ -83,3 +83,8 @@ jobs:
       - name: Check images keep their aspect ratio
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-image-sizing.mjs public
+
+      # A broken llms.txt is still a valid text file.
+      - name: Check llms.txt and the Markdown copies
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-llms.mjs public https://example.com/subpath/showcase/

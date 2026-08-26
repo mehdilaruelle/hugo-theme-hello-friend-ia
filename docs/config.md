@@ -336,6 +336,7 @@ templates.
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
+| `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
 
 ```toml
 [params]
@@ -440,3 +441,66 @@ Each language gets its own index and searches only itself.
 The form is hidden in the markup and revealed by the script, so a visitor with
 JavaScript off is told search is unavailable instead of being handed a box
 that does nothing.
+
+## llms.txt
+
+A model handed a page has to find the prose between a menu, a share row and a
+footer. Two output formats hand it the text directly, and a site pays for
+neither unless it asks.
+
+`llms.txt` is a map of the site as plain text — a heading, a one-line summary,
+then every page with a note. The convention is described at
+[llmstxt.org](https://llmstxt.org). Ask for it on the home page:
+
+```toml
+[outputs]
+  home = ["HTML", "RSS", "llms"]
+```
+
+That list replaces the whole of `home`, so a site using [Search](#search) —
+which is `JSON` on the same key — names both rather than one after the other:
+`home = ["HTML", "RSS", "JSON", "llms"]`.
+
+It appears at `/llms.txt`, one per language, because a model reading the
+French site should be handed French.
+
+The summary under the heading is the one the front page already gives a search
+engine: its own `description`, then `params.homeSubtitle`, then
+`params.description`. A front page with a body — see
+[Front page content](../README.md#front-page-content) — has that printed under
+the summary, so a site that has already said what it is about does not say it
+twice. Each page's note is its `description`, falling back to its summary.
+
+`params.llmsNote` adds a line of your own, after both: what you would rather a
+model did with the text, or what the site is not.
+
+`searchable: false` keeps a page out, the same switch the search index reads.
+
+## The page as Markdown
+
+The second format publishes each page a second time as Markdown, at
+`index.md` beside its `index.html`:
+
+```toml
+[outputs]
+  page = ["HTML", "md"]
+```
+
+The page's own `<head>` then advertises it, so a reader that prefers Markdown
+can find it without guessing:
+
+```html
+<link rel="alternate" type="text/markdown" href=".../index.md" />
+```
+
+When both formats are on, `llms.txt` links the Markdown rather than the HTML.
+With only `llms.txt` on, it links the HTML.
+
+What is published is what you wrote — headings, lists, code fences, tables and
+links all survive, because it is the source rather than the rendered page.
+Shortcodes are the one thing rendered, since `{{< video >}}` means nothing
+outside Hugo; they become the HTML they would have produced, which Markdown
+passes through and which carries the real URLs rather than a guess at them.
+
+Each file ends with the canonical URL, so a passage quoted out of it can be
+traced back to the page it came from.

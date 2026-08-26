@@ -1,0 +1,43 @@
+{{- define "partials/inline/url" -}}
+{{- $u := .Permalink -}}
+{{- with .OutputFormats.Get "md" }}{{ $u = .Permalink }}{{ end -}}
+{{- $u -}}
+{{- end -}}
+{{- /* [ ] and \ are syntax inside a link label. */ -}}
+{{- define "partials/inline/label" -}}
+  {{- .Title | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
+{{- end -}}
+{{- define "partials/inline/note" -}}
+  {{- $n := .Description | default .Summary -}}
+  {{- with $n -}}
+    {{- . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}
+  {{- end -}}
+{{- end -}}
+{{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
+# {{ site.Title }}
+{{ with $desc }}
+> {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- with .RenderShortcodes | strings.TrimSpace }}
+{{ . }}
+{{ end }}
+{{- with site.Params.llmsNote }}
+{{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
+{{- $posts := where $all "Section" "posts" -}}
+{{- $other := $all | complement $posts -}}
+{{- with $posts }}
+## {{ i18n "posts" | default "Posts" }}
+
+{{ range . -}}
+- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+{{ end }}
+{{- end }}
+{{- with $other }}
+## {{ i18n "pages" | default "Pages" }}
+
+{{ range . -}}
+- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+{{ end }}
+{{- end -}}

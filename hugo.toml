@@ -1,0 +1,14 @@
+# The theme's text formats. A site pays for one only by asking for it in its
+# own [outputs].
+[outputFormats]
+  [outputFormats.llms]
+    mediaType      = "text/plain"
+    baseName       = "llms"
+    isPlainText    = true
+    notAlternative = true
+
+  [outputFormats.md]
+    mediaType      = "text/markdown"
+    baseName       = "index"
+    isPlainText    = true
+    notAlternative = true
