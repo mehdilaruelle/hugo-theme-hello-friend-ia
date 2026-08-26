@@ -21,6 +21,7 @@ ce qui change :
 | `backgroundImage` | l'image derrière la page d'accueil |
 | `defaultTheme` | la page arrive en sombre au lieu d'y basculer |
 | `enableThumbnails` | les couvertures à côté des titres dans la liste |
+| `enableListExcerpts` | la description de chaque article sous son titre dans la liste |
 
 Aucune n'est active dans la démo par défaut, et c'est délibéré : un thème doit
 ressembler à lui-même à l'installation, pas à une liste de fonctionnalités. La

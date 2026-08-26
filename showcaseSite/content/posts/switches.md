@@ -20,6 +20,7 @@ configuration rather than replacing it, so it only has to name what changes:
 | `backgroundImage` | the image behind the front page |
 | `defaultTheme` | the page arrives dark instead of settling there |
 | `enableThumbnails` | cover images beside titles on the list |
+| `enableListExcerpts` | each post’s description under its title on the list |
 
 None of them are on in the default demo, and that is deliberate: a theme should
 look like itself out of the box, not like a feature list. This site is where the

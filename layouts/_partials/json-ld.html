@@ -27,12 +27,53 @@
   recognise is the evidence tying it to the same person elsewhere. sameAs
   carries the social profiles for that — the same claim rel="me" already makes
   on the links themselves. mailto: is an address, not a profile, so it is left
-  out. jobTitle comes from params.author when it is written as a map.
+  out.
+
+  jobTitle, description, knowsAbout and hasCredential all come from
+  params.author when it is written as a map.
 */ -}}
 {{- $jobTitle := "" -}}
+{{- $personDescription := "" -}}
+{{- $knowsAbout := slice -}}
+{{- $credentials := slice -}}
 {{- with site.Params.author -}}
   {{- if reflect.IsMap . -}}
     {{- $jobTitle = .jobTitle -}}
+    {{- $personDescription = .description -}}
+    {{- with .knowsAbout -}}
+      {{- $knowsAbout = . -}}
+    {{- end -}}
+    {{- /*
+      A credential is an object because schema.org models it as one. url is the
+      credential itself — the badge, the certificate — since that is what url
+      means on any Thing; the body that awarded it goes in recognizedBy. An
+      entry with no name is dropped rather than emitted empty.
+    */ -}}
+    {{- range .credentials -}}
+      {{- $name := .name -}}
+      {{- $category := .category -}}
+      {{- $url := .url -}}
+      {{- $issuer := .issuer -}}
+      {{- with $name -}}
+        {{- $credential := dict "@type" "EducationalOccupationalCredential" "name" $name -}}
+        {{- with $category -}}
+          {{- $credential = merge $credential (dict "credentialCategory" .) -}}
+        {{- end -}}
+        {{- /* absURL drops the base URL path, so a rooted path came out at the
+               domain root on a site served from a subpath. */ -}}
+        {{- with $url -}}
+          {{- $resolved := . -}}
+          {{- if not (partial "is-remote.html" $resolved) -}}
+            {{- $resolved = urls.JoinPath site.BaseURL $resolved -}}
+          {{- end -}}
+          {{- $credential = merge $credential (dict "url" $resolved) -}}
+        {{- end -}}
+        {{- with $issuer -}}
+          {{- $credential = merge $credential (dict "recognizedBy" (dict "@type" "Organization" "name" .)) -}}
+        {{- end -}}
+        {{- $credentials = $credentials | append $credential -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -51,6 +92,15 @@
 {{- end -}}
 {{- with $jobTitle -}}
   {{- $person = merge $person (dict "jobTitle" .) -}}
+{{- end -}}
+{{- with $personDescription -}}
+  {{- $person = merge $person (dict "description" .) -}}
+{{- end -}}
+{{- with $knowsAbout -}}
+  {{- $person = merge $person (dict "knowsAbout" .) -}}
+{{- end -}}
+{{- with $credentials -}}
+  {{- $person = merge $person (dict "hasCredential" .) -}}
 {{- end -}}
 {{- /*
   The portrait as a URL that exists. Resolving it as a resource is what
