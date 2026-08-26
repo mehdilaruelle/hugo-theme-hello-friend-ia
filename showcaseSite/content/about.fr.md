@@ -1,8 +1,7 @@
 +++
 title = "À propos"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
 
 Hugo est le **générateur de sites statiques le plus rapide du monde**, écrit en Go.

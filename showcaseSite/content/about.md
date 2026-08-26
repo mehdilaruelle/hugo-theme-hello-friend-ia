@@ -1,8 +1,7 @@
 +++
 title = "About"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
 
 Hugo is the **world's fastest framework for building websites**. It is written

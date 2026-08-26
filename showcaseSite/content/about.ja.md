@@ -1,8 +1,7 @@
 +++
 title = "概要"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
 
 Hugo は **Go 言語で書かれた、世界最速の静的サイトジェネレーター**です。

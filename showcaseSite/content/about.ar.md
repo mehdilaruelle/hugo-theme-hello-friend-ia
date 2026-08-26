@@ -1,8 +1,7 @@
 +++
 title = "حول"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
 
 Hugo هو **أسرع إطار عمل في العالم لبناء المواقع**، وهو مكتوب بلغة Go.

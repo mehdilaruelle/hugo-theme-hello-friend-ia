@@ -170,7 +170,10 @@
     weight = 3
     locale = "ja-JP"
     label  = "日本語"
+  # No abbreviated month exists in CLDR for either language, so "Jan" resolves
+  # to an empty string and the list date came out as a bare day number.
   [languages.ja.params]
+    dateformShort = "January 2"
     subtitle     = "機能ショーケース"
     description  = "テーマのすべてのオプションを一度に有効にしたサイト"
     homeSubtitle = "すべてのスイッチを入れた状態です"
@@ -216,6 +219,7 @@
     label  = "العربية"
     direction = "rtl"
   [languages.ar.params]
+    dateformShort = "January 2"
     subtitle     = "عرض الميزات"
     description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
     homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"
