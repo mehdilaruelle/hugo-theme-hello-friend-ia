@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "Hello Friend NG"
 description: "Every option the theme has, turned on at once, in four languages, with an article on what each one costs."
 ---
 

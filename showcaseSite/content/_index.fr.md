@@ -1,5 +1,5 @@
 ---
-title: "Accueil"
+title: "Hello Friend NG"
 description: "Toutes les options du thème activées d'un coup, en quatre langues, avec un article sur ce que coûte chacune."
 ---
 
