@@ -109,14 +109,14 @@
     object-fit: cover;
   }
 
-  // The excerpt needs a second line, and the title has to take the space the
-  // date does not, or a title long enough to fill the row pushes the date onto
-  // that second line and space-between leaves it at the start.
+  // The title takes the space the date leaves, or it pushes the date onto the
+  // wrapped line; overflow-wrap because flex will not shrink below a long word.
   .post-item-inner--excerpt {
     flex-wrap: wrap;
 
     .post-title {
       flex: 1;
+      overflow-wrap: anywhere;
     }
   }
 

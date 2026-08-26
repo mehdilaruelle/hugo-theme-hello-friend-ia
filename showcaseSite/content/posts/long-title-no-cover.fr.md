@@ -1,5 +1,5 @@
 +++
-title = "Un titre assez long pour passer à la ligne, et sans couverture pour le décaler"
+title = "Déployer hugo-theme-hello-friend-ng-ia/showcaseSite depuis un chemin assez long pour passer à la ligne"
 description = "La ligne sans miniature dont le titre ne tient pas : le cas où la date n'a nulle part où aller, sinon en dessous."
 date = "2026-01-10"
 type = ["posts","post"]

@@ -1,5 +1,5 @@
 +++
-title = "A title long enough to wrap onto a second line, with no cover to indent it"
+title = "Deploying hugo-theme-hello-friend-ng-ia/showcaseSite from a path long enough to wrap"
 description = "The row that has no thumbnail and a title that does not fit: the case where the date has nowhere to go but down."
 date = "2026-01-10"
 type = ["posts","post"]

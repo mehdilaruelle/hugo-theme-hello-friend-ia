@@ -1,5 +1,5 @@
 +++
-title = "カバー画像がなく、二行目に折り返すほど長いタイトルの記事"
+title = "hugo-theme-hello-friend-ng-ia/showcaseSite という折り返すほど長いパスからのデプロイ"
 description = "サムネイルがなく、タイトルが収まらない行。日付が下に落ちるしかなくなる場合です。"
 date = "2026-01-10"
 type = ["posts","post"]
