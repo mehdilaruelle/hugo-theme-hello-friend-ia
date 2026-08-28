@@ -22,12 +22,16 @@
     <ul class="language-switcher__list">
         {{- /* hugo.Sites, not site.Languages: deprecated in Hugo 0.156, and it
                carries the home page to fall back to when this page has no
-               translation in that language. */ -}}
+               translation in that language.
+
+               Permalink, not RelPermalink: a multihost site gives each language
+               its own baseURL, and a relative link would keep the visitor on
+               the host they are already on. */ -}}
         {{- range hugo.Sites }}
             {{- $lang := .Language -}}
-            {{- $url := .Home.RelPermalink -}}
+            {{- $url := .Home.Permalink -}}
             {{- range $page.AllTranslations -}}
-                {{- if eq .Language.Lang $lang.Lang -}}{{ $url = .RelPermalink }}{{- end -}}
+                {{- if eq .Language.Lang $lang.Lang -}}{{ $url = .Permalink }}{{- end -}}
             {{- end -}}
             {{- $name := $lang.Label | default (upper $lang.Lang) -}}
             <li class="language-switcher__item">
