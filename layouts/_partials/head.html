@@ -43,9 +43,11 @@
   /page/2/ output files, for nothing.
 */ -}}
 {{- $canonical := .Permalink -}}
+{{- $pager := 1 -}}
 {{- if in (slice "section" "taxonomy" "term") .Kind -}}
   {{- with .Paginator -}}
     {{- $canonical = .URL | absURL -}}
+    {{- $pager = .PageNumber -}}
   {{- end -}}
 {{- end -}}
 <link rel="canonical" href="{{ $canonical }}" />
@@ -75,7 +77,15 @@
 {{- end }}
 {{- end }}
 {{- end }}
-{{- if .IsTranslated }}
+{{- /*
+  Only the first pager carries the set. From page two on this page names itself
+  as its canonical, while every .Permalink below is the first page of its
+  language: the set neither contains the page carrying it, which Google
+  requires, nor points at canonical URLs. Whether the same-numbered pager even
+  exists in another language depends on that language's own post count, which
+  is not knowable from here, so the honest answer is to say nothing.
+*/ -}}
+{{- if and .IsTranslated (eq $pager 1) }}
 {{- /*
   x-default names the version to serve when no hreflang matches the visitor.
   hugo.Sites is ordered by language weight, so its first entry is the site's
