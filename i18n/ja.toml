@@ -84,6 +84,15 @@ other = "検索中…"
 
 # partials/head.html
 #
+[taxonomyDescriptionTag]
+other = "サイトのすべてのタグと、それぞれの記事数。"
+
+[taxonomyDescriptionCategory]
+other = "サイトのすべてのカテゴリーと、それぞれの記事数。"
+
+[taxonomyDescription]
+other = "サイトの記事が分類されているものすべて。"
+
 [termDescriptionTag]
 other = "「{{ .Term }}」タグの記事すべて。"
 
