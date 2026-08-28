@@ -35,9 +35,7 @@ const closeLanguageSwitcher = () => {
 
 menuTrigger &&
   menuTrigger.addEventListener("click", () => {
-    // The folded menu and the language panel open into the same corner of the
-    // header, so the one being opened closes the other rather than landing on
-    // top of it.
+    // Both open into the same corner, so opening one closes the other.
     closeLanguageSwitcher();
     menu && menu.classList.toggle("hidden");
     setExpanded();
@@ -45,11 +43,8 @@ menuTrigger &&
 
 window.addEventListener("resize", isMobileMenu);
 
-// Language switcher.
-//
-// It is a details element, so opening and closing it is the browser's own job
-// and it still works with this file blocked. What is added here is only what a
-// details cannot do for itself.
+// The switcher is a details element and opens on its own. Only what a details
+// cannot do for itself is added here.
 if (languageSwitcher) {
   languageSwitcher.addEventListener("toggle", () => {
     if (!languageSwitcher.open || !menu || !isMobile()) return;
@@ -59,17 +54,12 @@ if (languageSwitcher) {
     setExpanded();
   });
 
-  // A click anywhere else closes it. Without this the panel stays open until
-  // the summary is clicked a second time, which is not what a menu that opened
-  // over the page is expected to do.
   document.addEventListener("click", (event) => {
     if (languageSwitcher.open && !languageSwitcher.contains(event.target)) {
       closeLanguageSwitcher();
     }
   });
 
-  // Escape closes it and puts focus back on the globe, so a keyboard visitor
-  // who opened it by mistake is not left inside a list they did not want.
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || !languageSwitcher.open) return;
     closeLanguageSwitcher();

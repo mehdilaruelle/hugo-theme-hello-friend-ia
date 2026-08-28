@@ -109,17 +109,12 @@ that means adding `content/<section>/_index.<code>.md` with a `title`.
 toggle, opening the list of languages by their own names. It renders nothing on
 a single-language site, so it is safe to leave on.
 
-It sits in the header rather than in the menu, so it is still on screen on a
-phone, where the menu folds into the hamburger. Opening one closes the other.
+Every configured language is listed, the current one included and marked. Each
+entry points at this page's translation where there is one, and at that
+language's home page where there is not.
 
-Every configured language is listed, the current one included and marked — a
-globe on its own does not say which language the page is in. Each entry points
-at this page's translation where there is one, and at that language's home page
-where there is not.
-
-The panel is a `details` element, so it opens by pointer, tap and keyboard with
-no JavaScript at all; the bundle only adds closing it with <kbd>Escape</kbd> or
-a click outside.
+The panel is a `details` element, so it opens with no JavaScript; the bundle
+only adds closing it with <kbd>Escape</kbd> or a click outside.
 
 Strings the theme itself renders, such as *Reading time* or *Table of contents*,
 come from `i18n/<code>.toml` and are already translated for the languages
