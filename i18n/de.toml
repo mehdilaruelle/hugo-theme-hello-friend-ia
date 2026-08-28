@@ -45,3 +45,81 @@ olderPosts = "Ältere Beiträge"
 
 [language]
 other = "Sprache"
+
+[skipToContent]
+other = "Zum Inhalt springen"
+
+[toggleMenu]
+other = "Menü"
+
+[toggleTheme]
+other = "Dunkles Design"
+
+[copyCode]
+other = "Kopieren"
+
+[copyCodeDone]
+other = "Kopiert"
+
+[copyCodeFailed]
+other = "Strg+C drücken"
+
+# Search
+#
+[searchLabel]
+other = "Diese Website durchsuchen"
+
+[searchPlaceholder]
+other = "Zum Suchen tippen…"
+
+[searchResultsOne]
+other = "1 Ergebnis"
+
+[searchResultsMany]
+other = "%d Ergebnisse"
+
+[searchFailed]
+other = "Der Suchindex konnte nicht geladen werden."
+
+[searchNoScript]
+other = "Die Suche benötigt JavaScript. Das Archiv lässt sich nach Schlagwort und Datum durchstöbern."
+
+[searchNoIndex]
+other = "Die Suche ist auf dieser Website nicht eingerichtet."
+
+[searchLoading]
+other = "Wird gesucht…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Alle Schlagwörter dieser Website, mit der Anzahl der Beiträge zu jedem."
+
+[taxonomyDescriptionCategory]
+other = "Alle Kategorien dieser Website, mit der Anzahl der Beiträge in jeder."
+
+[taxonomyDescription]
+other = "Alles, wonach diese Website ihre Beiträge einordnet."
+
+[termDescriptionTag]
+other = "Alle Beiträge mit dem Schlagwort „{{ .Term }}“."
+
+[termDescriptionCategory]
+other = "Alle Beiträge in der Kategorie „{{ .Term }}“."
+
+[termDescription]
+other = "Alle Beiträge, die unter „{{ .Term }}“ eingeordnet sind."
+
+[pageNumber]
+other = "Seite {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Ursprünglich veröffentlicht auf"
+
+[posts]
+other = "Beiträge"
+
+[pages]
+other = "Seiten"

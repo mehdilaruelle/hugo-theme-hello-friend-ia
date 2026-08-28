@@ -40,3 +40,86 @@ other = "അവസാനമായി പുതുക്കിയത്"
 
 [language]
 other = "ഭാഷ"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "പുതിയ പോസ്റ്റുകൾ"
+olderPosts = "പഴയ പോസ്റ്റുകൾ"
+
+[skipToContent]
+other = "ഉള്ളടക്കത്തിലേക്ക് പോകുക"
+
+[toggleMenu]
+other = "മെനു"
+
+[toggleTheme]
+other = "ഇരുണ്ട തീം"
+
+[copyCode]
+other = "പകർത്തുക"
+
+[copyCodeDone]
+other = "പകർത്തി"
+
+[copyCodeFailed]
+other = "Ctrl+C അമർത്തുക"
+
+# Search
+#
+[searchLabel]
+other = "ഈ സൈറ്റിൽ തിരയുക"
+
+[searchPlaceholder]
+other = "തിരയാൻ ടൈപ്പ് ചെയ്യുക…"
+
+[searchResultsOne]
+other = "1 ഫലം"
+
+[searchResultsMany]
+other = "%d ഫലങ്ങൾ"
+
+[searchFailed]
+other = "തിരയൽ സൂചിക ലോഡ് ചെയ്യാനായില്ല."
+
+[searchNoScript]
+other = "തിരയലിന് JavaScript ആവശ്യമാണ്. ആർക്കൈവ് ടാഗ് അനുസരിച്ചും തീയതി അനുസരിച്ചും പരിശോധിക്കാം."
+
+[searchNoIndex]
+other = "ഈ സൈറ്റിൽ തിരയൽ ക്രമീകരിച്ചിട്ടില്ല."
+
+[searchLoading]
+other = "തിരയുന്നു…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "ഈ സൈറ്റിലെ എല്ലാ ടാഗുകളും, ഓരോന്നിനു കീഴിലെയും പോസ്റ്റുകളുടെ എണ്ണത്തോടെ."
+
+[taxonomyDescriptionCategory]
+other = "ഈ സൈറ്റിലെ എല്ലാ വിഭാഗങ്ങളും, ഓരോന്നിലെയും പോസ്റ്റുകളുടെ എണ്ണത്തോടെ."
+
+[taxonomyDescription]
+other = "ഈ സൈറ്റ് അതിന്റെ പോസ്റ്റുകൾ ക്രമീകരിക്കുന്ന എല്ലാ വിഭാഗങ്ങളും."
+
+[termDescriptionTag]
+other = "“{{ .Term }}” ടാഗുള്ള എല്ലാ പോസ്റ്റുകളും."
+
+[termDescriptionCategory]
+other = "“{{ .Term }}” വിഭാഗത്തിലെ എല്ലാ പോസ്റ്റുകളും."
+
+[termDescription]
+other = "“{{ .Term }}” എന്നതിനു കീഴിലുള്ള എല്ലാ പോസ്റ്റുകളും."
+
+[pageNumber]
+other = "പേജ് {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "ആദ്യം പ്രസിദ്ധീകരിച്ചത്"
+
+[posts]
+other = "പോസ്റ്റുകൾ"
+
+[pages]
+other = "പേജുകൾ"

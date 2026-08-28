@@ -45,3 +45,81 @@ olderPosts = "Intrări mai vechi"
 
 [language]
 other = "Limbă"
+
+[skipToContent]
+other = "Sari la conținut"
+
+[toggleMenu]
+other = "Meniu"
+
+[toggleTheme]
+other = "Temă întunecată"
+
+[copyCode]
+other = "Copiază"
+
+[copyCodeDone]
+other = "Copiat"
+
+[copyCodeFailed]
+other = "Apasă Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Caută pe acest site"
+
+[searchPlaceholder]
+other = "Scrie pentru a căuta…"
+
+[searchResultsOne]
+other = "1 rezultat"
+
+[searchResultsMany]
+other = "%d rezultate"
+
+[searchFailed]
+other = "Indexul de căutare nu a putut fi încărcat."
+
+[searchNoScript]
+other = "Căutarea necesită JavaScript. Arhiva poate fi răsfoită după etichetă și după dată."
+
+[searchNoIndex]
+other = "Căutarea nu este configurată pe acest site."
+
+[searchLoading]
+other = "Se caută…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Toate etichetele de pe acest site, cu numărul de articole pentru fiecare."
+
+[taxonomyDescriptionCategory]
+other = "Toate categoriile de pe acest site, cu numărul de articole din fiecare."
+
+[taxonomyDescription]
+other = "Tot ceea ce acest site folosește pentru a-și clasifica articolele."
+
+[termDescriptionTag]
+other = "Toate articolele etichetate „{{ .Term }}”."
+
+[termDescriptionCategory]
+other = "Toate articolele din categoria „{{ .Term }}”."
+
+[termDescription]
+other = "Toate articolele clasificate sub „{{ .Term }}”."
+
+[pageNumber]
+other = "pagina {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Publicat inițial pe"
+
+[posts]
+other = "Articole"
+
+[pages]
+other = "Pagini"

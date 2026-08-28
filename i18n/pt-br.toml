@@ -45,3 +45,81 @@ olderPosts = "Entradas mais antigas"
 
 [language]
 other = "Idioma"
+
+[skipToContent]
+other = "Pular para o conteúdo"
+
+[toggleMenu]
+other = "Menu"
+
+[toggleTheme]
+other = "Tema escuro"
+
+[copyCode]
+other = "Copiar"
+
+[copyCodeDone]
+other = "Copiado"
+
+[copyCodeFailed]
+other = "Pressione Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Buscar neste site"
+
+[searchPlaceholder]
+other = "Digite para buscar…"
+
+[searchResultsOne]
+other = "1 resultado"
+
+[searchResultsMany]
+other = "%d resultados"
+
+[searchFailed]
+other = "Não foi possível carregar o índice de busca."
+
+[searchNoScript]
+other = "A busca precisa de JavaScript. O arquivo pode ser navegado por tag e por data."
+
+[searchNoIndex]
+other = "A busca não está configurada neste site."
+
+[searchLoading]
+other = "Buscando…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Todas as tags deste site, com o número de publicações em cada uma."
+
+[taxonomyDescriptionCategory]
+other = "Todas as categorias deste site, com o número de publicações em cada uma."
+
+[taxonomyDescription]
+other = "Tudo sob o que este site arquiva suas publicações."
+
+[termDescriptionTag]
+other = "Todas as publicações com a tag “{{ .Term }}”."
+
+[termDescriptionCategory]
+other = "Todas as publicações na categoria “{{ .Term }}”."
+
+[termDescription]
+other = "Todas as publicações arquivadas sob “{{ .Term }}”."
+
+[pageNumber]
+other = "página {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Publicado originalmente em"
+
+[posts]
+other = "Publicações"
+
+[pages]
+other = "Páginas"

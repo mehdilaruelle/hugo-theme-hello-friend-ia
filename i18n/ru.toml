@@ -49,3 +49,81 @@ olderPosts = "Старые записи"
 
 [language]
 other = "Язык"
+
+[skipToContent]
+other = "Перейти к содержимому"
+
+[toggleMenu]
+other = "Меню"
+
+[toggleTheme]
+other = "Тёмная тема"
+
+[copyCode]
+other = "Копировать"
+
+[copyCodeDone]
+other = "Скопировано"
+
+[copyCodeFailed]
+other = "Нажмите Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Поиск по сайту"
+
+[searchPlaceholder]
+other = "Введите запрос…"
+
+[searchResultsOne]
+other = "1 результат"
+
+[searchResultsMany]
+other = "Результатов: %d"
+
+[searchFailed]
+other = "Не удалось загрузить поисковый индекс."
+
+[searchNoScript]
+other = "Для поиска нужен JavaScript. Архив можно просматривать по меткам и по датам."
+
+[searchNoIndex]
+other = "Поиск на этом сайте не настроен."
+
+[searchLoading]
+other = "Идёт поиск…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Все метки сайта с числом записей под каждой."
+
+[taxonomyDescriptionCategory]
+other = "Все категории сайта с числом записей в каждой."
+
+[taxonomyDescription]
+other = "Всё, по чему на этом сайте разложены записи."
+
+[termDescriptionTag]
+other = "Все записи с меткой «{{ .Term }}»."
+
+[termDescriptionCategory]
+other = "Все записи в категории «{{ .Term }}»."
+
+[termDescription]
+other = "Все записи из раздела «{{ .Term }}»."
+
+[pageNumber]
+other = "страница {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Первая публикация на"
+
+[posts]
+other = "Записи"
+
+[pages]
+other = "Страницы"

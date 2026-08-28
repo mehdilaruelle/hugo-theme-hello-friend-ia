@@ -45,3 +45,81 @@ olderPosts = "Eski girişler"
 
 [language]
 other = "Dil"
+
+[skipToContent]
+other = "İçeriğe geç"
+
+[toggleMenu]
+other = "Menü"
+
+[toggleTheme]
+other = "Koyu tema"
+
+[copyCode]
+other = "Kopyala"
+
+[copyCodeDone]
+other = "Kopyalandı"
+
+[copyCodeFailed]
+other = "Ctrl+C tuşlarına basın"
+
+# Search
+#
+[searchLabel]
+other = "Bu sitede ara"
+
+[searchPlaceholder]
+other = "Aramak için yazın…"
+
+[searchResultsOne]
+other = "1 sonuç"
+
+[searchResultsMany]
+other = "%d sonuç"
+
+[searchFailed]
+other = "Arama dizini yüklenemedi."
+
+[searchNoScript]
+other = "Arama JavaScript gerektirir. Arşive etikete ve tarihe göre göz atabilirsiniz."
+
+[searchNoIndex]
+other = "Bu sitede arama yapılandırılmamış."
+
+[searchLoading]
+other = "Aranıyor…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Bu sitedeki tüm etiketler ve her birinin altındaki yazı sayısı."
+
+[taxonomyDescriptionCategory]
+other = "Bu sitedeki tüm kategoriler ve her birindeki yazı sayısı."
+
+[taxonomyDescription]
+other = "Bu sitenin yazılarını altında topladığı her şey."
+
+[termDescriptionTag]
+other = "“{{ .Term }}” etiketli tüm yazılar."
+
+[termDescriptionCategory]
+other = "“{{ .Term }}” kategorisindeki tüm yazılar."
+
+[termDescription]
+other = "“{{ .Term }}” altında toplanan tüm yazılar."
+
+[pageNumber]
+other = "sayfa {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "İlk olarak şurada yayımlandı"
+
+[posts]
+other = "Yazılar"
+
+[pages]
+other = "Sayfalar"

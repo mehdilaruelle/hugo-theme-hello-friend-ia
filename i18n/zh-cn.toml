@@ -45,3 +45,81 @@ olderPosts = "旧条目"
 
 [language]
 other = "语言"
+
+[skipToContent]
+other = "跳到正文"
+
+[toggleMenu]
+other = "菜单"
+
+[toggleTheme]
+other = "深色主题"
+
+[copyCode]
+other = "复制"
+
+[copyCodeDone]
+other = "已复制"
+
+[copyCodeFailed]
+other = "请按 Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "站内搜索"
+
+[searchPlaceholder]
+other = "输入以搜索…"
+
+[searchResultsOne]
+other = "1 条结果"
+
+[searchResultsMany]
+other = "%d 条结果"
+
+[searchFailed]
+other = "无法加载搜索索引。"
+
+[searchNoScript]
+other = "搜索需要 JavaScript。归档可按标签和日期浏览。"
+
+[searchNoIndex]
+other = "本站尚未配置搜索。"
+
+[searchLoading]
+other = "搜索中…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "本站的所有标签，以及每个标签下的文章数。"
+
+[taxonomyDescriptionCategory]
+other = "本站的所有分类，以及每个分类下的文章数。"
+
+[taxonomyDescription]
+other = "本站归类文章所用的全部条目。"
+
+[termDescriptionTag]
+other = "带有标签“{{ .Term }}”的全部文章。"
+
+[termDescriptionCategory]
+other = "分类“{{ .Term }}”下的全部文章。"
+
+[termDescription]
+other = "归入“{{ .Term }}”的全部文章。"
+
+[pageNumber]
+other = "第 {{ .Number }} 页"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "最初发布于"
+
+[posts]
+other = "文章"
+
+[pages]
+other = "页面"

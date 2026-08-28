@@ -40,3 +40,86 @@ other = "Last update"
 
 [language]
 other = "Lengua"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Articol pussee noeuv"
+olderPosts = "Articol pussee vecc"
+
+[skipToContent]
+other = "Va al contegnuu"
+
+[toggleMenu]
+other = "Menu"
+
+[toggleTheme]
+other = "Tema scur"
+
+[copyCode]
+other = "Copia"
+
+[copyCodeDone]
+other = "Copiaa"
+
+[copyCodeFailed]
+other = "Prem Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Cerca in sto sit"
+
+[searchPlaceholder]
+other = "Scriv per cercà…"
+
+[searchResultsOne]
+other = "1 resultaa"
+
+[searchResultsMany]
+other = "%d resultaa"
+
+[searchFailed]
+other = "Se pò minga cargà l'indes de la ricerca."
+
+[searchNoScript]
+other = "La ricerca la gh'ha bisogn de JavaScript. L'archivi el se pò sfojà per tag e per data."
+
+[searchNoIndex]
+other = "La ricerca l'è minga configurada su sto sit."
+
+[searchLoading]
+other = "Se cerca…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Tucc i tag de sto sit, cont el numer di articol sott a ognidun."
+
+[taxonomyDescriptionCategory]
+other = "Tucc i categorii de sto sit, cont el numer di articol in ognidunna."
+
+[taxonomyDescription]
+other = "Tuscoss che sto sit el dopera per ordinà i so articol."
+
+[termDescriptionTag]
+other = "Tucc i articol cont el tag «{{ .Term }}»."
+
+[termDescriptionCategory]
+other = "Tucc i articol de la categoria «{{ .Term }}»."
+
+[termDescription]
+other = "Tucc i articol ordinaa sott a «{{ .Term }}»."
+
+[pageNumber]
+other = "pagina {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Publicaa in origin su"
+
+[posts]
+other = "Articol"
+
+[pages]
+other = "Pagin"

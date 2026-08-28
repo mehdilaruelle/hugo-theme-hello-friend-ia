@@ -40,3 +40,86 @@ other = "最後修改"
 
 [language]
 other = "語言"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "較新文章"
+olderPosts = "較舊文章"
+
+[skipToContent]
+other = "跳至內容"
+
+[toggleMenu]
+other = "選單"
+
+[toggleTheme]
+other = "深色主題"
+
+[copyCode]
+other = "複製"
+
+[copyCodeDone]
+other = "已複製"
+
+[copyCodeFailed]
+other = "請按 Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "站內搜尋"
+
+[searchPlaceholder]
+other = "輸入以搜尋…"
+
+[searchResultsOne]
+other = "1 項結果"
+
+[searchResultsMany]
+other = "%d 項結果"
+
+[searchFailed]
+other = "無法載入搜尋索引。"
+
+[searchNoScript]
+other = "搜尋需要 JavaScript。封存可依標籤與日期瀏覽。"
+
+[searchNoIndex]
+other = "本站尚未設定搜尋。"
+
+[searchLoading]
+other = "搜尋中…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "本站的所有標籤，以及每個標籤下的文章數。"
+
+[taxonomyDescriptionCategory]
+other = "本站的所有分類，以及每個分類下的文章數。"
+
+[taxonomyDescription]
+other = "本站用來歸類文章的所有項目。"
+
+[termDescriptionTag]
+other = "帶有標籤「{{ .Term }}」的所有文章。"
+
+[termDescriptionCategory]
+other = "分類「{{ .Term }}」下的所有文章。"
+
+[termDescription]
+other = "歸入「{{ .Term }}」的所有文章。"
+
+[pageNumber]
+other = "第 {{ .Number }} 頁"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "最初發表於"
+
+[posts]
+other = "文章"
+
+[pages]
+other = "頁面"
