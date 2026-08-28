@@ -1,9 +1,10 @@
 +++
 title = "概要"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
+
+Jane Doe はウェブサイトを作り、そのために使う道具についてここで書いています。
 
 Hugo は **Go 言語で書かれた、世界最速の静的サイトジェネレーター**です。
 

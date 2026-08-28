@@ -1,9 +1,10 @@
 +++
 title = "À propos"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
+
+Jane Doe construit des sites web, et écrit ici sur les outils dont elle se sert pour cela.
 
 Hugo est le **générateur de sites statiques le plus rapide du monde**, écrit en Go.
 

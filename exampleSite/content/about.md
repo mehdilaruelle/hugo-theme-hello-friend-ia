@@ -5,6 +5,8 @@ date   = "2014-04-09"
 aliases = ["about-us","about-hugo","contact"]
 +++
 
+Jane Doe builds websites, and writes here about the tools she uses to do it.
+
 Hugo is the **world’s fastest framework for building websites**. It is written in Go.
 
 It makes use of a variety of open source projects including:

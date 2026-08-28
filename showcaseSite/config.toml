@@ -170,7 +170,10 @@
     weight = 3
     locale = "ja-JP"
     label  = "日本語"
+  # No abbreviated month exists in CLDR for either language, so "Jan" resolves
+  # to an empty string and the list date came out as a bare day number.
   [languages.ja.params]
+    dateformShort = "January 2"
     subtitle     = "機能ショーケース"
     description  = "テーマのすべてのオプションを一度に有効にしたサイト"
     homeSubtitle = "すべてのスイッチを入れた状態です"
@@ -215,7 +218,10 @@
     locale = "ar-SA"
     label  = "العربية"
     direction = "rtl"
+  # Day before month here, unlike Japanese: Hugo localises the month name but
+  # never the order, which the layout string fixes.
   [languages.ar.params]
+    dateformShort = "2 January"
     subtitle     = "عرض الميزات"
     description  = "كل خيارات القالب مُفعَّلة دفعة واحدة"
     homeSubtitle = "كل المفاتيح مُشغَّلة، لترى ما تفعله"

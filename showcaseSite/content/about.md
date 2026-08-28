@@ -1,9 +1,10 @@
 +++
 title = "About"
+schema = "ProfilePage"
 date = "2014-04-09"
-[ author ]
-  name = "Hugo Authors"
 +++
+
+Jane Doe builds websites, and writes here about the tools she uses to do it.
 
 Hugo is the **world's fastest framework for building websites**. It is written
 in Go.
