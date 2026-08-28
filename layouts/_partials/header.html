@@ -5,12 +5,24 @@
         <span class="header__right">
             {{- if len .Site.Menus }}
                 {{ partial "menu.html" . }}
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                {{- /* A button, not a span. Below the phone breakpoint the menu
+                       is display: none and this is the only way to it, so a
+                       control no keyboard can reach and no screen reader can
+                       name does not collapse the navigation, it removes it.
+
+                       disabled until menu.js wires it up, like the toggle
+                       below: without the script the menu is already open.
+                       aria-expanded says so for the same reason — a disabled
+                       control is still read out, and the markup ships with the
+                       menu open. menu.js corrects it during init, before it
+                       removes disabled. */ -}}
+                <button type="button" class="menu-trigger" aria-expanded="true" disabled
+                        aria-label="{{ partial "i18n.html" (dict "key" "toggleMenu" "fallback" "Menu") }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M0 0h24v24H0z" fill="none"/>
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </svg>
-                </span>
+                </button>
             {{- end }}
 
             {{- if .Site.Params.EnableThemeToggle }}

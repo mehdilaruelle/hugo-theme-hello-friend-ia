@@ -104,6 +104,9 @@ other = "Every post filed under “{{ .Term }}”."
 [toggleTheme]
 other = "Dark theme"
 
+[toggleMenu]
+other = "Menu"
+
 [pageNumber]
 other = "page {{ .Number }}"
 # Markdown output and llms.txt

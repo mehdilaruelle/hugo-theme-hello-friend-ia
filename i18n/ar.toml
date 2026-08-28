@@ -119,6 +119,9 @@ other = "كل المقالات المصنّفة تحت «{{ .Term }}»."
 [toggleTheme]
 other = "المظهر الداكن"
 
+[toggleMenu]
+other = "القائمة"
+
 [pageNumber]
 other = "الصفحة {{ .Number }}"
 
