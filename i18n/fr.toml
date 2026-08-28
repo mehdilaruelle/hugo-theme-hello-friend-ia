@@ -104,6 +104,9 @@ other = "Tous les articles classés sous « {{ .Term }} »."
 [toggleTheme]
 other = "Thème sombre"
 
+[toggleMenu]
+other = "Menu"
+
 [pageNumber]
 other = "page {{ .Number }}"
 # Markdown output and llms.txt
