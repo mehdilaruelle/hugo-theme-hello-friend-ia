@@ -128,9 +128,10 @@ disableHugoGeneratorInject = false
 
   # Global language menu
   #
-  # Puts the other languages in the menu. Left on here although this site has
-  # only one, because it then renders nothing at all — which is the point worth
-  # demonstrating. The showcase site has four and shows what it looks like.
+  # Puts a globe in the header, beside the theme toggle, opening the list of
+  # languages. Left on here although this site has only one, because it then
+  # renders nothing at all — which is the point worth demonstrating. The
+  # showcase site has four and shows what it looks like.
   #
   enableGlobalLanguageMenu = true
 

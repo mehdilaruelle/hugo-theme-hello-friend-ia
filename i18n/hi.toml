@@ -37,3 +37,6 @@ other = "{{ .Count }} शब्द"
 
 [lastModified]
 other = "आखरी अपडेट"
+
+[language]
+other = "भाषा"

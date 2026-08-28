@@ -108,6 +108,9 @@ other = "ダークテーマ"
 [toggleMenu]
 other = "メニュー"
 
+[language]
+other = "言語"
+
 [pageNumber]
 other = "{{ .Number }} ページ目"
 

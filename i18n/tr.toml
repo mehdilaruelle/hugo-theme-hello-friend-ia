@@ -42,3 +42,6 @@ other = "Son güncelleme"
 [pagination]
 newerPosts = "Daha yeni girişler"
 olderPosts = "Eski girişler"
+
+[language]
+other = "Dil"

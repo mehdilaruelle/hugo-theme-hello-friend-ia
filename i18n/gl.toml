@@ -39,3 +39,6 @@ other = "{{ .Count }} Palabras"
 [pagination]
 newerPosts = "Entradas más recientes"
 olderPosts = "Entradas antiguas"
+
+[language]
+other = "Idioma"

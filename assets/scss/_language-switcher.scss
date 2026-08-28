@@ -1,0 +1,179 @@
+@use "variables" as *;
+
+// The globe in the header and the panel it opens.
+//
+// A details element, so the open and closed states are the browser's own and
+// the panel works with the script bundle blocked. The marker it draws in front
+// of the summary is removed three ways because no single one covers every
+// engine: list-style for Firefox, ::-webkit-details-marker for older WebKit,
+// ::marker for the rest.
+.language-switcher {
+  position: relative;
+  margin-inline-start: 10px;
+
+  > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: "";
+    }
+
+    // A summary is focusable in every browser, and this is the only thing
+    // telling a keyboard visitor it is where they are. Matches the ring on the
+    // theme toggle next to it.
+    &:focus-visible {
+      outline: 2px solid #67a2c9;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+  }
+
+  &__icon {
+    // The stroke, not the fill: the icon is drawn as lines, and currentColor
+    // then carries it through both themes the way the toggle's fill does.
+    stroke: currentColor;
+    flex: 0 0 auto;
+  }
+
+  &__list {
+    position: absolute;
+    // Below the icon rather than beside it, clear of the header's own padding.
+    top: calc(100% + 14px);
+    inset-inline-end: 0;
+    // Above .menu, which sits at 9999: on a phone the folded menu opens into
+    // the same corner, and the panel the visitor just opened has to win.
+    z-index: 10000;
+    min-width: 9rem;
+    margin: 0;
+    padding: 6px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    list-style: none;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    // data-theme is only on the element once the script has run, so the system
+    // preference is answered on its own as well — the shape every other themed
+    // rule in this theme uses.
+    background: $light-background-header;
+    border-color: $light-border-color;
+
+    @media (prefers-color-scheme: dark) {
+      background: $dark-background-header;
+      border-color: $dark-border-color;
+    }
+
+    @media (prefers-color-scheme: light) {
+      background: $light-background-header;
+      border-color: $light-border-color;
+    }
+
+    [data-theme=dark] & {
+      background: $dark-background-header;
+      border-color: $dark-border-color;
+    }
+
+    [data-theme=light] & {
+      background: $light-background-header;
+      border-color: $light-border-color;
+    }
+  }
+
+  &__item {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__link,
+  &__current {
+    display: block;
+    padding: 6px 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    // The panel is opened from a corner of the header, and its entries read
+    // from the start edge whichever way the page runs.
+    text-align: start;
+  }
+
+  &__link {
+    color: $light-color;
+
+    &:hover,
+    &:focus-visible {
+      background: $light-background-secondary;
+      text-decoration: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      color: $dark-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $dark-background-secondary;
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      color: $light-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $light-background-secondary;
+      }
+    }
+
+    [data-theme=dark] & {
+      color: $dark-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $dark-background-secondary;
+      }
+    }
+
+    [data-theme=light] & {
+      color: $light-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $light-background-secondary;
+      }
+    }
+  }
+
+  // The language already being read. Not a link, so it is marked by weight and
+  // by a rule on the start edge rather than by colour alone.
+  &__current {
+    font-weight: bold;
+    border-inline-start: 3px solid currentColor;
+    padding-inline-start: 11px;
+
+    color: $light-color-secondary;
+
+    @media (prefers-color-scheme: dark) {
+      color: $dark-color-secondary;
+    }
+
+    @media (prefers-color-scheme: light) {
+      color: $light-color-secondary;
+    }
+
+    [data-theme=dark] & {
+      color: $dark-color-secondary;
+    }
+
+    [data-theme=light] & {
+      color: $light-color-secondary;
+    }
+  }
+}

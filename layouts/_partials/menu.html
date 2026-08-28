@@ -42,23 +42,10 @@
             {{ end }}
         {{- end }}
 
-        {{- if and .Site.Params.EnableGlobalLanguageMenu hugo.IsMultilingual }}
-            <li class="languages">
-                {{- range .AllTranslations }}
-                    {{- if ne .Language.Lang $.Language.Lang }}
-                        {{- $label := .Language.Label | default .Language.Lang }}
-                        <a class="language"
-                           href="{{ .Permalink }}"
-                           lang="{{ .Language.Lang }}"
-                           hreflang="{{ .Language.Lang }}"
-                           title="{{ $label }}">
-                            <span aria-hidden="true">{{ .Language.Lang | upper }}</span>
-                            <span class="screen-reader-text">{{ $label }}</span>
-                        </a>
-                    {{- end }}
-                {{- end }}
-            </li>
-        {{- end }}
+        {{- /* The language switcher used to be the last entry here. It now
+               lives in the header, beside the theme toggle, so that it is still
+               on screen when this menu folds into the hamburger — see
+               partials/language-switcher.html. */ -}}
     </ul>
 </nav>
 

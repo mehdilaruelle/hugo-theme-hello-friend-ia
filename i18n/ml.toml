@@ -37,3 +37,6 @@ other = "{{ .Count }} വാക്കുകൾ"
 
 [lastModified]
 other = "അവസാനമായി പുതുക്കിയത്"
+
+[language]
+other = "ഭാഷ"

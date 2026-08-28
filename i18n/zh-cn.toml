@@ -42,3 +42,6 @@ other = "最后修改"
 [pagination]
 newerPosts = "较新条目"
 olderPosts = "旧条目"
+
+[language]
+other = "语言"

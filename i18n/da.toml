@@ -37,3 +37,6 @@ other = "{{ .Count }} Ord"
 
 [lastModified]
 other = "Sidst opdateret"
+
+[language]
+other = "Sprog"

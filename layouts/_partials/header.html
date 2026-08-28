@@ -35,6 +35,11 @@
                 <button type="button" class="theme-toggle not-selectable" aria-pressed="false" disabled
                         aria-label="{{ partial "i18n.html" (dict "key" "toggleTheme" "fallback" "Dark theme") }}">{{ partial "theme-toggle-icon.html" . }}</button>
             {{- end}}
+
+            {{- /* Alongside the theme toggle rather than inside the menu, so it
+                   survives the menu folding into the hamburger on a phone. The
+                   partial renders nothing on a single-language site. */ -}}
+            {{ partial "language-switcher.html" . }}
         </span>
     </span>
 </header>
