@@ -98,6 +98,15 @@ other = "جارٍ البحث…"
 
 # partials/head.html
 #
+[taxonomyDescriptionTag]
+other = "كل الوسوم في هذا الموقع، مع عدد المقالات تحت كل واحد."
+
+[taxonomyDescriptionCategory]
+other = "كل التصنيفات في هذا الموقع، مع عدد المقالات في كل واحد."
+
+[taxonomyDescription]
+other = "كل ما تُصنَّف تحته مقالات هذا الموقع."
+
 [termDescriptionTag]
 other = "كل المقالات الموسومة بـ«{{ .Term }}»."
 

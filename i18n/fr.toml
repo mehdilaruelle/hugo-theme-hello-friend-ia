@@ -82,6 +82,15 @@ other = "La recherche n’est pas configurée sur ce site."
 other = "Recherche en cours…"
 
 # partials/head.html
+[taxonomyDescriptionTag]
+other = "Tous les tags du site, avec le nombre d'articles pour chacun."
+
+[taxonomyDescriptionCategory]
+other = "Toutes les catégories du site, avec le nombre d'articles dans chacune."
+
+[taxonomyDescription]
+other = "Tout ce sous quoi les articles du site sont classés."
+
 [termDescriptionTag]
 other = "Tous les articles avec le tag « {{ .Term }} »."
 
