@@ -57,7 +57,7 @@ disableHugoGeneratorInject = false
           inline = [['\(', '\)']]
 
 [permalinks]
-  posts = "/posts/:year/:month/:title/"
+  posts = "/posts/:year/:month/:slug/"
 
 [taxonomies]
   tag      = "tags"

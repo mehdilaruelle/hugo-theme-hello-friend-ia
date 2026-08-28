@@ -1,5 +1,6 @@
 +++
-title = "النشر من المسار hugo-theme-hello-friend-ng-ia/showcaseSite الطويل بما يكفي لينتقل إلى سطر ثانٍ"
+title = "النشر من المسار hugo-theme-hello-friend-ng-ia الطويل بما يكفي لينتقل إلى سطر ثانٍ"
+slug = "long-title-no-cover"
 description = "الصف الذي لا يحمل صورة مصغّرة وعنوانه لا يتّسع: الحالة التي لا يجد فيها التاريخ مكانًا إلا في الأسفل."
 date = "2026-01-10"
 type = ["posts","post"]
