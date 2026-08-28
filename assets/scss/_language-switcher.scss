@@ -1,0 +1,162 @@
+@use "variables" as *;
+
+.language-switcher {
+  position: relative;
+  margin-inline-start: 10px;
+
+  > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    // The marker is removed three ways: no single one covers every engine.
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: "";
+    }
+
+    &:focus-visible {
+      outline: 2px solid #67a2c9;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+  }
+
+  &__icon {
+    stroke: currentColor;
+    flex: 0 0 auto;
+  }
+
+  &__list {
+    position: absolute;
+    top: calc(100% + 14px);
+    inset-inline-end: 0;
+    // Above .menu, at 9999: on a phone both open into the same corner.
+    z-index: 10000;
+    min-width: 9rem;
+    margin: 0;
+    padding: 6px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    list-style: none;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    // data-theme is only on the element once the script has run, so the system
+    // preference is answered on its own as well.
+    background: $light-background-header;
+    border-color: $light-border-color;
+
+    @media (prefers-color-scheme: dark) {
+      background: $dark-background-header;
+      border-color: $dark-border-color;
+    }
+
+    @media (prefers-color-scheme: light) {
+      background: $light-background-header;
+      border-color: $light-border-color;
+    }
+
+    [data-theme=dark] & {
+      background: $dark-background-header;
+      border-color: $dark-border-color;
+    }
+
+    [data-theme=light] & {
+      background: $light-background-header;
+      border-color: $light-border-color;
+    }
+  }
+
+  &__item {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__link,
+  &__current {
+    display: block;
+    padding: 6px 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    text-align: start;
+  }
+
+  &__link {
+    color: $light-color;
+
+    &:hover,
+    &:focus-visible {
+      background: $light-background-secondary;
+      text-decoration: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      color: $dark-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $dark-background-secondary;
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      color: $light-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $light-background-secondary;
+      }
+    }
+
+    [data-theme=dark] & {
+      color: $dark-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $dark-background-secondary;
+      }
+    }
+
+    [data-theme=light] & {
+      color: $light-color;
+
+      &:hover,
+      &:focus-visible {
+        background: $light-background-secondary;
+      }
+    }
+  }
+
+  // The current language, marked by weight and a rule rather than colour alone.
+  &__current {
+    font-weight: bold;
+    border-inline-start: 3px solid currentColor;
+    padding-inline-start: 11px;
+
+    color: $light-color-secondary;
+
+    @media (prefers-color-scheme: dark) {
+      color: $dark-color-secondary;
+    }
+
+    @media (prefers-color-scheme: light) {
+      color: $light-color-secondary;
+    }
+
+    [data-theme=dark] & {
+      color: $dark-color-secondary;
+    }
+
+    [data-theme=light] & {
+      color: $light-color-secondary;
+    }
+  }
+}

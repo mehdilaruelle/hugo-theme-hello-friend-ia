@@ -107,6 +107,9 @@ other = "Thème sombre"
 [toggleMenu]
 other = "Menu"
 
+[language]
+other = "Langue"
+
 [pageNumber]
 other = "page {{ .Number }}"
 # Markdown output and llms.txt

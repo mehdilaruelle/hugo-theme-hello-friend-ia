@@ -324,7 +324,8 @@ pagination.pagerSize     = 10
   # Enable sharing buttons, if you like
   enableSharingButtons = true
   
-  # Show a global language switcher in the navigation bar
+  # Show a global language switcher — a globe in the header, beside the theme
+  # toggle, at every screen width
   enableGlobalLanguageMenu = true
 
   # Metadata mostly used in document's head

@@ -42,3 +42,6 @@ other = "Ultimo aggiornamento"
 [pagination]
 newerPosts = "Voci più recenti"
 olderPosts = "Voci più vecchie"
+
+[language]
+other = "Lingua"

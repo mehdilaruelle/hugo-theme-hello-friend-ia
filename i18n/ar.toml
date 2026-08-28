@@ -122,6 +122,9 @@ other = "المظهر الداكن"
 [toggleMenu]
 other = "القائمة"
 
+[language]
+other = "اللغة"
+
 [pageNumber]
 other = "الصفحة {{ .Number }}"
 

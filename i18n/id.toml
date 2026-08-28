@@ -42,3 +42,6 @@ other = "Terakhir diupdate"
 [pagination]
 newerPosts = "Postingan yang lebih baru"
 olderPosts = "Postingan yang lebih lama"
+
+[language]
+other = "Bahasa"

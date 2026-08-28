@@ -105,9 +105,16 @@ that means adding `content/<section>/_index.<code>.md` with a `title`.
 
 ### The language switcher
 
-`params.enableGlobalLanguageMenu` puts the other languages in the menu, each as
-its two-letter code. It renders nothing on a single-language site, so it is safe
-to leave on.
+`params.enableGlobalLanguageMenu` puts a globe in the header, next to the theme
+toggle, opening the list of languages by their own names. It renders nothing on
+a single-language site, so it is safe to leave on.
+
+Every configured language is listed, the current one included and marked. Each
+entry points at this page's translation where there is one, and at that
+language's home page where there is not.
+
+The panel is a `details` element, so it opens with no JavaScript; the bundle
+only adds closing it with <kbd>Escape</kbd> or a click outside.
 
 Strings the theme itself renders, such as *Reading time* or *Table of contents*,
 come from `i18n/<code>.toml` and are already translated for the languages

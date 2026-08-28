@@ -1,0 +1,51 @@
+{{- /*
+  A globe in the header, opening the list of languages.
+
+  A details/summary, so it opens with no JavaScript; menu.js only adds Escape
+  and click-outside.
+*/ -}}
+{{- if and .Site.Params.EnableGlobalLanguageMenu hugo.IsMultilingual -}}
+{{- $page := . -}}
+{{- $label := partial "i18n.html" (dict "key" "language" "fallback" "Language") -}}
+<details class="language-switcher">
+    <summary class="language-switcher__toggle" title="{{ $label }}">
+        <svg class="language-switcher__icon" width="24" height="24" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true" focusable="false"
+             xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18"/>
+            <path d="M12 3a14 14 0 0 1 3.6 9A14 14 0 0 1 12 21a14 14 0 0 1-3.6-9A14 14 0 0 1 12 3z"/>
+        </svg>
+        <span class="screen-reader-text">{{ $label }}</span>
+    </summary>
+    <ul class="language-switcher__list">
+        {{- /* hugo.Sites, not site.Languages: deprecated in Hugo 0.156, and it
+               carries the home page to fall back to when this page has no
+               translation in that language.
+
+               Permalink, not RelPermalink: a multihost site gives each language
+               its own baseURL, and a relative link would keep the visitor on
+               the host they are already on. */ -}}
+        {{- range hugo.Sites }}
+            {{- $lang := .Language -}}
+            {{- $url := .Home.Permalink -}}
+            {{- range $page.AllTranslations -}}
+                {{- if eq .Language.Lang $lang.Lang -}}{{ $url = .Permalink }}{{- end -}}
+            {{- end -}}
+            {{- $name := $lang.Label | default (upper $lang.Lang) -}}
+            <li class="language-switcher__item">
+                {{- if eq $lang.Lang $page.Language.Lang -}}
+                    {{- /* Marked, not linked: a globe does not say which
+                           language the page is already in. */ -}}
+                    <span class="language-switcher__current" lang="{{ $lang.Lang }}"
+                          {{ with $lang.Direction }}dir="{{ . }}" {{ end }}aria-current="true">{{ $name }}</span>
+                {{- else -}}
+                    <a class="language-switcher__link" href="{{ $url }}" lang="{{ $lang.Lang }}"
+                       hreflang="{{ $lang.Lang }}"{{ with $lang.Direction }} dir="{{ . }}"{{ end }}>{{ $name }}</a>
+                {{- end -}}
+            </li>
+        {{- end }}
+    </ul>
+</details>
+{{- end -}}
