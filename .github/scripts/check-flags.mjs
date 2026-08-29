@@ -1,11 +1,9 @@
 // Every language in data/langFlags.yaml must name a flag the theme can draw.
 //
-// The mapping is language code -> country code, and the two are not the same
-// alphabet: Ukrainian is "uk" as a language and "ua" as a country. Getting it
-// wrong is silent. translation-link.html falls back to the language code in a
-// box only when the entry is *missing*; an entry that is present but names a
-// flag nothing defines takes the other branch and renders an empty square —
-// which is the outcome the fallback exists to prevent.
+// A language code is not a country code — Ukrainian is uk, Ukraine is ua — and
+// naming the wrong one renders an empty square rather than falling back to the
+// language code, because translation-link.html only falls back when the entry
+// is missing.
 //
 //   node check-flags.mjs <theme-root>
 
@@ -16,22 +14,27 @@ const root = process.argv[2] || '.';
 const yaml = readFileSync(join(root, 'data/langFlags.yaml'), 'utf8');
 const scss = readFileSync(join(root, 'assets/scss/_flag-icons.scss'), 'utf8');
 
-const entries = [...yaml.matchAll(/^([a-z][a-z0-9-]*)\s*:\s*([a-z][a-z0-9-]*)\s*$/gm)]
-  .map(([, lang, flag]) => ({ lang, flag }));
-
-if (!entries.length) {
-  console.error('no entries read from data/langFlags.yaml');
-  process.exit(1);
-}
-
 const problems = [];
+const entries = [];
+
+// Every data line has to be understood. Reporting what could not be read is the
+// point: a mapping this script skips is still one Hugo uses.
+yaml.split(/\r?\n/).forEach((line, i) => {
+  if (!line.trim() || line.trim().startsWith('#')) return;
+  const m = line.match(/^\s*([a-z][a-z0-9-]*)\s*:\s*["']?([a-z][a-z0-9-]*)["']?\s*(?:#.*)?$/);
+  if (!m) problems.push(`data/langFlags.yaml:${i + 1}: cannot read this line: ${line.trim()}`);
+  else entries.push({ lang: m[1], flag: m[2] });
+});
+
 for (const { lang, flag } of entries) {
-  if (!new RegExp('\\.fi-' + flag + '\\b').test(scss)) {
+  // Not \b: it matches before a hyphen, so .fi-es-ct would answer for .fi-es.
+  if (!new RegExp('\\.fi-' + flag + '(?![a-z0-9-])').test(scss)) {
     problems.push(`${lang} -> ${flag}: no .fi-${flag} rule in assets/scss/_flag-icons.scss`);
   }
   for (const ratio of ['4x3', '1x1']) {
-    const svg = join(root, 'static/flags', ratio, `${flag}.svg`);
-    if (!existsSync(svg)) problems.push(`${lang} -> ${flag}: static/flags/${ratio}/${flag}.svg is missing`);
+    if (!existsSync(join(root, 'static/flags', ratio, `${flag}.svg`))) {
+      problems.push(`${lang} -> ${flag}: static/flags/${ratio}/${flag}.svg is missing`);
+    }
   }
 }
 
