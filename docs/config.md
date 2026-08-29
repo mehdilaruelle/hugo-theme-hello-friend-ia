@@ -344,6 +344,8 @@ templates.
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
 | `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
+| `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
+| `imageMaxWidth` | caps the widest copy generated for `srcset`. Defaults to `1400` |
 
 ```toml
 [params]
@@ -355,6 +357,35 @@ templates.
 
 `themeColor` and `keywords` are only emitted when set. An empty `content` is not
 a neutral default — it is a tag asserting the value is blank.
+
+#### Responsive images
+
+Every image the theme processes goes out with a `srcset` of 480, 800 and 1200
+pixel copies, plus one at `imageMaxWidth`, and a `sizes` telling the browser how
+wide it will be shown before any of them have loaded. Only widths smaller than
+the source are generated, so a small picture is never upscaled.
+
+The defaults describe an image at the measure of an article. Change them when
+your layout is not that:
+
+```toml
+[params]
+  # A content column wider than an article: say so, or a wide viewport is told
+  # the picture is 800px and picks a copy that then has to be stretched.
+  imageSizes    = "(max-width: 1000px) 100vw, 1000px"
+  # The widest copy worth generating. Lower it to cut the build and the bytes.
+  imageMaxWidth = 1000
+```
+
+`sizes` has to describe the box the image really fills, and it costs you both
+ways: declare it wider than the truth and every visitor fetches a file larger
+than they will ever see, declare it narrower and they get one upscaled to fit.
+Below the breakpoint the default already says `100vw`, so it is the wide-viewport
+half that a wider column has to correct.
+
+`partials/image.html` also takes `sizes` and `maxWidth` per call, for a picture
+shown at a size of its own. The `image` shortcode does not forward them — it
+passes `src`, `alt`, `position` and `style` only.
 
 A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 `ogImage`. Setting `params.images` yourself hands both tags back to Hugo's own
