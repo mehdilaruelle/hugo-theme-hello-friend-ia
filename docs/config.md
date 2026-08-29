@@ -370,16 +370,22 @@ your layout is not that:
 
 ```toml
 [params]
-  # A wider content column: say so, or phones download more than they show.
+  # A content column wider than an article: say so, or a wide viewport is told
+  # the picture is 800px and picks a copy that then has to be stretched.
   imageSizes    = "(max-width: 1000px) 100vw, 1000px"
   # The widest copy worth generating. Lower it to cut the build and the bytes.
   imageMaxWidth = 1000
 ```
 
-`sizes` is the one that costs you if it is wrong: a browser picks from `srcset`
-using it, so a value wider than the real box makes every visitor fetch a larger
-file than they will ever see. Both can also be overridden per call — the `image`
-shortcode and partial take `sizes` and `maxWidth` directly.
+`sizes` has to describe the box the image really fills, and it costs you both
+ways: declare it wider than the truth and every visitor fetches a file larger
+than they will ever see, declare it narrower and they get one upscaled to fit.
+Below the breakpoint the default already says `100vw`, so it is the wide-viewport
+half that a wider column has to correct.
+
+`partials/image.html` also takes `sizes` and `maxWidth` per call, for a picture
+shown at a size of its own. The `image` shortcode does not forward them — it
+passes `src`, `alt`, `position` and `style` only.
 
 A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 `ogImage`. Setting `params.images` yourself hands both tags back to Hugo's own
