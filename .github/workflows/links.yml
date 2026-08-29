@@ -64,6 +64,14 @@ jobs:
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-links.mjs public https://example.com/subpath/showcase/
 
+      # A language code is not a country code — Ukrainian is uk, Ukraine is ua —
+      # and naming the wrong one renders an empty square rather than falling
+      # back to the language code, because the fallback only fires on a missing
+      # entry.
+      - name: Check every language names a flag that exists
+        working-directory: hello-friend-ng
+        run: node .github/scripts/check-flags.mjs .
+
       # A ";" between query parameters is not a separator any more: it absorbs
       # everything after it into the preceding value, and the build is silent.
       - name: Check the sharing links parse
