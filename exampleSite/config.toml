@@ -178,12 +178,14 @@ disableHugoGeneratorInject = false
       "Fork maintained by <a href=\"https://github.com/mehdilaruelle\">Mehdi Laruelle</a>"
     ]
 
-  # Colors for favicons
+  # Colours for favicons. Flat, because that is where they are read. The
+  # browser UI tint is themeColor above, not here.
   #
-  [params.favicon.color]
+  [params.favicon]
+    # Safari's pinned-tab icon is a silhouette and takes its colour here.
     mask = "#1b1c1d"
+    # The Windows tile.
     msapplication = "#1b1c1d"
-    theme = "#1b1c1d"
 
   [params.logo]
     logoMark     = ">"

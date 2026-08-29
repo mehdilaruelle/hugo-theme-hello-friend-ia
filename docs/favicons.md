@@ -20,3 +20,22 @@ site without them emits no broken links. The last three are never referenced
 from the HTML at all — they are reached through the two files that name them,
 which RealFaviconGenerator generates alongside the images. Ship those two files
 too, or the three images are dead weight.
+
+## Colours
+
+Two of the tags carry a colour, and neither is guessed:
+
+```toml
+[params.favicon]
+  # Safari's pinned-tab icon is a silhouette, and takes its colour from here.
+  mask          = "#1b1c1d"
+  # The Windows tile.
+  msapplication = "#1b1c1d"
+```
+
+Each is emitted only when set. The browser's own default is a better answer than
+a tag asserting the colour is blank.
+
+The tint of the browser UI on mobile is a different thing and lives at the top
+level, as `params.themeColor` — see
+[Everything else the theme reads](config.md#site-params).

@@ -6,6 +6,11 @@
 
 [![Hello Friend NG](images/screenshot.png)](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)
 
+**100 / 100 / 100 / 100** on PageSpeed Insights — performance, accessibility,
+best practices and SEO — on both demo sites, on mobile and on desktop. The
+second of those is the showcase, with every option in the theme switched on at
+once. [The four reports →](#speed)
+
 > **This is a fork.** All the credit for the theme goes to
 > [Djordje Atlialp (@rhazdon)](https://github.com/rhazdon), who wrote
 > [hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng).
@@ -94,32 +99,24 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 ### Speed
 
 Both demo sites are measured, not a private one, so you can re-run these
-yourself. On desktop the theme scores **100 on all four categories**:
+yourself. The theme scores **100 on all four categories, on both form factors**:
 
 | | performance | accessibility | best practices | SEO |
 | --- | --- | --- | --- | --- |
-| [demo, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/uxw8hcmp4h?form_factor=desktop) | 100 | 100 | 100 | 100 |
-| [demo, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/uxw8hcmp4h?form_factor=mobile) | 99 | 100 | 100 | 100 |
-| [showcase, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/ofldcv5wdb?form_factor=desktop) | 100 | 100 | 100 | 100 |
-| [showcase, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/ofldcv5wdb?form_factor=mobile) | 97 | 100 | 100 | 100 |
+| [demo, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/tik77v9nka?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [demo, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia/tik77v9nka?form_factor=mobile) | 100 | 100 | 100 | 100 |
+| [showcase, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/nfdgth6h9a?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [showcase, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ng-ia-showcase/nfdgth6h9a?form_factor=mobile) | 100 | 100 | 100 | 100 |
 
-Measured on 25 August 2026. **Accessibility, best practices and SEO are 100
-everywhere**, and those are the three the theme has most say over.
+Measured on 29 August 2026, replacing a run on the 25th that scored 99 on the
+demo's mobile and 97 on the showcase's.
 
-The mobile performance points are worth being specific about, because the
-report says where they go. The demo loses one on Largest Contentful Paint, at
-2.0 s, and the insights behind it are `Use efficient cache lifetimes` and
-`Document request latency`: GitHub Pages serves these with a ten-minute cache
-and its own time to first byte. That point is the host, not the theme, and 99
-is the ceiling here.
+The showcase is the one worth looking at: it turns every option in the theme on
+at once — four languages, a background image, thumbnails, excerpts, covers,
+diagrams, maths, search — and still scores what the stripped-back demo does.
 
-The showcase loses the same point and two more on Speed Index, because its
-front page carries a `content/_index.md` block above the fold and the demo's
-does not. That is the showcase doing its job: it turns every option on, and
-this is what one of them costs on a slow connection.
-
-None of it is layout: **Cumulative Layout Shift is 0 on all four**, and Total
-Blocking Time is 0 ms.
+None of it is bought with layout: **Cumulative Layout Shift is 0 on all four**,
+and Total Blocking Time is 0 ms.
 
 Your content, your images and anything you add have as much say in the result
 as the theme does. What the theme contributes is the part it controls:
@@ -134,6 +131,9 @@ as the theme does. What the theme contributes is the part it controls:
   [Where to put the portrait](#where-to-put-the-portrait).
 - **KaTeX and Mermaid are opt-in per page**, so a page without a formula or a
   diagram fetches neither.
+- **`imageSizes` and `imageMaxWidth`**, which decide how many bytes a phone
+  downloads for a picture. Set them if your content column is not the measure of
+  an article. See [Responsive images](docs/config.md#responsive-images).
 
 ## SEO
 

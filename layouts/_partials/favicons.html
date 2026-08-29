@@ -11,9 +11,12 @@
     <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
 {{- end }}
 {{- if fileExists "static/safari-pinned-tab.svg" }}
-    <link rel="mask-icon" href="{{ "safari-pinned-tab.svg" | relURL }}" color="{{ .Site.Params.favicon.mask }}">
+    <link rel="mask-icon" href="{{ "safari-pinned-tab.svg" | relURL }}"{{ with .Site.Params.favicon.mask }} color="{{ . }}"{{ end }}>
 {{- end }}
 {{- if fileExists "static/favicon.ico" }}
     <link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
 {{- end }}
-    <meta name="msapplication-TileColor" content="{{ .Site.Params.favicon.msapplication }}">
+{{- /* Only when set: an empty content asserts the colour is blank. */ -}}
+{{- with .Site.Params.favicon.msapplication }}
+    <meta name="msapplication-TileColor" content="{{ . }}">
+{{- end }}
