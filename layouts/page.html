@@ -2,15 +2,18 @@
     <div class="content">
         <main id="main" class="post">
 
-            <div class="post-info">
-                {{ if .IsTranslated }}
+            {{- /* The condition moved out to the container, and a paragraph
+                   closing tag that was never opened went with it. Every page
+                   without a translation used to carry an empty post-info div
+                   holding nothing but that stray tag. */ -}}
+            {{ if .IsTranslated }}
+                <div class="post-info">
                     {{ i18n "postAvailable" }}
                     {{ range .Translations }}
                         {{ partial "translation-link.html" . }}
-                    {{ end}}
-                {{ end }}
-                </p>
-            </div>
+                    {{ end }}
+                </div>
+            {{ end }}
 
             <article>
                 {{- /* h1, as posts use: a page whose title is an h2 has no

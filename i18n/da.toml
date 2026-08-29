@@ -40,3 +40,86 @@ other = "Sidst opdateret"
 
 [language]
 other = "Sprog"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "Nyere indlæg"
+olderPosts = "Ældre indlæg"
+
+[skipToContent]
+other = "Gå til indhold"
+
+[toggleMenu]
+other = "Menu"
+
+[toggleTheme]
+other = "Mørkt tema"
+
+[copyCode]
+other = "Kopiér"
+
+[copyCodeDone]
+other = "Kopieret"
+
+[copyCodeFailed]
+other = "Tryk Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Søg på dette websted"
+
+[searchPlaceholder]
+other = "Skriv for at søge…"
+
+[searchResultsOne]
+other = "1 resultat"
+
+[searchResultsMany]
+other = "%d resultater"
+
+[searchFailed]
+other = "Søgeindekset kunne ikke indlæses."
+
+[searchNoScript]
+other = "Søgning kræver JavaScript. Arkivet kan gennemses efter emneord og dato."
+
+[searchNoIndex]
+other = "Søgning er ikke sat op på dette websted."
+
+[searchLoading]
+other = "Søger…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Alle emneord på dette websted med antallet af indlæg under hvert."
+
+[taxonomyDescriptionCategory]
+other = "Alle kategorier på dette websted med antallet af indlæg i hver."
+
+[taxonomyDescription]
+other = "Alt det, dette websted ordner sine indlæg efter."
+
+[termDescriptionTag]
+other = "Alle indlæg med emneordet »{{ .Term }}«."
+
+[termDescriptionCategory]
+other = "Alle indlæg i kategorien »{{ .Term }}«."
+
+[termDescription]
+other = "Alle indlæg under »{{ .Term }}«."
+
+[pageNumber]
+other = "side {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Oprindeligt udgivet på"
+
+[posts]
+other = "Indlæg"
+
+[pages]
+other = "Sider"

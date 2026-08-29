@@ -40,3 +40,86 @@ other = "आखरी अपडेट"
 
 [language]
 other = "भाषा"
+
+# partials/pagination-list.html
+[pagination]
+newerPosts = "नई पोस्ट"
+olderPosts = "पुरानी पोस्ट"
+
+[skipToContent]
+other = "सामग्री पर जाएँ"
+
+[toggleMenu]
+other = "मेन्यू"
+
+[toggleTheme]
+other = "गहरी थीम"
+
+[copyCode]
+other = "कॉपी करें"
+
+[copyCodeDone]
+other = "कॉपी हो गया"
+
+[copyCodeFailed]
+other = "Ctrl+C दबाएँ"
+
+# Search
+#
+[searchLabel]
+other = "इस साइट में खोजें"
+
+[searchPlaceholder]
+other = "खोजने के लिए टाइप करें…"
+
+[searchResultsOne]
+other = "1 परिणाम"
+
+[searchResultsMany]
+other = "%d परिणाम"
+
+[searchFailed]
+other = "खोज सूचकांक लोड नहीं हो सका।"
+
+[searchNoScript]
+other = "खोज के लिए JavaScript चाहिए। संग्रह को टैग और तारीख से देखा जा सकता है।"
+
+[searchNoIndex]
+other = "इस साइट पर खोज सेट नहीं की गई है।"
+
+[searchLoading]
+other = "खोजा जा रहा है…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "इस साइट के सभी टैग, हर एक के अंतर्गत पोस्ट की संख्या के साथ।"
+
+[taxonomyDescriptionCategory]
+other = "इस साइट की सभी श्रेणियाँ, हर एक में पोस्ट की संख्या के साथ।"
+
+[taxonomyDescription]
+other = "वह सब कुछ जिसके अंतर्गत यह साइट अपनी पोस्ट रखती है।"
+
+[termDescriptionTag]
+other = "“{{ .Term }}” टैग वाली सभी पोस्ट।"
+
+[termDescriptionCategory]
+other = "“{{ .Term }}” श्रेणी की सभी पोस्ट।"
+
+[termDescription]
+other = "“{{ .Term }}” के अंतर्गत रखी गई सभी पोस्ट।"
+
+[pageNumber]
+other = "पृष्ठ {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "मूल रूप से यहाँ प्रकाशित"
+
+[posts]
+other = "पोस्ट"
+
+[pages]
+other = "पृष्ठ"

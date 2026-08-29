@@ -49,3 +49,81 @@ olderPosts = "Старіші записи"
 
 [language]
 other = "Мова"
+
+[skipToContent]
+other = "Перейти до вмісту"
+
+[toggleMenu]
+other = "Меню"
+
+[toggleTheme]
+other = "Темна тема"
+
+[copyCode]
+other = "Копіювати"
+
+[copyCodeDone]
+other = "Скопійовано"
+
+[copyCodeFailed]
+other = "Натисніть Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Пошук по сайту"
+
+[searchPlaceholder]
+other = "Введіть запит…"
+
+[searchResultsOne]
+other = "1 результат"
+
+[searchResultsMany]
+other = "Результатів: %d"
+
+[searchFailed]
+other = "Не вдалося завантажити пошуковий індекс."
+
+[searchNoScript]
+other = "Для пошуку потрібен JavaScript. Архів можна переглядати за мітками та за датами."
+
+[searchNoIndex]
+other = "Пошук на цьому сайті не налаштовано."
+
+[searchLoading]
+other = "Триває пошук…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Усі мітки сайту з кількістю записів під кожною."
+
+[taxonomyDescriptionCategory]
+other = "Усі категорії сайту з кількістю записів у кожній."
+
+[taxonomyDescription]
+other = "Усе, за чим на цьому сайті впорядковано записи."
+
+[termDescriptionTag]
+other = "Усі записи з міткою «{{ .Term }}»."
+
+[termDescriptionCategory]
+other = "Усі записи в категорії «{{ .Term }}»."
+
+[termDescription]
+other = "Усі записи з розділу «{{ .Term }}»."
+
+[pageNumber]
+other = "сторінка {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Первинна публікація на"
+
+[posts]
+other = "Записи"
+
+[pages]
+other = "Сторінки"

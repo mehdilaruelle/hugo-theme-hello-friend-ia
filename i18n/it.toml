@@ -45,3 +45,81 @@ olderPosts = "Voci più vecchie"
 
 [language]
 other = "Lingua"
+
+[skipToContent]
+other = "Vai al contenuto"
+
+[toggleMenu]
+other = "Menu"
+
+[toggleTheme]
+other = "Tema scuro"
+
+[copyCode]
+other = "Copia"
+
+[copyCodeDone]
+other = "Copiato"
+
+[copyCodeFailed]
+other = "Premi Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Cerca in questo sito"
+
+[searchPlaceholder]
+other = "Digita per cercare…"
+
+[searchResultsOne]
+other = "1 risultato"
+
+[searchResultsMany]
+other = "%d risultati"
+
+[searchFailed]
+other = "Non è stato possibile caricare l'indice di ricerca."
+
+[searchNoScript]
+other = "La ricerca richiede JavaScript. L'archivio è consultabile per tag e per data."
+
+[searchNoIndex]
+other = "La ricerca non è configurata su questo sito."
+
+[searchLoading]
+other = "Ricerca in corso…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Tutti i tag di questo sito, con il numero di articoli per ciascuno."
+
+[taxonomyDescriptionCategory]
+other = "Tutte le categorie di questo sito, con il numero di articoli in ciascuna."
+
+[taxonomyDescription]
+other = "Tutto ciò sotto cui questo sito archivia i suoi articoli."
+
+[termDescriptionTag]
+other = "Tutti gli articoli con il tag «{{ .Term }}»."
+
+[termDescriptionCategory]
+other = "Tutti gli articoli nella categoria «{{ .Term }}»."
+
+[termDescription]
+other = "Tutti gli articoli archiviati sotto «{{ .Term }}»."
+
+[pageNumber]
+other = "pagina {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Pubblicato originariamente su"
+
+[posts]
+other = "Articoli"
+
+[pages]
+other = "Pagine"

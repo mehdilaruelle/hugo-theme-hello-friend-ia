@@ -45,3 +45,81 @@ olderPosts = "Postingan yang lebih lama"
 
 [language]
 other = "Bahasa"
+
+[skipToContent]
+other = "Lompat ke konten"
+
+[toggleMenu]
+other = "Menu"
+
+[toggleTheme]
+other = "Tema gelap"
+
+[copyCode]
+other = "Salin"
+
+[copyCodeDone]
+other = "Tersalin"
+
+[copyCodeFailed]
+other = "Tekan Ctrl+C"
+
+# Search
+#
+[searchLabel]
+other = "Cari di situs ini"
+
+[searchPlaceholder]
+other = "Ketik untuk mencari…"
+
+[searchResultsOne]
+other = "1 hasil"
+
+[searchResultsMany]
+other = "%d hasil"
+
+[searchFailed]
+other = "Indeks pencarian tidak dapat dimuat."
+
+[searchNoScript]
+other = "Pencarian memerlukan JavaScript. Arsip dapat ditelusuri menurut tag dan tanggal."
+
+[searchNoIndex]
+other = "Pencarian belum disiapkan di situs ini."
+
+[searchLoading]
+other = "Mencari…"
+
+# partials/head.html
+#
+[taxonomyDescriptionTag]
+other = "Semua tag di situs ini, beserta jumlah tulisan pada masing-masing."
+
+[taxonomyDescriptionCategory]
+other = "Semua kategori di situs ini, beserta jumlah tulisan di masing-masing."
+
+[taxonomyDescription]
+other = "Segala hal yang dipakai situs ini untuk menggolongkan tulisannya."
+
+[termDescriptionTag]
+other = "Semua tulisan bertag “{{ .Term }}”."
+
+[termDescriptionCategory]
+other = "Semua tulisan dalam kategori “{{ .Term }}”."
+
+[termDescription]
+other = "Semua tulisan yang digolongkan di bawah “{{ .Term }}”."
+
+[pageNumber]
+other = "halaman {{ .Number }}"
+
+# Markdown output and llms.txt
+#
+[llmsCanonical]
+other = "Awalnya diterbitkan di"
+
+[posts]
+other = "Tulisan"
+
+[pages]
+other = "Halaman"
