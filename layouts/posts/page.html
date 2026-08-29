@@ -9,10 +9,10 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            {{ i18n "readingTime" .Page.ReadingTime }}
+            {{ partial "i18n.html" (dict "key" "readingTime" "args" .Page.ReadingTime "fallback" (cond (eq .Page.ReadingTime 1) "One minute" (printf "%d minutes" .Page.ReadingTime))) }}
           {{ end }}
 
-          {{ if .IsTranslated }} | {{ i18n "postAvailable" }}
+          {{ if .IsTranslated }} | {{ partial "i18n.html" (dict "key" "postAvailable" "fallback" "Also available in") }}
             {{ range .Translations }}
                 {{ partial "translation-link.html" . }}
             {{ end}}
@@ -42,7 +42,7 @@
         {{- if .Params.toc }}
           <hr />
           <aside id="toc">
-            <div class="toc-title">{{ i18n "tableOfContents" }}</div>
+            <div class="toc-title">{{ partial "i18n.html" (dict "key" "tableOfContents" "fallback" "Table of Contents") }}</div>
             {{ .TableOfContents }}
           </aside>
           <hr />
@@ -84,7 +84,7 @@
             <line x1="16" y1="17" x2="8" y2="17"></line>
             <polyline points="10 9 9 9 8 9"></polyline>
           </svg>
-          {{ i18n "wordCount" .Page.WordCount }}
+          {{ partial "i18n.html" (dict "key" "wordCount" "args" .Page.WordCount "fallback" (cond (eq .Page.WordCount 1) "One Word" (printf "%d Words" .Page.WordCount))) }}
         </p>
 
         <p>
@@ -108,9 +108,9 @@
           {{ if .Lastmod }} 
             {{ if not (eq .Lastmod .Date )}}
               {{ if .Site.Params.dateformNumTime }}
-                ({{ i18n "lastModified" }}: {{ dateFormat .Site.Params.dateformNumTime .Lastmod.Local }})
+                ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat .Site.Params.dateformNumTime .Lastmod.Local }})
               {{ else }} 
-                ({{ i18n "lastModified" }}: {{ dateFormat "2006-01-02 15:04" .Lastmod.Local }})
+                ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat "2006-01-02 15:04" .Lastmod.Local }})
               {{ end }}
             {{ end }}
           {{ end }}

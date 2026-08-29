@@ -124,7 +124,7 @@
     {{- else if in (slice "section" "taxonomy" "term") .Kind -}}
       {{- with .Paginator -}}
         {{- if gt .PageNumber 1 -}}
-          {{- $title = printf "%s (%s) :: %s" (partial "title.html" $) (i18n "pageNumber" (dict "Number" .PageNumber) | default (printf "page %d" .PageNumber)) site.Title -}}
+          {{- $title = printf "%s (%s) :: %s" (partial "title.html" $) (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" .PageNumber) "fallback" (printf "page %d" .PageNumber))) site.Title -}}
         {{- end -}}
       {{- end -}}
     {{- end }}

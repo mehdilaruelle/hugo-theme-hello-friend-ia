@@ -11,4 +11,4 @@
 
 ---
 
-{{ i18n "llmsCanonical" | default "Originally published at" }} {{ .Permalink }}
+{{ partial "i18n.html" (dict "key" "llmsCanonical" "fallback" "Originally published at") }} {{ .Permalink }}
