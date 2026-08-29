@@ -28,14 +28,14 @@
 {{- $posts := where $all "Section" "posts" -}}
 {{- $other := $all | complement $posts -}}
 {{- with $posts }}
-## {{ i18n "posts" | default "Posts" }}
+## {{ partial "i18n.html" (dict "key" "posts" "fallback" "Posts") }}
 
 {{ range . -}}
 - [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end }}
 {{- with $other }}
-## {{ i18n "pages" | default "Pages" }}
+## {{ partial "i18n.html" (dict "key" "pages" "fallback" "Pages") }}
 
 {{ range . -}}
 - [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}

@@ -10,8 +10,10 @@
                               "args" (dict "Number" 2))
 */ -}}
 {{- $t := "" -}}
-{{- with .args -}}
-  {{- $t = i18n $.key . -}}
+{{- /* isset, not with: a count of zero is a count, and `with` would take it
+       for an absent argument and look the key up without one. */ -}}
+{{- if isset . "args" -}}
+  {{- $t = i18n .key .args -}}
 {{- else -}}
   {{- $t = i18n .key -}}
 {{- end -}}

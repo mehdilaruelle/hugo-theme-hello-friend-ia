@@ -8,7 +8,7 @@
                    holding nothing but that stray tag. */ -}}
             {{ if .IsTranslated }}
                 <div class="post-info">
-                    {{ i18n "postAvailable" }}
+                    {{ partial "i18n.html" (dict "key" "postAvailable" "fallback" "Also available in") }}
                     {{ range .Translations }}
                         {{ partial "translation-link.html" . }}
                     {{ end }}
@@ -36,7 +36,7 @@
                 {{ if .Params.toc }}
                     <hr />
                     <aside id="toc">
-                    <div class="toc-title">{{ i18n "tableOfContents" }}</div>
+                    <div class="toc-title">{{ partial "i18n.html" (dict "key" "tableOfContents" "fallback" "Table of Contents") }}</div>
                         {{ .TableOfContents }}
                     </aside>
                     <hr />
