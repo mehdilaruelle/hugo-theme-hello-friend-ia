@@ -56,7 +56,12 @@
         startOnLoad: false,
         theme: want ? 'dark' : 'base',
         darkMode: want,
-        themeVariables: { tertiaryColor: '#dee3ed' }
+        // The edge-label pill masks the line behind the text, so it has to be the
+        // surface colour. Mermaid's dark default is a mid grey that leaves the
+        // label at 4.43 on it — the only sub-AA element in a dark diagram.
+        themeVariables: want
+          ? { tertiaryColor: '#dee3ed', edgeLabelBackground: '#3b3d42' }
+          : { tertiaryColor: '#dee3ed' }
       });
 
       mermaid.run()
