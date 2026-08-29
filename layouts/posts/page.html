@@ -31,7 +31,7 @@
 
         {{ if .Params.Cover }}
           <figure class="post-cover">
-            {{ partial "image.html" (dict "src" .Params.Cover "alt" .Title "page" .) }}
+            {{ partial "image.html" (dict "src" .Params.Cover "alt" (partial "title.html" .) "page" .) }}
 
             {{ if .Params.CoverCaption }}
               <figcaption class="center">{{ .Params.CoverCaption | markdownify }}</figcaption>
