@@ -22,7 +22,7 @@
 {{- $index := slice -}}
 {{- range where site.RegularPages "Params.searchable" "!=" false -}}
   {{- $index = $index | append (dict
-      "title"   .Title
+      "title"   (partial "title.html" .)
       "url"     .RelPermalink
       "date"    (.Date.Format "2006-01-02")
       "tags"    (.Params.tags | default slice)

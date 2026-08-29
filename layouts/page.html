@@ -21,7 +21,7 @@
                        nothing to land on and a crawler no subject. .post-title
                        carries the size, so this changes the outline and not the
                        look. */ -}}
-                <h1 class="post-title"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
+                <h1 class="post-title"><a href="{{ .Permalink }}">{{ partial "title.html" . | markdownify }}</a></h1>
 
                 {{ if .Params.Cover }}
                     <figure class="post-cover">

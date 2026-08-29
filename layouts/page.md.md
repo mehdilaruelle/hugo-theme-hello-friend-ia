@@ -1,6 +1,6 @@
 {{- $body := .RenderShortcodes -}}
 {{- $note := .Description | default .Summary -}}
-# {{ .Title }}
+# {{ partial "title.html" . }}
 {{ with $note }}
 > {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}

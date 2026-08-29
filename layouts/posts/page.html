@@ -22,7 +22,7 @@
 
       <article>
         <h1 class="post-title">
-          <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+          <a href="{{ .Permalink }}">{{ partial "title.html" . | markdownify }}</a>
         </h1>
 
         {{ with .Params.Description }}

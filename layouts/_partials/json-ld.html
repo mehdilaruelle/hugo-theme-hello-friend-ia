@@ -237,7 +237,7 @@
     "@id" .Permalink
     "url" .Permalink
     "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
-    "headline" (.Title | plainify | truncate 110 "")
+    "headline" (partial "title.html" . | plainify | truncate 110 "")
     "datePublished" (.PublishDate.Format "2006-01-02T15:04:05Z07:00")
     "inLanguage" .Language.Lang
     "wordCount" .WordCount
