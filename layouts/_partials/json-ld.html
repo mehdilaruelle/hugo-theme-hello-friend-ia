@@ -177,7 +177,7 @@
       "@type" "CollectionPage"
       "@id" .Permalink
       "url" .Permalink
-      "name" (.Title | plainify)
+      "name" (partial "title.html" . | plainify)
       "inLanguage" .Language.Lang
     -}}
     {{- with partial "description.html" . -}}
@@ -197,7 +197,7 @@
     {{- with $listed -}}
       {{- $items := slice -}}
       {{- range $i, $p := first 20 . -}}
-        {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "url" $p.Permalink "name" ($p.Title | plainify)) -}}
+        {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "url" $p.Permalink "name" (partial "title.html" $p | plainify)) -}}
       {{- end -}}
       {{- $data = merge $data (dict "mainEntity" (dict "@type" "ItemList" "numberOfItems" (len $.Pages) "itemListElement" $items)) -}}
     {{- end -}}
@@ -218,7 +218,7 @@
     "@type" "ProfilePage"
     "@id" .Permalink
     "url" .Permalink
-    "name" (.Title | plainify)
+    "name" (partial "title.html" . | plainify)
     "inLanguage" .Language.Lang
   -}}
   {{- with .Description -}}
@@ -237,7 +237,7 @@
     "@id" .Permalink
     "url" .Permalink
     "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
-    "headline" (.Title | plainify | truncate 110 "")
+    "headline" (partial "title.html" . | plainify | truncate 110 "")
     "datePublished" (.PublishDate.Format "2006-01-02T15:04:05Z07:00")
     "inLanguage" .Language.Lang
     "wordCount" .WordCount
@@ -327,6 +327,6 @@
     "itemListElement" (slice
       (dict "@type" "ListItem" "position" 1 "name" (partial "i18n.html" (dict "key" "home" "fallback" "Home")) "item" site.Home.Permalink)
       (dict "@type" "ListItem" "position" 2 "name" (.LinkTitle | plainify) "item" .Permalink)
-      (dict "@type" "ListItem" "position" 3 "name" ($.Title | plainify))) -}}
+      (dict "@type" "ListItem" "position" 3 "name" (partial "title.html" $ | plainify))) -}}
 <script type="application/ld+json">{{ $trail | jsonify | safeJS }}</script>
 {{- end -}}

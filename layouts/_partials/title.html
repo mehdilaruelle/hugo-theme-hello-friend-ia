@@ -1,0 +1,20 @@
+{{- /*
+  A page's title, never empty. Takes the page.
+
+  Hugo invents a title for the pages it generates -- sections, taxonomies,
+  terms -- but not for one you wrote, so a file with no title in its front
+  matter has .Title "". That empty string reached an h1 wrapped in a link, the
+  previous/next buttons, the feed, llms.txt, the search index and the Markdown
+  copy: a link with no accessible name, and four machine-readable outputs
+  carrying an entry nothing can name.
+
+  The file name is the one thing such a page always has. It is what the author
+  typed, so it is closer to a title than the alternatives, and humanize turns
+  the-slug into "The slug".
+*/ -}}
+{{- $title := .Title -}}
+{{- if not $title -}}
+  {{- /* .File is nil on a generated page, which always has a title anyway. */ -}}
+  {{- with .File -}}{{- $title = humanize .ContentBaseName -}}{{- end -}}
+{{- end -}}
+{{- return $title -}}

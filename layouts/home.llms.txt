@@ -5,7 +5,7 @@
 {{- end -}}
 {{- /* [ ] and \ are syntax inside a link label. */ -}}
 {{- define "partials/inline/label" -}}
-  {{- .Title | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
+  {{- partial "title.html" . | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
 {{- end -}}
 {{- define "partials/inline/note" -}}
   {{- $n := .Description | default .Summary -}}
