@@ -21,7 +21,10 @@
       button.type = 'button';
       button.className = 'copy-code';
       button.textContent = label;
-      button.setAttribute('aria-label', label);
+      // No aria-label. It would win over the text and freeze the name at
+      // "Copy", so neither the confirmation nor the fallback instruction ever
+      // reached a screen reader. aria-live announces the change instead.
+      button.setAttribute('aria-live', 'polite');
 
       function flash(text, className) {
         button.textContent = text;
