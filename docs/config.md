@@ -344,6 +344,8 @@ templates.
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
 | `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
+| `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
+| `imageMaxWidth` | caps the widest copy generated for `srcset`. Defaults to `1400` |
 
 ```toml
 [params]
@@ -355,6 +357,29 @@ templates.
 
 `themeColor` and `keywords` are only emitted when set. An empty `content` is not
 a neutral default — it is a tag asserting the value is blank.
+
+#### Responsive images
+
+Every image the theme processes goes out with a `srcset` of 480, 800 and 1200
+pixel copies, plus one at `imageMaxWidth`, and a `sizes` telling the browser how
+wide it will be shown before any of them have loaded. Only widths smaller than
+the source are generated, so a small picture is never upscaled.
+
+The defaults describe an image at the measure of an article. Change them when
+your layout is not that:
+
+```toml
+[params]
+  # A wider content column: say so, or phones download more than they show.
+  imageSizes    = "(max-width: 1000px) 100vw, 1000px"
+  # The widest copy worth generating. Lower it to cut the build and the bytes.
+  imageMaxWidth = 1000
+```
+
+`sizes` is the one that costs you if it is wrong: a browser picks from `srcset`
+using it, so a value wider than the real box makes every visitor fetch a larger
+file than they will ever see. Both can also be overridden per call — the `image`
+shortcode and partial take `sizes` and `maxWidth` directly.
 
 A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 `ogImage`. Setting `params.images` yourself hands both tags back to Hugo's own

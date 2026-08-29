@@ -1,15 +1,22 @@
 # Favicons
 
-Use [RealFaviconGenerator](https://realfavicongenerator.net/) to generate these files, put them into your site's static folder:
+Use [RealFaviconGenerator](https://realfavicongenerator.net/) to generate these
+files, and put them in your site's `static` folder:
 
-- android-chrome-192x192.png
-- android-chrome-512x512.png
-- apple-touch-icon.png
-- favicon-16x16.png
-- favicon-32x32.png
-- favicon.ico
-- mstile-150x150.png
-- safari-pinned-tab.svg
-- site.webmanifest
-The theme links each of these only when the file is present in your site's
-`static` folder, so a site without them emits no broken links.
+| file | how it is reached |
+| --- | --- |
+| `favicon.ico` | linked by the theme |
+| `favicon-16x16.png` | linked by the theme |
+| `favicon-32x32.png` | linked by the theme |
+| `apple-touch-icon.png` | linked by the theme |
+| `safari-pinned-tab.svg` | linked by the theme |
+| `site.webmanifest` | linked by the theme |
+| `android-chrome-192x192.png` | named inside `site.webmanifest`, not in the HTML |
+| `android-chrome-512x512.png` | named inside `site.webmanifest`, not in the HTML |
+| `mstile-150x150.png` | named inside `browserconfig.xml`, which Windows looks for at the site root |
+
+The six the theme links are each linked **only when the file is present**, so a
+site without them emits no broken links. The last three are never referenced
+from the HTML at all — they are reached through the two files that name them,
+which RealFaviconGenerator generates alongside the images. Ship those two files
+too, or the three images are dead weight.
