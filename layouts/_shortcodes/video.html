@@ -2,8 +2,11 @@
   A video standing in for an animated GIF.
 
   Autoplays muted on a loop, like the GIF it replaces, so an article reads the
-  same. Pass controls="true" when the clip is long enough that a reader may want
-  to stop it — something a GIF never allowed.
+  same — but with the player controls a GIF never had, because a loop runs for
+  as long as the page is open and a reader has to be able to stop it.
+
+  controls="true" chooses the other mode: no autoplay and no loop, so the clip
+  waits to be started. The controls are there either way.
 
   src is the path without an extension. Every source given in formats is
   emitted, in order, and the browser takes the first it can play; put the

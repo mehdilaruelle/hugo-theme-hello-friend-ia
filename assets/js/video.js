@@ -22,10 +22,13 @@
       v.loop = false;
       v.removeAttribute('autoplay');
       v.removeAttribute('loop');
-      // It may already have started before this ran.
+      // It may already have started before this ran, in which case the poster
+      // has been replaced by whatever frame it reached. load() resets the
+      // element and brings the poster back; currentTime = 0 would only rewind
+      // to the first frame, which is a different picture from the one the
+      // author chose.
       if (!v.paused) v.pause();
-      // Back to the first frame, so the poster's promise is kept.
-      try { v.currentTime = 0; } catch (e) {}
+      try { v.load(); } catch (e) {}
     }
   }
 

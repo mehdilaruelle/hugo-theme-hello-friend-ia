@@ -27,8 +27,9 @@ The `video` shortcode takes the path without an extension and emits one
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern looping" >}}
 
 It autoplays, muted, on a loop — exactly like the GIF it replaces, so an article
-reads the same. Pass `controls="true"` when a clip is long enough that a reader
-may want to stop it, which a GIF never allowed:
+reads the same, but with the player controls a GIF never had: a loop runs for as
+long as the page is open. Pass `controls="true"` to drop the autoplay and the
+loop, so the clip waits to be started:
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" controls="true" alt="A test pattern" >}}
 

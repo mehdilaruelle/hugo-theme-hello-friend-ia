@@ -27,8 +27,9 @@ format, pour que le navigateur prenne le premier qu'il sait lire :
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="Une mire qui tourne en boucle" >}}
 
 Il démarre seul, muet, en boucle — exactement comme le GIF qu'il remplace, donc
-l'article se lit pareil. Passez `controls="true"` quand un clip est assez long
-pour qu'on veuille l'arrêter, ce qu'un GIF n'a jamais permis :
+l'article se lit pareil, mais avec les contrôles qu'un GIF n'a jamais eus : une
+boucle tourne tant que la page est ouverte. Passez `controls="true"` pour retirer
+l'autolecture et la boucle, le clip attend alors qu'on le démarre :
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" controls="true" alt="Une mire" >}}
 
