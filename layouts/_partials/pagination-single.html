@@ -11,7 +11,7 @@
             {{ if .NextInSection }}
             <span class="button previous">
                 <a href="{{ .NextInSection.Permalink }}">
-                    <span class="button__icon">←</span>
+                    <span class="button__icon" aria-hidden="true">←</span>
                     <span class="button__text">{{ partial "title.html" .NextInSection }}</span>
                 </a>
             </span>
@@ -21,7 +21,7 @@
             <span class="button next">
                 <a href="{{ .PrevInSection.Permalink }}">
                     <span class="button__text">{{ partial "title.html" .PrevInSection }}</span>
-                    <span class="button__icon">→</span>
+                    <span class="button__icon" aria-hidden="true">→</span>
                 </a>
             </span>
             {{ end }}
