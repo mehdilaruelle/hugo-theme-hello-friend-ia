@@ -12,14 +12,7 @@
        owner's job title, portrait and profiles under one @id, so reading its
        name from a page that names its own author would put two names on one
        entity. */ -}}
-{{- $siteAuthor := "" -}}
-{{- with site.Params.author -}}
-  {{- if reflect.IsMap . -}}
-    {{- $siteAuthor = .name -}}
-  {{- else -}}
-    {{- $siteAuthor = . -}}
-  {{- end -}}
-{{- end -}}
+{{- $siteAuthor := (partial "site-author.html" .).name -}}
 
 {{- $image := "" -}}
 {{- with .Params.images -}}
