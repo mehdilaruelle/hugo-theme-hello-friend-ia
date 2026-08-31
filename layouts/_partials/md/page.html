@@ -1,0 +1,34 @@
+{{- /*
+  One page as a Markdown document: heading, note, byline, body, and the URL it
+  came from. Takes the page.
+
+  It lives in a partial rather than in page.md.md because llms-full.txt is the
+  same document repeated — the whole site in one request instead of one per
+  page — and two templates rendering "the page as Markdown" separately are two
+  templates that will disagree one day.
+
+  The body is .RenderShortcodes rather than .Content: the source, with its
+  headings and code fences and tables intact, and only the shortcodes expanded,
+  since a shortcode call means nothing outside Hugo.
+
+  Every value printed here is marked safe, and the file extension is why. A
+  partial that prints rather than returns is compiled as an HTML template
+  whatever it is called, so without safeHTML each apostrophe and angle bracket
+  of the body leaves as &#39; and &lt; — entities in a file whose whole purpose
+  is to be read as text. page.md.md did not need it: a plain-text output format
+  is a text template, and a text template escapes nothing.
+*/ -}}
+{{- $body := .RenderShortcodes -}}
+{{- $note := .Description | default .Summary -}}
+# {{ partial "title.html" . | safeHTML }}
+{{ with $note }}
+> {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | safeHTML }}
+{{ end }}
+{{- with .Date }}{{ if not .IsZero }}
+{{ time.Format "2006-01-02" . }}{{ with $.Params.tags }} · {{ delimit . ", " | safeHTML }}{{ end }}
+{{ end }}{{ end }}
+{{ $body | strings.TrimSpace | safeHTML }}
+
+---
+
+{{ partial "i18n.html" (dict "key" "llmsCanonical" "fallback" "Originally published at") | safeHTML }} {{ .Permalink | safeHTML }}

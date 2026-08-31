@@ -1,0 +1,7 @@
+{{- /*
+  A page's title, safe between the brackets of a Markdown link. Takes the page.
+
+  [ ] and \ are syntax there: a title carrying one would close the label early,
+  or escape whatever came after it.
+*/ -}}
+{{- return (partial "title.html" . | plainify | replaceRE `([\\[\]])` `\${1}`) -}}

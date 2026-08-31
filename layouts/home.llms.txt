@@ -1,18 +1,12 @@
-{{- define "partials/inline/url" -}}
-{{- $u := .Permalink -}}
-{{- with .OutputFormats.Get "md" }}{{ $u = .Permalink }}{{ end -}}
-{{- $u -}}
-{{- end -}}
-{{- /* [ ] and \ are syntax inside a link label. */ -}}
-{{- define "partials/inline/label" -}}
-  {{- partial "title.html" . | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
-{{- end -}}
-{{- define "partials/inline/note" -}}
-  {{- $n := .Description | default .Summary -}}
-  {{- with $n -}}
-    {{- . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}
-  {{- end -}}
-{{- end -}}
+{{- /*
+  llms.txt: the site as a map — a heading, a one-line summary, then every page
+  as a link with a note. The convention is described at llmstxt.org.
+
+  How a link is resolved, how a title is escaped and how a note is cut are
+  three rules shared with the Markdown mirror, so they live in partials under
+  _partials/md/ rather than here. They were inline partials of this file while
+  it was the only thing linking pages; list.md.md and home.md.md are two more.
+*/ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
 # {{ site.Title }}
 {{ with $desc }}
@@ -31,13 +25,13 @@
 ## {{ partial "i18n.html" (dict "key" "posts" "fallback" "Posts") }}
 
 {{ range . -}}
-- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "md/label.html" . }}]({{ partial "md/url.html" . }}){{ with (partial "md/note.html" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end }}
 {{- with $other }}
 ## {{ partial "i18n.html" (dict "key" "pages" "fallback" "Pages") }}
 
 {{ range . -}}
-- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "md/label.html" . }}]({{ partial "md/url.html" . }}){{ with (partial "md/note.html" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end -}}

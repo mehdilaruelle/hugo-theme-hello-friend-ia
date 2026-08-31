@@ -1,0 +1,17 @@
+{{- /*
+  The line that follows a link: the page's description, its summary when it has
+  no description, and the empty string when it has neither. Takes the page.
+
+  Flattened to one line, because a newline inside a list item ends the item,
+  and cut to a length that reads as a note rather than as the page itself.
+
+  htmlUnescape runs twice, for the reason it does in the search index: the
+  first decodes the entities the renderer produced, so truncate counts real
+  characters rather than the four to eight an entity spells one with, and the
+  second undoes truncate's own escaping.
+*/ -}}
+{{- $note := "" -}}
+{{- with .Description | default .Summary -}}
+  {{- $note = . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}
+{{- end -}}
+{{- return $note -}}

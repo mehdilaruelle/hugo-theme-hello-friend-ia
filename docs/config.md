@@ -450,6 +450,7 @@ templates.
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
 | `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
+
 | `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
 | `imageMaxWidth` | caps the widest copy generated for `srcset`. Defaults to `1400` |
 
@@ -748,17 +749,39 @@ model did with the text, or what the site is not.
 
 `searchable: false` keeps a page out, the same switch the search index reads.
 
-## The page as Markdown
+## The site as Markdown
 
-The second format publishes each page a second time as Markdown, at
-`index.md` beside its `index.html`:
+The second format publishes a page a second time as Markdown, at `index.md`
+beside its `index.html`. Ask for it on every kind of page, not only on the
+articles:
 
 ```toml
 [outputs]
-  page = ["HTML", "md"]
+  page     = ["HTML", "md"]
+  home     = ["HTML", "RSS", "md"]
+  section  = ["HTML", "RSS", "md"]
+  taxonomy = ["HTML", "RSS", "md"]
+  term     = ["HTML", "RSS", "md"]
 ```
 
-The page's own `<head>` then advertises it, so a reader that prefers Markdown
+`page` alone covers the articles, which is where this started, and it leaves
+the mirror holed exactly where its own links point: the front page, `/posts/`,
+`/tags/` and `/tags/hugo/` are the pages a reader navigates *through*, and one
+that followed a link to `/posts/index.md` used to find nothing there and fall
+back to the HTML. With the four other kinds on, every page of the site is
+reachable from `/index.md` without reading a line of HTML.
+
+Each list replaces the whole of Hugo's default for that kind, which is why
+`RSS` is named again above: leaving it out drops the section and taxonomy
+feeds.
+
+A list page's Markdown is its title, its own description, its body, then its
+children as links to their own `.md`. The children are listed whole rather than
+one pager at a time — pagination is a reading aid for a screen, and a file
+fetched in one request has no reason to make the rest of a section a second
+request.
+
+The page's own `<head>` advertises the copy, so a reader that prefers Markdown
 can find it without guessing:
 
 ```html
