@@ -18,6 +18,13 @@
 {{- with site.Params.llmsNote }}
 {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}
+{{- /* Only when the site publishes one. A map is worth more when it says where
+       the territory is, and a reader that wants the whole site can then take
+       it in one request rather than in one per link below. Not written as a
+       list item: everything in a list here is a page. */ -}}
+{{- with .OutputFormats.Get "llmsfull" }}
+{{ partial "i18n.html" (dict "key" "llmsFullAt" "fallback" "The full text of every page below:") }} {{ .Permalink }}
+{{ end }}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
 {{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}

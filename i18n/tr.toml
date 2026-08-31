@@ -136,3 +136,8 @@ other = "Ara"
 [contents]
 other = "İçindekiler"
 
+[llmsFullAt]
+other = "Aşağıdaki tüm sayfaların tam metni:"
+
+[llmsFullTruncated]
+other = "{{ .Total }} sayfanın en yeni {{ .Kept }} tanesi."

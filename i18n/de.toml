@@ -136,3 +136,8 @@ other = "Suche"
 [contents]
 other = "Inhalt"
 
+[llmsFullAt]
+other = "Der vollständige Text aller Seiten unten:"
+
+[llmsFullTruncated]
+other = "Die {{ .Kept }} neuesten von {{ .Total }} Seiten."

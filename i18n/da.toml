@@ -136,3 +136,8 @@ other = "Søg"
 [contents]
 other = "Indhold"
 
+[llmsFullAt]
+other = "Den fulde tekst af alle sider nedenfor:"
+
+[llmsFullTruncated]
+other = "De {{ .Kept }} nyeste af {{ .Total }} sider."

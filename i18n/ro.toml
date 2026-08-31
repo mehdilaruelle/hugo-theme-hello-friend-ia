@@ -136,3 +136,8 @@ other = "Căutare"
 [contents]
 other = "Cuprins"
 
+[llmsFullAt]
+other = "Textul integral al tuturor paginilor de mai jos:"
+
+[llmsFullTruncated]
+other = "Cele mai recente {{ .Kept }} pagini din {{ .Total }}."

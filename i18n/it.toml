@@ -136,3 +136,8 @@ other = "Cerca"
 [contents]
 other = "Indice"
 
+[llmsFullAt]
+other = "Il testo integrale di tutte le pagine elencate sotto:"
+
+[llmsFullTruncated]
+other = "Le {{ .Kept }} pagine più recenti su {{ .Total }}."

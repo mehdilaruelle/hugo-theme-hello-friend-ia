@@ -137,3 +137,8 @@ other = "検索"
 [contents]
 other = "目次"
 
+[llmsFullAt]
+other = "以下のすべてのページの全文:"
+
+[llmsFullTruncated]
+other = "{{ .Total }} ページのうち最新の {{ .Kept }} ページ。"

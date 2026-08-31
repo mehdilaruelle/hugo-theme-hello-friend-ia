@@ -53,6 +53,44 @@ for (const [lang, prefix] of Object.entries(langs)) {
     if (!existsSync(target(url))) fail(`${lang}: ${url} resolves to nothing`);
   }
   if (bad === before) console.log(`  ${lang.padEnd(3)} llms.txt  ${links.length} links, all resolve`);
+
+  // llms-full.txt is optional — a site asks for it in [outputs] or does not
+  // have one — but a site that does publish one has made llms.txt a promise
+  // about it: the same pages, in the same order, carrying their text.
+  const fullFile = join(root, prefix, "llms-full.txt");
+  if (!existsSync(fullFile)) continue;
+  const beforeFull = bad;
+  const full = readFileSync(fullFile, "utf8").split("\r\n").join("\n");
+
+  const fullUrl = `${base}${prefix}llms-full.txt`;
+  if (!s.includes(fullUrl)) fail(`${lang}: llms.txt does not name ${fullUrl}`);
+  if (!full.startsWith("# ")) fail(`${lang}: llms-full.txt does not open with a heading`);
+  if (full.includes("{{<") || full.includes("{{%")) fail(`${lang}: llms-full.txt has an unrendered shortcode`);
+  const fullEntities = entities(full);
+  if (fullEntities) fail(`${lang}: llms-full.txt has ${fullEntities.length} HTML entities, e.g. ${fullEntities[0]}`);
+
+  // Each entry ends with the page's own URL on a line of its own, so that is
+  // what is looked for -- and with the newline, since .../about/ is a prefix
+  // of .../about/me/ and would otherwise be found in it.
+  const pages = links.filter((u) => u.startsWith(base)).map((u) => u.replace(/index\.md$/, ""));
+  const at = pages.map((u) => full.indexOf(`${u}\n`));
+  const missing = at.findIndex((i) => i < 0);
+  const kept = missing < 0 ? pages.length : missing;
+  if (!kept) fail(`${lang}: llms-full.txt carries none of the ${pages.length} pages llms.txt maps`);
+  // params.llmsFullLimit cuts the tail off. It cannot leave a hole in the
+  // middle, and it cannot reorder what is left: either would mean the file no
+  // longer matches the map that points at it.
+  for (let i = kept; i < at.length; i++) {
+    if (at[i] >= 0) fail(`${lang}: llms-full.txt skips ${pages[kept]} but carries ${pages[i]}`);
+  }
+  for (let i = 1; i < kept; i++) {
+    if (at[i] < at[i - 1]) fail(`${lang}: llms-full.txt lists ${pages[i]} out of the order llms.txt gives`);
+  }
+  if (bad === beforeFull) {
+    console.log(`  ${lang.padEnd(3)} llms-full  ${kept < pages.length
+      ? `${kept} of ${pages.length} pages, the rest cut by llmsFullLimit`
+      : `${kept} page${kept === 1 ? "" : "s"}, the whole map`}`);
+  }
 }
 
 const beforeMd = bad;

@@ -136,3 +136,8 @@ other = "തിരയുക"
 [contents]
 other = "ഉള്ളടക്കം"
 
+[llmsFullAt]
+other = "താഴെയുള്ള എല്ലാ പേജുകളുടെയും പൂർണ്ണ വാചകം:"
+
+[llmsFullTruncated]
+other = "{{ .Total }}-ൽ ഏറ്റവും പുതിയ {{ .Kept }} പേജുകൾ."

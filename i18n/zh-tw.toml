@@ -136,3 +136,8 @@ other = "搜尋"
 [contents]
 other = "目錄"
 
+[llmsFullAt]
+other = "以下所有頁面的全文："
+
+[llmsFullTruncated]
+other = "{{ .Total }} 個頁面中最新的 {{ .Kept }} 個。"

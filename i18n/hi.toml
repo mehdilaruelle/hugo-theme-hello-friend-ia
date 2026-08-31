@@ -136,3 +136,8 @@ other = "खोज"
 [contents]
 other = "सामग्री"
 
+[llmsFullAt]
+other = "नीचे दिए गए सभी पृष्ठों का पूरा पाठ:"
+
+[llmsFullTruncated]
+other = "{{ .Total }} में से {{ .Kept }} सबसे हाल के पृष्ठ।"

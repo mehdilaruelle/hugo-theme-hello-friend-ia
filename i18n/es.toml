@@ -136,3 +136,8 @@ other = "Buscar"
 [contents]
 other = "Contenido"
 
+[llmsFullAt]
+other = "El texto completo de todas las páginas siguientes:"
+
+[llmsFullTruncated]
+other = "Las {{ .Kept }} páginas más recientes de {{ .Total }}."

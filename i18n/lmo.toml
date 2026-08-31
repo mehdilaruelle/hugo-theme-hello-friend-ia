@@ -136,3 +136,8 @@ other = "Cerca"
 [contents]
 other = "Indes"
 
+[llmsFullAt]
+other = "El test compless de tütt i pagin chì sota:"
+
+[llmsFullTruncated]
+other = "I {{ .Kept }} pagin püssee recent su {{ .Total }}."

@@ -136,3 +136,8 @@ other = "Cari"
 [contents]
 other = "Daftar isi"
 
+[llmsFullAt]
+other = "Teks lengkap semua halaman di bawah ini:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} halaman terbaru dari {{ .Total }}."

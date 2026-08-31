@@ -151,3 +151,8 @@ other = "بحث"
 [contents]
 other = "المحتويات"
 
+[llmsFullAt]
+other = "النص الكامل لكل الصفحات أدناه:"
+
+[llmsFullTruncated]
+other = "أحدث {{ .Kept }} صفحة من أصل {{ .Total }}."

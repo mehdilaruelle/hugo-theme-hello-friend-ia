@@ -1,0 +1,53 @@
+{{- /*
+  llms-full.txt: the site in one file.
+
+  llmstxt.org describes two files and the theme carried one. llms.txt is the
+  map — a heading, a summary, then every page as a link. This is the territory:
+  the same pages, in the same order, each carrying its text instead of a
+  pointer to it. A reader that wanted the site had to follow N links; now it
+  follows one.
+
+  Each entry is the same document page.md.md publishes, through the same
+  partial, separated by a rule. Nothing here is a second rendering of a page:
+  a file that disagreed with the page it copies would be worse than no file.
+
+  params.llmsFullLimit caps the number of entries, because without one a blog
+  of three hundred posts writes several megabytes that nobody asked for. When
+  it bites, the file says so — a truncated copy that presents itself as the
+  whole site is the one outcome worth avoiding.
+*/ -}}
+{{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
+{{- /* The order llms.txt lists them in: posts first, then everything else, and
+       newest first within each, so a limit keeps the most recent. */ -}}
+{{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
+{{- $posts := where $all "Section" "posts" -}}
+{{- $other := $all | complement $posts -}}
+{{- $ordered := slice -}}
+{{- range $posts -}}{{- $ordered = $ordered | append . -}}{{- end -}}
+{{- range $other -}}{{- $ordered = $ordered | append . -}}{{- end -}}
+{{- $total := len $ordered -}}
+{{- $limit := int (site.Params.llmsFullLimit | default 0) -}}
+{{- if and (gt $limit 0) (lt $limit $total) -}}
+  {{- $ordered = first $limit $ordered -}}
+{{- end -}}
+# {{ site.Title }}
+{{ with $desc }}
+> {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- with .RenderShortcodes | strings.TrimSpace }}
+{{ . }}
+{{ end }}
+{{- with site.Params.llmsNote }}
+{{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- if lt (len $ordered) $total }}
+{{- /* Kept, not Count: a dict with a Count key sends i18n looking for a plural
+       form, and a language whose table has only "other" would come back empty
+       on the one page a limit of 1 keeps. */ -}}
+{{ partial "i18n.html" (dict "key" "llmsFullTruncated" "args" (dict "Kept" (len $ordered) "Total" $total) "fallback" (printf "The %d most recent of %d pages." (len $ordered) $total)) }}
+{{ end }}
+{{- range $ordered }}
+---
+
+{{ partial "md/page.html" . }}
+{{ end -}}

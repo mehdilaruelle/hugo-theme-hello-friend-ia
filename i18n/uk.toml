@@ -140,3 +140,8 @@ other = "Пошук"
 [contents]
 other = "Зміст"
 
+[llmsFullAt]
+other = "Повний текст усіх сторінок нижче:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} найновіших сторінок із {{ .Total }}."

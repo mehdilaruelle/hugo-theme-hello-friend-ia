@@ -95,7 +95,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Front page content from `content/_index.md`, see [Front page content](#front-page-content)
 - JSON-LD structured data, breadcrumbs and a complete `hreflang` set, see [SEO](#seo)
 - 100 on accessibility, best practices and SEO on both demo sites, see [Speed](#speed)
-- Optional `llms.txt` and a Markdown copy of every page, list pages included, see [llms.txt](docs/config.md#llmstxt)
+- Optional `llms.txt`, `llms-full.txt` and a Markdown copy of every page, list pages included, see [llms.txt](docs/config.md#llmstxt)
 
 ### Speed
 
@@ -714,7 +714,7 @@ override something in your own site, mind these locations:
 | Home page | `layouts/home.html` |
 | Single pages | `layouts/page.html` |
 | List pages (section, taxonomy, term) | `layouts/list.html` |
-| Text outputs (`llms.txt` and Markdown) | `layouts/home.llms.txt`, `layouts/{home,list,page}.md.md` |
+| Text outputs (`llms.txt`, `llms-full.txt`, Markdown) | `layouts/home.llms.txt`, `layouts/home.llmsfull.txt`, `layouts/{home,list,page}.md.md` |
 | Base template | `layouts/baseof.html` |
 | Extra `<head>` tags | `layouts/_partials/extra-head.html` |
 
