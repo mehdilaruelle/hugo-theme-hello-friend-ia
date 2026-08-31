@@ -27,8 +27,9 @@ series = ["Showcase"]
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="ループするテストパターン" >}}
 
 置き換える対象の GIF と同じく、音を出さず自動で再生し、繰り返します。記事の
-読み心地は変わりません。読者が止めたくなる長さの場合は `controls="true"` を
-渡します。GIF では決してできなかったことです。
+読み心地は変わりませんが、GIF にはなかった再生コントロールが付きます。繰り返し
+はページを開いているあいだ続くからです。`controls="true"` を渡すと自動再生と
+ループをやめ、読者が自分で開始するまで待ちます。
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" controls="true" alt="テストパターン" >}}
 

@@ -561,9 +561,9 @@ Properties:
   - `width` / `height` (optional but recommended — a video has no size until it
     loads, and the page jumps around without them)
   - `alt` (optional, becomes the accessible name)
-  - `controls` (optional, default `false`; `true` shows the player controls and
-    drops the autoplay, which lets a reader stop the clip — something a GIF
-    never allowed)
+  - `controls` (optional, default `false`; `true` drops the autoplay and the
+    loop, so the clip waits to be started. The player controls are emitted
+    either way — a loop has to be stoppable)
   - `position` (optional, options: [`left`, `center`, `right`])
   - `formats` (optional, default `webm,mp4`; emitted in that order and the
     browser takes the first it can play, so put the smaller encoding first)
