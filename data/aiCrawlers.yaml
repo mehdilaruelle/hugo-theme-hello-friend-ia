@@ -1,0 +1,48 @@
+# The AI crawlers robots.txt can name, in the two groups that differ in what
+# they do with a page.
+#
+# The distinction that matters is not "AI yes / AI no". It is whether the fetch
+# comes back to you. A training crawler reads the site once and the text ends
+# up inside a model, unattributed. A retrieval crawler reads it to answer
+# somebody's question now, and the answer carries a link. Plenty of people want
+# to refuse the first and keep the second, which is why these are two lists and
+# params.ai is two switches.
+#
+# Tokens, not user agent strings: robots.txt matches the product token a
+# crawler declares, case-insensitively, and Google-Extended and
+# Applebot-Extended are tokens with no crawler behind them at all — they exist
+# only to be named here.
+#
+# Kept up to date the way langFlags.yaml is. A site that disagrees writes its
+# own data/aiCrawlers.yaml, which Hugo merges over this one.
+
+# Read to train a model. Nothing you write comes back as a link.
+train:
+  - GPTBot                # OpenAI
+  - ClaudeBot             # Anthropic
+  - CCBot                 # Common Crawl, whose archives train most of the rest
+  - Google-Extended       # Gemini. A token only; Googlebot is search
+  - Applebot-Extended     # Apple Intelligence. A token only; Applebot is search
+  - meta-externalagent    # Meta
+  - Bytespider            # ByteDance
+  - Amazonbot             # Amazon
+  - PanguBot              # Huawei
+  - cohere-ai             # Cohere
+  - Diffbot
+  - omgilibot             # Webz.io
+  - Timpibot
+  - AI2Bot                # Allen Institute for AI
+  - ImagesiftBot
+
+# Read to answer a question, with a link back. Refusing these takes the site
+# out of the answer as well as out of the model.
+cite:
+  - OAI-SearchBot         # OpenAI's index for search answers
+  - ChatGPT-User          # fetched because somebody asked ChatGPT about a URL
+  - Claude-User           # fetched because somebody asked Claude about a URL
+  - Claude-SearchBot      # Anthropic's index for search answers
+  - PerplexityBot         # Perplexity's index
+  - Perplexity-User
+  - DuckAssistBot         # DuckDuckGo
+  - MistralAI-User
+  - Meta-ExternalFetcher

@@ -54,6 +54,13 @@
   customCSS = ["css/custom.css"]
   customJS  = ["js/custom.js"]
 
+  # The two halves of the AI policy, set the way most people who want one want
+  # it: no, you may not train on this; yes, you may fetch it to answer somebody
+  # and link back. robots.txt grows the groups and the Content-Signal line.
+  [params.ai]
+    train = false
+    cite  = true
+
   # The author as an entity rather than a name. knowsAbout says what she works
   # in and hasCredential what backs it up; both land in the Person node that the
   # home page, every article and the about page already share under one @id.

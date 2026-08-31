@@ -1,4 +1,73 @@
+{{- /*
+  robots.txt: where the sitemap is, and which AI crawlers the site would rather
+  not have.
+
+  params.ai is two switches, because the question worth asking is not "AI yes
+  or no" but whether the fetch comes back to you:
+
+    [params.ai]
+      train = false   # read the site to train a model
+      cite  = true    # read it to answer a question, with a link back
+
+  Both default to true, and a site that sets neither gets the file it always
+  got: one group, and the sitemap. Nothing here changes for a site that has not
+  asked for it.
+
+  The agents behind each switch live in data/aiCrawlers.yaml, so a site names
+  an intention rather than maintaining a list of robots. One that would rather
+  write the list itself sets params.ai.crawlers to the text it wants, and that
+  is emitted in place of the generated groups.
+
+  Worth saying plainly, in the documentation and here: this file is a request.
+  What honours it, honours it; the rest is a matter for the CDN.
+*/ -}}
+{{- $ai := site.Params.ai -}}
+{{- $on := and $ai (reflect.IsMap $ai) -}}
+{{- $train := true -}}
+{{- $cite := true -}}
+{{- $search := true -}}
+{{- $custom := "" -}}
+{{- if $on -}}
+  {{- if isset $ai "train" -}}{{- $train = $ai.train -}}{{- end -}}
+  {{- if isset $ai "cite" -}}{{- $cite = $ai.cite -}}{{- end -}}
+  {{- if isset $ai "search" -}}{{- $search = $ai.search -}}{{- end -}}
+  {{- $custom = $ai.crawlers | default "" | strings.TrimSpace -}}
+{{- end -}}
+{{- /* Groups are emitted only for what is refused. Silence is permission in
+       robots.txt, so an Allow for the rest would say nothing the wildcard
+       group above does not already say. */ -}}
+{{- $groups := slice -}}
+{{- if not $custom -}}
+  {{- if not $train -}}
+    {{- $groups = $groups | append (dict "note" "Declined: fetched to train a model, with no link back." "agents" hugo.Data.aiCrawlers.train) -}}
+  {{- end -}}
+  {{- if not $cite -}}
+    {{- $groups = $groups | append (dict "note" "Declined: fetched to answer a question and cite the site." "agents" hugo.Data.aiCrawlers.cite) -}}
+  {{- end -}}
+{{- end -}}
 User-agent: *
+{{- /* An empty value means every path, so this is the file saying everything
+       is allowed. It says nothing new — a group with no rule in it is ignored,
+       and being ignored is also how a crawler ends up allowed — but a group
+       that states its rule is one a validator can read, and one the refusals
+       below can be checked against. */}}
+Disallow:
+{{- /* Content-Signal states the intention once, for anything that reads it
+       rather than matching itself against a group. A Cloudflare proposal from
+       September 2025 rather than a standard, which the documentation says. */}}
+{{- if $on }}
+Content-Signal: search={{ cond $search "yes" "no" }}, ai-input={{ cond $cite "yes" "no" }}, ai-train={{ cond $train "yes" "no" }}
+{{- end }}
+{{- with $custom }}
+
+{{ . | safeHTML }}
+{{- end }}
+{{- range $groups }}
+
+# {{ .note }}
+{{ range .agents }}User-agent: {{ . }}
+{{ end }}Disallow: /
+{{- end }}
 
 {{/* Crawlers find a sitemap far sooner when robots.txt names it, and Hugo's
      built-in robots.txt does not. On a multilingual site this is the index,

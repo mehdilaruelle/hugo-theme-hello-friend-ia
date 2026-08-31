@@ -451,6 +451,7 @@ templates.
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
 | `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
 | `llmsFullLimit` | how many pages `llms-full.txt` carries. Unset or `0` publishes every one |
+| `ai` | which AI crawlers `robots.txt` turns away. **A table**, see [AI crawlers](#ai-crawlers) |
 | `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
 | `imageMaxWidth` | caps the widest copy generated for `srcset`. Defaults to `1400` |
 
@@ -832,3 +833,89 @@ passes through and which carries the real URLs rather than a guess at them.
 
 Each file ends with the canonical URL, so a passage quoted out of it can be
 traced back to the page it came from.
+
+## AI crawlers
+
+`llms.txt` says *how* to read the site. This says *who* may — and the question
+worth asking is not "AI yes or no" but what the fetch is for. A training
+crawler reads the site once and the text ends up inside a model, unattributed.
+A retrieval crawler reads it to answer somebody's question now, and the answer
+carries a link back. Most people who want a policy want to refuse the first and
+keep the second, so this is two switches rather than one:
+
+```toml
+[params.ai]
+  train = false   # read the site to train a model
+  cite  = true    # read it to answer a question, with a link back
+```
+
+Both default to `true`, and a site that sets neither gets the `robots.txt` it
+always got — one group and the sitemap. Nothing changes for anyone who has not
+asked for it. `enableRobotsTXT = true` at the root is what makes Hugo write the
+file at all.
+
+With the two settings above, `robots.txt` comes out as:
+
+```
+User-agent: *
+Disallow:
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+# Declined: fetched to train a model, with no link back.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: CCBot
+User-agent: Google-Extended
+...
+Disallow: /
+
+Sitemap: https://example.com/sitemap.xml
+```
+
+Only what is refused gets a group of its own. Silence is permission in
+`robots.txt`, so an `Allow` for the rest would say nothing the wildcard group
+above does not already say.
+
+A third key, `search`, appears in `Content-Signal` and nowhere else, and
+defaults to `yes`. It is about search engines rather than about AI: refusing it
+takes the site out of results as well as out of answers.
+
+### Who is in each list
+
+`data/aiCrawlers.yaml`, kept current the way `data/langFlags.yaml` is, so a
+site names an intention instead of maintaining a list of robots. `train` holds
+`GPTBot`, `ClaudeBot`, `CCBot`, `Google-Extended`, `Applebot-Extended`,
+`meta-externalagent` and the rest; `cite` holds `OAI-SearchBot`, `Claude-User`,
+`Claude-SearchBot`, `PerplexityBot` and the others that fetch a page to answer
+with it. Two of those are tokens with no crawler behind them —
+`Google-Extended` and `Applebot-Extended` exist only to be named here, while
+`Googlebot` and `Applebot` stay search.
+
+Disagree with a list and your own `data/aiCrawlers.yaml` merges over the
+theme's. To write the groups yourself instead:
+
+```toml
+[params.ai]
+  crawlers = """
+User-agent: GPTBot
+Disallow: /
+"""
+```
+
+That text is emitted verbatim in place of the generated groups.
+`Content-Signal` still follows `train`, `cite` and `search`.
+
+### What this is and is not
+
+`robots.txt` is a request. What honours it, honours it; the rest is a matter
+for the CDN, and no theme can change that.
+
+`Content-Signal` is a [Cloudflare proposal][content-signals] from September
+2025, added to several million domains at once, and not a standard. It costs
+one line, and it is worth saying plainly that it is a declaration of intent
+rather than a lock.
+
+Both are worth having anyway. A policy that is ignored by some is still the
+difference between having said no and never having been asked.
+
+[content-signals]: https://searchengineland.com/cloudflare-content-signals-462538
