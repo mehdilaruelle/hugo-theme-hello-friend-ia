@@ -25,9 +25,8 @@
         <item>
             <title>{{ partial "title.html" . }}</title>
             <link>{{ .Permalink }}</link>
-            {{- /* pubDate is optional, and a page with no date would otherwise
-                   be published as 01 Jan 0001. The channel's lastBuildDate is
-                   already guarded this way. */}}
+            {{- /* pubDate is optional, and the zero time publishes as
+                   01 Jan 0001. lastBuildDate above is guarded the same way. */}}
             {{ if not .Date.IsZero }}<pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>{{ end }}
             {{ with .Site.Params.Author.email }}<author>{{.}}{{ with $.Site.Params.Author.name }} ({{.}}){{end}}</author>{{end}}
             <guid>{{ .Permalink }}</guid>
