@@ -34,10 +34,8 @@
   {{- with .Get "height" }} height="{{ . }}"{{ end }}
   {{- with $poster }} poster="{{ . | safeURL }}"{{ end }}
   {{- with .Get "alt" }} aria-label="{{ . | plainify }}"{{ end }}
-  {{- /* controls in both modes. A looping clip runs for as long as the page is
-         open, and content that moves on its own has to be stoppable without a
-         script -- so the pause button is the mechanism, not an option the
-         author remembers to pass. */ -}}
+  {{- /* controls in both modes: a loop has to be stoppable without a script,
+         not only when the author remembers to ask. */ -}}
   controls{{ if not $controls }} autoplay loop{{ end }}
   muted playsinline preload="metadata"
 {{- with .Get "position" }} class="{{ . }}"{{ end }}>

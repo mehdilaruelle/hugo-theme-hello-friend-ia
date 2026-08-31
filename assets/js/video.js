@@ -1,13 +1,6 @@
-// Autoplay, and the visitors who have asked for less of it.
-//
-// The video shortcode replaces an animated GIF, so by default it plays on a
-// loop. A loop is motion that never ends, and prefers-reduced-motion is a
-// request not to be shown it. No stylesheet can answer that one: autoplay is
-// an HTML attribute, not something CSS can turn off.
-//
-// The poster stays, so the picture is still there -- it simply waits to be
-// started. The controls come from the markup, not from here, so a visitor
-// without this script still has a pause button.
+// prefers-reduced-motion for an autoplaying video. No stylesheet can do this
+// one: autoplay is an HTML attribute. The controls come from the markup, so a
+// visitor without this script still has a pause button.
 
 (function () {
   var query = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,11 +15,8 @@
       v.loop = false;
       v.removeAttribute('autoplay');
       v.removeAttribute('loop');
-      // It may already have started before this ran, in which case the poster
-      // has been replaced by whatever frame it reached. load() resets the
-      // element and brings the poster back; currentTime = 0 would only rewind
-      // to the first frame, which is a different picture from the one the
-      // author chose.
+      // load(), not currentTime = 0: once playback has begun only a reset
+      // brings the poster back, and a rewind shows the first frame instead.
       if (!v.paused) v.pause();
       try { v.load(); } catch (e) {}
     }
