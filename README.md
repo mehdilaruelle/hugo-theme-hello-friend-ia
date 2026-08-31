@@ -293,6 +293,22 @@ git submodule add https://github.com/mehdilaruelle/hugo-theme-hello-friend-ng-ia
 
 The directory name matters: keep it `hello-friend-ng`, since that is the value `theme` takes in your configuration.
 
+The section name matters too: articles go in `content/posts/`. Hugo resolves an
+article's template by section name, and the theme's article layouts are
+`layouts/posts/page.html` and `layouts/posts/section.rss.xml`. A section named
+anything else falls back to the generic page template and to Hugo's built-in
+feed — silently, with no error and no warning. What that costs:
+
+- on the page: reading time, date, word count, last-modified, sharing buttons,
+  previous/next links, Disqus, Commento, Utterances, the description
+  standfirst, the audio player
+- in the feed: the full-text `<content:encoded>`, the theme's channel metadata,
+  and `services.rss.limit`
+
+`params.mainSections` does not move this. It points the footer's RSS icon and
+the 404 page at a section; it does not change which template renders an
+article.
+
 For the original, unforked theme, use
 [rhazdon/hugo-theme-hello-friend-ng](https://github.com/rhazdon/hugo-theme-hello-friend-ng) instead.
 

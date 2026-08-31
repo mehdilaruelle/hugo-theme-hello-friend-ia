@@ -339,7 +339,7 @@ templates.
 | `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
 | `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
 | `ogImage` | the picture a social card falls back to when a page has no `cover`. Use PNG or JPEG — no platform renders an SVG card |
-| `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts` |
+| `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts`. It does **not** decide which template renders an article: those resolve by section name, so articles belong in `content/posts/` |
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
