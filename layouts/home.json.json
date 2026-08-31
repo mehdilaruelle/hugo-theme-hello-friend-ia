@@ -21,10 +21,15 @@
 {{- $limit := site.Params.searchContentLimit | default 4000 -}}
 {{- $index := slice -}}
 {{- range where site.RegularPages "Params.searchable" "!=" false -}}
+  {{- /* Empty rather than the zero time: search.js renders the date in a result
+         only when there is one, and "0001-01-01" would have been shown as if it
+         were the day the page was written. */ -}}
+  {{- $date := "" -}}
+  {{- if not .Date.IsZero -}}{{- $date = .Date.Format "2006-01-02" -}}{{- end -}}
   {{- $index = $index | append (dict
       "title"   (partial "title.html" .)
       "url"     .RelPermalink
-      "date"    (.Date.Format "2006-01-02")
+      "date"    $date
       "tags"    (.Params.tags | default slice)
       "summary" (.Summary | plainify | htmlUnescape | chomp)
       "content" (.Plain | htmlUnescape | chomp | truncate $limit "" | htmlUnescape)

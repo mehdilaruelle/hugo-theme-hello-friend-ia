@@ -41,13 +41,13 @@
                                             {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
                                         {{- end }}
                                         <span class="post-title">{{ partial "title.html" . }}</span>
-                                        <time class="post-day" datetime="{{ .Date.Format "2006-01-02" }}">
+                                        {{ if not .Date.IsZero }}{{- /* An undated page has the zero time, and "Jan 1" reads like a real date rather than a missing one. */ -}}<time class="post-day" datetime="{{ .Date.Format "2006-01-02" }}">
                                             {{ if .Site.Params.dateformShort }}
                                                 {{ time.Format .Site.Params.dateformShort .Date }}
                                             {{ else }}
                                                 {{ time.Format "Jan 2" .Date }}
                                             {{ end }}
-                                        </time>
+                                        </time>{{ end }}
                                         {{- with $excerpt }}
                                             <span class="post-excerpt">{{ . }}</span>
                                         {{- end }}

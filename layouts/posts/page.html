@@ -87,7 +87,7 @@
           {{ partial "i18n.html" (dict "key" "wordCount" "args" .Page.WordCount "fallback" (cond (eq .Page.WordCount 1) "One Word" (printf "%d Words" .Page.WordCount))) }}
         </p>
 
-        <p>
+        {{ if not .Date.IsZero }}{{- /* Formatting the zero time prints a calendar icon beside "0001-01-01 01:00". */ -}}<p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -114,7 +114,7 @@
               {{ end }}
             {{ end }}
           {{ end }}
-        </p>
+        </p>{{ end }}
 
         {{- if .GitInfo }}
           <p>
