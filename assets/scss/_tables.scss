@@ -1,11 +1,17 @@
 @use "variables" as *;
 
+// A table wider than the page scrolls here, rather than in the document.
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 .post-content {
   table {
     border-collapse: collapse;
     margin: 25px auto;
     font-size: 0.9em;
-    min-width: 400px;
+    min-width: min(400px, 100%);
     max-width: 100%;
 
     th,
