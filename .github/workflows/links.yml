@@ -131,10 +131,9 @@ jobs:
         working-directory: hello-friend-ng/exampleSite
         run: node ../.github/scripts/check-seo.mjs public
 
-      # The AI policy is stated twice — in the groups robots.txt refuses, and
-      # in its Content-Signal line — so the one thing to assert is that they
-      # say the same thing. The default demo is checked too, because the
-      # feature being off has to keep meaning the file nobody asked to change.
+      # The AI policy is stated twice, so the thing to assert is that both say
+      # the same. The default demo is checked too: the feature being off has to
+      # keep meaning the file nobody asked to change.
       - name: Check robots.txt agrees with itself
         working-directory: hello-friend-ng
         run: |

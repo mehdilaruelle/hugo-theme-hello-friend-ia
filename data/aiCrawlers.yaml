@@ -1,17 +1,9 @@
-# The AI crawlers robots.txt can name, in the two groups that differ in what
-# they do with a page.
+# The AI crawlers robots.txt can name, split by what the fetch does: read to
+# train a model, or read to answer somebody with a link back. That is the
+# distinction params.ai.train and .cite switch on.
 #
-# The distinction that matters is not "AI yes / AI no". It is whether the fetch
-# comes back to you. A training crawler reads the site once and the text ends
-# up inside a model, unattributed. A retrieval crawler reads it to answer
-# somebody's question now, and the answer carries a link. Plenty of people want
-# to refuse the first and keep the second, which is why these are two lists and
-# params.ai is two switches.
-#
-# Tokens, not user agent strings: robots.txt matches the product token a
-# crawler declares, case-insensitively, and Google-Extended and
-# Applebot-Extended are tokens with no crawler behind them at all — they exist
-# only to be named here.
+# Product tokens, not user agent strings. Some have no crawler behind them at
+# all — Google-Extended and Applebot-Extended exist only to be named here.
 #
 # Kept up to date the way langFlags.yaml is. A site that disagrees writes its
 # own data/aiCrawlers.yaml, which Hugo merges over this one.
@@ -21,11 +13,9 @@ train:
   - GPTBot                # OpenAI
   - ClaudeBot             # Anthropic
   - CCBot                 # Common Crawl, whose archives train most of the rest
-  # One token, two uses: Google-Extended covers training Gemini *and* grounding
-  # its answers in your pages. There is no second token to keep the grounding
-  # and refuse the training, so refusing training here does cost the Google
-  # answer box. It sits in train because that is what people mean by refusing
-  # training; docs/config.md says what it costs.
+  # Covers training Gemini and grounding its answers, with no second token to
+  # separate them: refusing training here costs the Google answer box too.
+  # docs/config.md says so; it stays here because this is what people mean.
   - Google-Extended       # A token only; Googlebot itself is search
   - Applebot-Extended     # Apple Intelligence. A token only; Applebot is search
   - meta-externalagent    # Meta
@@ -40,7 +30,7 @@ train:
   - ImagesiftBot
 
 # Read to answer a question, with a link back. Refusing these takes the site
-# out of the answer as well as out of the model.
+# out of the answer too.
 cite:
   - OAI-SearchBot         # OpenAI's index for search answers
   - ChatGPT-User          # fetched because somebody asked ChatGPT about a URL

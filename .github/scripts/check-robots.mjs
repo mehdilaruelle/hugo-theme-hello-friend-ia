@@ -1,6 +1,5 @@
-// robots.txt states the AI policy in two places at once — the groups it
-// refuses, and the Content-Signal line — and a file that says one thing in one
-// and the opposite in the other is worse than saying nothing.
+// robots.txt states the AI policy twice — the groups it refuses, and the
+// Content-Signal line — so the thing to assert is that they agree.
 //
 //   node check-robots.mjs <theme-root> <public-dir>
 
@@ -13,9 +12,8 @@ const pub = process.argv[3] || 'public';
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
-// Only the shape data/aiCrawlers.yaml has: two keys, each a list of tokens
-// with an optional trailing comment. A line this cannot read is reported
-// rather than skipped, because Hugo still reads it.
+// Only the shape data/aiCrawlers.yaml has. A line this cannot read is
+// reported rather than skipped, because Hugo still reads it.
 const known = {};
 let key = null;
 readFileSync(join(root, 'data/aiCrawlers.yaml'), 'utf8').split(/\r?\n/).forEach((line, i) => {
@@ -29,8 +27,8 @@ readFileSync(join(root, 'data/aiCrawlers.yaml'), 'utf8').split(/\r?\n/).forEach(
 for (const group of ['train', 'cite']) {
   if (!known[group] || !known[group].length) fail(`data/aiCrawlers.yaml: the ${group} list is empty`);
 }
-// One agent in both groups gets two answers to the same question, and which
-// one it is handed depends on the order the file happens to be written in.
+// An agent in both groups gets whichever answer the file happens to state
+// first.
 const overlap = (known.train || []).filter((a) => (known.cite || []).includes(a));
 if (overlap.length) fail(`data/aiCrawlers.yaml: ${overlap.join(', ')} is in both groups`);
 
@@ -38,9 +36,8 @@ const file = join(pub, 'robots.txt');
 if (!existsSync(file)) { fail('no robots.txt was written'); process.exit(1); }
 const text = readFileSync(file, 'utf8');
 
-// robots.txt groups: one or more User-agent lines, then the rules that apply
-// to all of them. A rule line closes the run of agents, so the next agent line
-// starts a new group.
+// One or more User-agent lines, then the rules for all of them. A rule closes
+// the run, so the next agent line starts a new group.
 const groups = [];
 const sitemaps = [];
 let current = null;
@@ -74,9 +71,8 @@ if (wildcard && wildcard.rules.some(([f, v]) => f === 'disallow' && v === '/')) 
   fail('robots.txt: User-agent: * is disallowed everything, which takes the site out of search');
 }
 
-// Everything a group of its own refuses. params.ai.crawlers can put any token
-// here, so this only holds for a site using the generated groups, which the
-// showcase does.
+// params.ai.crawlers can put any token here, so this holds only for a site
+// using the generated groups — which the showcase does.
 const refused = new Set();
 for (const g of groups) {
   if (g.agents.includes('*')) continue;
@@ -88,8 +84,8 @@ for (const agent of refused) {
   }
 }
 
-// params.ai is one switch per group, so a group is refused whole or not at
-// all. Half of one is a policy nobody wrote.
+// One switch per group, so a group is refused whole or not at all. Half of
+// one is a policy nobody wrote.
 const state = {};
 for (const group of ['train', 'cite']) {
   const listed = (known[group] || []).filter((a) => refused.has(a));
@@ -100,12 +96,9 @@ for (const group of ['train', 'cite']) {
   }
 }
 
-// The Content-Signal line says the same thing to whatever reads intentions
-// rather than matching itself against a group. Both have to agree — and both
-// have to be there: a file that refuses crawlers and states no signal has said
-// it once, and this script would have passed it while the pull request claimed
-// otherwise. A site refusing nothing needs no signal, which is the default
-// demo and stays silent.
+// Both have to agree, and both have to be there: a file that refuses crawlers
+// and states no signal has said it once. A site refusing nothing needs no
+// signal, which is the default demo.
 const signal = (wildcard ? wildcard.rules : []).find(([f]) => f === 'content-signal');
 if (!signal && refused.size) {
   fail(`robots.txt: ${refused.size} AI crawler(s) refused and no Content-Signal to say so`);
