@@ -1,10 +1,8 @@
 @use "variables" as *;
 
 // A table wider than the page scrolls here, rather than in the document.
-// tabindex makes the box itself a tab stop, which is the only way a keyboard
-// user reaches the scroll: a table of plain text has nothing focusable inside
-// it to tab to. Chrome and Firefox now focus scroll containers on their own,
-// Safari does not.
+// Nothing inside a text table is focusable, so the box itself is the tab stop
+// or the scroll is mouse-only.
 .table-wrap {
   overflow-x: auto;
   max-width: 100%;
@@ -21,13 +19,8 @@
     border-collapse: collapse;
     margin: 25px auto;
     font-size: 0.9em;
-    // Interpolated so it reaches the browser as the CSS function. Written
-    // bare, libsass reads it as Sass's own min() and fails the build on
-    // "Incompatible units: '%' and 'px'" -- and libsass is the fallback the
-    // theme still documents for a site without Dart Sass. unquote() would do
-    // the same job, but Dart Sass is retiring the global built-ins and libsass
-    // has no sass:string to call it through. Both transpilers emit
-    // min(400px,100%) from this.
+    // Interpolated, or libsass reads it as Sass's own min() and fails the
+    // build on "Incompatible units: '%' and 'px'".
     min-width: #{"min(400px, 100%)"};
     max-width: 100%;
 
