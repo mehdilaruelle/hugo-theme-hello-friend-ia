@@ -661,7 +661,7 @@ pre:focus-within > code[data-lang]::before {
 // appear.
 @media (hover: none) {
   .copy-code,
-  pre > code[data-lang]::before {
+  pre > code[data-lang]:not([data-lang=""])::before {
     opacity: 1;
   }
 }
