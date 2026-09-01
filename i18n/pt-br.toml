@@ -123,3 +123,9 @@ other = "Publicações"
 
 [pages]
 other = "Páginas"
+
+[shareOn]
+other = "Compartilhar no {{ .Network }}"
+
+[shareViaEmail]
+other = "Compartilhar por e-mail"

@@ -122,3 +122,9 @@ other = "Posts"
 
 [pages]
 other = "Pages"
+
+[shareOn]
+other = "Share on {{ .Network }}"
+
+[shareViaEmail]
+other = "Share via email"

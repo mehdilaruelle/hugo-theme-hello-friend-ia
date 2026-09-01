@@ -127,3 +127,9 @@ other = "Записи"
 
 [pages]
 other = "Страницы"
+
+[shareOn]
+other = "Поделиться в {{ .Network }}"
+
+[shareViaEmail]
+other = "Поделиться по электронной почте"

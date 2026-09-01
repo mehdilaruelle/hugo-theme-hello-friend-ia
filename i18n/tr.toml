@@ -123,3 +123,9 @@ other = "Yazılar"
 
 [pages]
 other = "Sayfalar"
+
+[shareOn]
+other = "{{ .Network }} üzerinde paylaş"
+
+[shareViaEmail]
+other = "E-posta ile paylaş"

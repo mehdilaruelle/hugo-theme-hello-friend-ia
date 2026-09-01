@@ -123,3 +123,9 @@ other = "Indlæg"
 
 [pages]
 other = "Sider"
+
+[shareOn]
+other = "Del på {{ .Network }}"
+
+[shareViaEmail]
+other = "Del via e-mail"
