@@ -153,11 +153,15 @@
   // selector no longer names the element. The box it points at has not moved.
   .dropdown {
     display: inline-block;
+    position: relative;
   }
 
   .dropdown-content {
     display: none;
     position: absolute;
+    inset-inline-end: 0;
+    // Shrink-to-fit now measures against the parent, so entries would wrap.
+    white-space: nowrap;
     background: $dark-background-header;
 
     @media (prefers-color-scheme: light) {
@@ -211,5 +215,24 @@
 
   .dropdown:focus-within .dropdown-content {
     display: block;
+  }
+
+  // A floating panel opens past the right-aligned mobile menu, and
+  // :focus-within never fires on a parent that is a link: a tap activates it.
+  @media #{$media-size-phone} {
+    .dropdown {
+      display: block;
+    }
+
+    .dropdown-content {
+      display: block;
+      position: static;
+      white-space: normal;
+    }
+
+    .dropdown-content a {
+      padding: 12px 0;
+      padding-inline-start: 16px;
+    }
   }
 }
