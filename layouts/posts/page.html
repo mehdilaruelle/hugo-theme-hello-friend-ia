@@ -87,12 +87,8 @@
           {{ partial "i18n.html" (dict "key" "wordCount" "args" .Page.WordCount "fallback" (cond (eq .Page.WordCount 1) "One Word" (printf "%d Words" .Page.WordCount))) }}
         </p>
 
-        {{- /* Formatting the zero time prints a calendar icon beside
-               "0001-01-01 01:00", so the date is guarded on its own value.
-               Lastmod carries a separate one: Hugo fills it from Git or from
-               front matter independently of Date, so a page can legitimately
-               have a last-modified time and no publication date. Guarding the
-               pair together would drop that "Last updated" too. */ -}}
+        {{- /* Formatting the zero time prints "0001-01-01 01:00". A guard each,
+               not one around both: Hugo fills Lastmod independently of Date. */ -}}
         {{- $hasDate := not .Date.IsZero -}}
         {{- $hasLastmod := and (not .Lastmod.IsZero) (ne .Lastmod .Date) -}}
         {{ if or $hasDate $hasLastmod }}<p>
