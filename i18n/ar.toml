@@ -138,3 +138,9 @@ other = "المقالات"
 
 [pages]
 other = "الصفحات"
+
+[shareOn]
+other = "شارك على {{ .Network }}"
+
+[shareViaEmail]
+other = "شارك عبر البريد الإلكتروني"

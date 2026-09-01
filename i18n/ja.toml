@@ -124,3 +124,9 @@ other = "記事"
 
 [pages]
 other = "ページ"
+
+[shareOn]
+other = "{{ .Network }} で共有"
+
+[shareViaEmail]
+other = "メールで共有"

@@ -123,3 +123,9 @@ other = "പോസ്റ്റുകൾ"
 
 [pages]
 other = "പേജുകൾ"
+
+[shareOn]
+other = "{{ .Network }}-ൽ പങ്കിടുക"
+
+[shareViaEmail]
+other = "ഇമെയിൽ വഴി പങ്കിടുക"

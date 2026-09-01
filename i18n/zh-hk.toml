@@ -123,3 +123,9 @@ other = "文章"
 
 [pages]
 other = "頁面"
+
+[shareOn]
+other = "分享到 {{ .Network }}"
+
+[shareViaEmail]
+other = "透過電郵分享"

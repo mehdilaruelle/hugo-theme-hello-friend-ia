@@ -123,3 +123,9 @@ other = "Tulisan"
 
 [pages]
 other = "Halaman"
+
+[shareOn]
+other = "Bagikan di {{ .Network }}"
+
+[shareViaEmail]
+other = "Bagikan lewat email"

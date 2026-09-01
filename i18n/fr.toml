@@ -122,3 +122,9 @@ other = "Articles"
 
 [pages]
 other = "Pages"
+
+[shareOn]
+other = "Partager sur {{ .Network }}"
+
+[shareViaEmail]
+other = "Partager par e-mail"
