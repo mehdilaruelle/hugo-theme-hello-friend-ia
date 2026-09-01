@@ -87,13 +87,18 @@
           {{ partial "i18n.html" (dict "key" "wordCount" "args" .Page.WordCount "fallback" (cond (eq .Page.WordCount 1) "One Word" (printf "%d Words" .Page.WordCount))) }}
         </p>
 
-        <p>
+        {{- /* Formatting the zero time prints "0001-01-01 01:00". A guard each,
+               not one around both: Hugo fills Lastmod independently of Date. */ -}}
+        {{- $hasDate := not .Date.IsZero -}}
+        {{- $hasLastmod := and (not .Lastmod.IsZero) (ne .Lastmod .Date) -}}
+        {{ if or $hasDate $hasLastmod }}<p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
             <line x1="8" y1="2" x2="8" y2="6"></line>
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
+          {{- if $hasDate }}
           {{- /* .Local, like the text below it: the visible date is rendered in
                  the build machine's zone, and a datetime in another offset can
                  name a different calendar day for anything near midnight. */ -}}
@@ -104,17 +109,16 @@
               {{ dateFormat "2006-01-02 15:04" .Date.Local }}
             {{- end }}
           </time>
+          {{- end }}
 
-          {{ if .Lastmod }} 
-            {{ if not (eq .Lastmod .Date )}}
-              {{ if .Site.Params.dateformNumTime }}
-                ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat .Site.Params.dateformNumTime .Lastmod.Local }})
-              {{ else }} 
-                ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat "2006-01-02 15:04" .Lastmod.Local }})
-              {{ end }}
+          {{ if $hasLastmod }}
+            {{ if .Site.Params.dateformNumTime }}
+              ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat .Site.Params.dateformNumTime .Lastmod.Local }})
+            {{ else }} 
+              ({{ partial "i18n.html" (dict "key" "lastModified" "fallback" "Last updated") }}: {{ dateFormat "2006-01-02 15:04" .Lastmod.Local }})
             {{ end }}
           {{ end }}
-        </p>
+        </p>{{ end }}
 
         {{- if .GitInfo }}
           <p>

@@ -26,7 +26,9 @@
         <item>
             <title>{{ partial "title.html" . }}</title>
             <link>{{ .Permalink }}</link>
-            <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+            {{- /* pubDate is optional, and the zero time publishes as
+                   01 Jan 0001. lastBuildDate above is guarded the same way. */}}
+            {{ if not .Date.IsZero }}<pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>{{ end }}
             {{ with $author.email }}<author>{{.}}{{ with $author.name }} ({{.}}){{end}}</author>{{end}}
             <guid>{{ .Permalink }}</guid>
             {{- /* description is the summary, content:encoded the whole
