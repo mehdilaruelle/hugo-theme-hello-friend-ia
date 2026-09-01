@@ -113,9 +113,13 @@
     }
   }
 
+  // On the link, not the flag: margin inside an underlined link is underlined.
+  .translation-link {
+    margin: 0 5px;
+  }
+
   .flag {
     border-radius: 50%;
-    margin: 0 5px;
   }
 }
 
