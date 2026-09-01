@@ -1,22 +1,11 @@
 {{- /*
-  The front page as Markdown: the root of the Markdown mirror.
-
-  llms.txt is the flat map — every page of the site on one screen. This is the
-  first node of the graph instead: the site's name and summary, its front-page
-  body, then the top-level sections and pages, each linking to its own
-  Markdown. Follow those and every page is reachable without reading a line of
-  HTML, which is what the mirror promised and only half delivered.
-
-  The two files are not the same thing said twice. One is for a reader that
-  wants the whole shape at once, the other for a reader that walks it.
+  The front page as Markdown, and the root of the mirror. llms.txt is the flat
+  map — every page on one screen; this is the first node of a graph you walk.
 */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
-{{- /*
-  .Pages on the home page is the top-level sections and the pages at the root.
-  It leaves out the ones Hugo generates — /tags/, /categories/ — so the mirror
-  published those and nothing linked them: two subtrees reachable only by
-  guessing a URL. A graph with an unreachable half is not a graph.
-*/ -}}
+{{- /* .Pages is the top-level sections and the pages at the root. It leaves
+       out the ones Hugo generates, so /tags/ and /categories/ were published
+       and nothing linked them. */ -}}
 {{- $children := slice -}}
 {{- range .Pages -}}{{- $children = $children | append . -}}{{- end -}}
 {{- range where site.Pages "Kind" "taxonomy" -}}{{- $children = $children | append . -}}{{- end -}}

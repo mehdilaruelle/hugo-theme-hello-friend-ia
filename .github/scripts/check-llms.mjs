@@ -17,19 +17,14 @@ const walk = (d) => readdirSync(d).flatMap((e) => {
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
-// An entity is wrong in prose and right inside a tag: a shortcode expands to
-// the HTML it would have produced, and alt="d&#39;ecran" is that HTML being
-// correct. Only what is left after the tags is read.
-//
-// A tag, rather than anything between angle brackets: "A < B &amp; C > D" is
-// prose, and treating it as markup took the entity out with it — a hole in
-// the one assertion here that exists to find entities.
+// An entity is wrong in prose and right inside a tag, since a shortcode
+// expands to real HTML. A tag, not anything between angle brackets: stripping
+// those took "A < B &amp; C > D" with them, entity and all.
 const prose = (s) => s.replace(/<\/?[A-Za-z][^>]*>/g, "");
 const entities = (s) => prose(s).match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
 
 // A Markdown destination, without the title that may follow it: in
-// [About](/about/ "About") the page is /about/, not the six characters after
-// it. An angle-bracketed destination keeps what is inside the brackets.
+// [About](/about/ "About") the page is /about/.
 const destination = (raw) => {
   const d = raw.trim();
   if (d.startsWith("<")) {
@@ -45,9 +40,8 @@ const LINK = /\[(?:\\.|[^\\\]])*\]\(([^)]+)\)/g;
 const LIST_LINK = /^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm;
 const mdLinks = (s) => [...s.matchAll(LINK)].map((m) => destination(m[1]));
 
-// Where a URL under the base lands on disk. The path decides that and nothing
-// else: a query or a fragment is for whoever opens the page, and joining one
-// into a filename looks for a file nobody wrote.
+// Where a URL under the base lands on disk. The path decides, and nothing
+// else: a fragment joined into a filename looks for a file nobody wrote.
 const basePath = new URL(base).pathname;
 const relative = (path) => {
   const p = path.startsWith(basePath) ? path.slice(basePath.length) : path.replace(/^\//, "");
@@ -81,9 +75,8 @@ for (const [lang, prefix] of Object.entries(langs)) {
   }
   if (bad === before) console.log(`  ${lang.padEnd(3)} llms.txt  ${links.length} links, all resolve`);
 
-  // llms-full.txt is optional — a site asks for it in [outputs] or does not
-  // have one — but a site that does publish one has made llms.txt a promise
-  // about it: the same pages, in the same order, carrying their text.
+  // Optional, but a site that publishes one has made llms.txt a promise about
+  // it: the same pages, in the same order, carrying their text.
   const fullFile = join(root, prefix, "llms-full.txt");
   if (!existsSync(fullFile)) continue;
   const beforeFull = bad;
@@ -96,10 +89,9 @@ for (const [lang, prefix] of Object.entries(langs)) {
   const fullEntities = entities(full);
   if (fullEntities) fail(`${lang}: llms-full.txt has ${fullEntities.length} HTML entities, e.g. ${fullEntities[0]}`);
 
-  // Every entry closes the way page.md.md closes: a rule, a blank line, then
-  // the page URL. The entries are read out of the file itself rather than
-  // looked up one URL at a time, because looking up only the URLs the map
-  // names can never notice a page in here that the map never named.
+  // Read out of the file rather than looked up one URL at a time: looking up
+  // only what the map names can never notice a page it never named. Every
+  // entry closes as page.md.md does — rule, blank line, page URL.
   const lines = full.split("\n");
   const carried = [];
   for (let i = 2; i < lines.length; i++) {
@@ -109,9 +101,8 @@ for (const [lang, prefix] of Object.entries(langs)) {
   }
   const pages = links.filter((u) => u.startsWith(base)).map((u) => u.replace(/index\.md$/, ""));
   if (!carried.length) fail(`${lang}: llms-full.txt carries none of the ${pages.length} pages llms.txt maps`);
-  // params.llmsFullLimit cuts the tail off, and that is all it may do: it
-  // cannot leave a hole in the middle, reorder what is left, or add a page
-  // the map never listed.
+  // llmsFullLimit may cut the tail and nothing else: no hole in the middle,
+  // no reordering, no page the map never listed.
   const expected = pages.slice(0, carried.length);
   for (let i = 0; i < Math.max(carried.length, expected.length); i++) {
     if (carried[i] !== expected[i]) {
@@ -143,9 +134,7 @@ for (const f of mds) {
   // Anywhere in the file would pass on a page that merely links to the site.
   const last = s.trimEnd().split("\n").pop().trim();
   if (!last.split(/\s+/).pop().startsWith(base)) fail(`${f}: does not end with a canonical URL`);
-  // The mirror is only walkable if its own links land somewhere. A list page
-  // links its children, the front page links the sections, and nothing but an
-  // assertion on the built files says those files exist.
+  // The mirror is only walkable if its own links land somewhere.
   for (const url of mdLinks(s).filter((u) => u.startsWith(base))) {
     edges++;
     if (!resolves(url)) fail(`${f}: ${url} resolves to nothing`);
@@ -153,14 +142,10 @@ for (const f of mds) {
 }
 if (bad === beforeMd) console.log(`  md       ${mds.length} pages, each a heading then prose, ${edges} links between them`);
 
-// Reachability, which is the part resolving links does not prove. A page with
-// pages under it is a node the mirror exists to be walked through, so it has
-// to be reachable from the front page of its language: /tags/ published itself
-// and its terms, nothing linked it, and every other assertion here passed.
-//
-// A page with nothing under it is exempt. That is what a page kept out with
-// searchable looks like from disk, and a leaf nobody links is a choice rather
-// than a hole.
+// Resolving links does not prove reachability. A page with pages under it has
+// to be reachable from its language's front page: /tags/ published itself and
+// its terms, nothing linked it, and every other assertion here passed. A leaf
+// nobody links is exempt — that is what searchable: false looks like on disk.
 const beforeGraph = bad;
 const outgoing = (rel) => mdLinks(readFileSync(join(root, rel), "utf8"))
   .filter((u) => u.startsWith(base))

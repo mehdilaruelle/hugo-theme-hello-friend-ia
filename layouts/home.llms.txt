@@ -1,11 +1,9 @@
 {{- /*
-  llms.txt: the site as a map — a heading, a one-line summary, then every page
-  as a link with a note. The convention is described at llmstxt.org.
+  llms.txt: the site as a map — a heading, a summary, then every page as a link
+  with a note. The convention is at llmstxt.org.
 
-  How a link is resolved, how a title is escaped and how a note is cut are
-  three rules shared with the Markdown mirror, so they live in partials under
-  _partials/md/ rather than here. They were inline partials of this file while
-  it was the only thing linking pages; list.md.md and home.md.md are two more.
+  How a link resolves, how a title is escaped and how a note is cut are shared
+  with the Markdown mirror, under _partials/md/.
 */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
 # {{ site.Title }}
@@ -18,10 +16,7 @@
 {{- with site.Params.llmsNote }}
 {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}
-{{- /* Only when the site publishes one. A map is worth more when it says where
-       the territory is, and a reader that wants the whole site can then take
-       it in one request rather than in one per link below. Not written as a
-       list item: everything in a list here is a page. */ -}}
+{{- /* Not written as a list item: everything in a list here is a page. */ -}}
 {{- with .OutputFormats.Get "llmsfull" }}
 {{ partial "i18n.html" (dict "key" "llmsFullAt" "fallback" "The full text of every page below:") }} {{ .Permalink }}
 {{ end }}

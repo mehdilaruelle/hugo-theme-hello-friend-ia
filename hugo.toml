@@ -13,9 +13,8 @@
     isPlainText    = true
     notAlternative = true
 
-  # llms.txt is the map, this is the territory: the same pages, in the same
-  # order, carrying their text rather than a link to it. One request instead of
-  # one per page. params.llmsFullLimit caps how many.
+  # The same pages llms.txt maps, carrying their text. params.llmsFullLimit
+  # caps how many.
   [outputFormats.llmsfull]
     mediaType      = "text/plain"
     baseName       = "llms-full"

@@ -1,12 +1,5 @@
-{{- /*
-  Where to send a reader that would rather have Markdown: the page's .md copy
-  when the site publishes one, and its HTML when it does not. Takes the page.
-
-  Every text output resolves a link through here. llms.txt worked it out in an
-  inline partial of its own, which was enough while it was the only file
-  linking pages; the section and front-page mirrors are two more, and three
-  copies of a rule is three places for it to drift.
-*/ -}}
+{{- /* The page's .md copy when the site publishes one, its HTML when it does
+       not. Shared, so the map and the mirrors cannot disagree. */ -}}
 {{- $url := .Permalink -}}
 {{- with .OutputFormats.Get "md" -}}{{- $url = .Permalink -}}{{- end -}}
 {{- return $url -}}
