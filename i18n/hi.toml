@@ -129,3 +129,6 @@ other = "{{ .Network }} पर साझा करें"
 
 [shareViaEmail]
 other = "ईमेल से साझा करें"
+
+[search]
+other = "खोज"

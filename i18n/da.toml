@@ -129,3 +129,6 @@ other = "Del på {{ .Network }}"
 
 [shareViaEmail]
 other = "Del via e-mail"
+
+[search]
+other = "Søg"

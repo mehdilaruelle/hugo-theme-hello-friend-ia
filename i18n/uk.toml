@@ -133,3 +133,6 @@ other = "Поділитися в {{ .Network }}"
 
 [shareViaEmail]
 other = "Поділитися електронною поштою"
+
+[search]
+other = "Пошук"

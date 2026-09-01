@@ -129,3 +129,6 @@ other = "Bagikan di {{ .Network }}"
 
 [shareViaEmail]
 other = "Bagikan lewat email"
+
+[search]
+other = "Cari"
