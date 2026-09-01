@@ -776,9 +776,11 @@ nobody will read, so there is a cap:
   llmsFullLimit = 50   # pages. Unset or 0 publishes every one
 ```
 
-It keeps the newest, in the order `llms.txt` lists them, and when it bites the
-file says so under the summary — *The 50 most recent of 312 pages.* A truncated
-copy presenting itself as the whole site is the one outcome worth avoiding.
+It keeps the first entries in the order `llms.txt` lists them — posts newest
+first, then the other pages — so an older post still outranks a newer page, and
+the notice says exactly that rather than claiming recency it cannot deliver:
+*50 of 312 pages, in the order llms.txt lists them.* A truncated copy
+presenting itself as the whole site is the one outcome worth avoiding.
 
 ## The site as Markdown
 

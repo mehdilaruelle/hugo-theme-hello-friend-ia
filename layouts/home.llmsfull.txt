@@ -17,8 +17,10 @@
   whole site is the one outcome worth avoiding.
 */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
-{{- /* The order llms.txt lists them in: posts first, then everything else, and
-       newest first within each, so a limit keeps the most recent. */ -}}
+{{- /* The order llms.txt lists them in: posts first, then everything else.
+       Not the site's pages by date, then — an older post still comes before a
+       newer page — which is why a limit says it kept the first N in this
+       order rather than claiming they are the most recent. */ -}}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
 {{- $posts := where $all "Section" "posts" -}}
 {{- $other := $all | complement $posts -}}
@@ -44,7 +46,7 @@
 {{- /* Kept, not Count: a dict with a Count key sends i18n looking for a plural
        form, and a language whose table has only "other" would come back empty
        on the one page a limit of 1 keeps. */ -}}
-{{ partial "i18n.html" (dict "key" "llmsFullTruncated" "args" (dict "Kept" (len $ordered) "Total" $total) "fallback" (printf "The %d most recent of %d pages." (len $ordered) $total)) }}
+{{ partial "i18n.html" (dict "key" "llmsFullTruncated" "args" (dict "Kept" (len $ordered) "Total" $total) "fallback" (printf "%d of %d pages, in the order llms.txt lists them." (len $ordered) $total)) }}
 {{ end }}
 {{- range $ordered }}
 ---

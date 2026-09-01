@@ -140,4 +140,4 @@ other = "Indice"
 other = "Il testo integrale di tutte le pagine elencate sotto:"
 
 [llmsFullTruncated]
-other = "Le {{ .Kept }} pagine più recenti su {{ .Total }}."
+other = "{{ .Kept }} pagine su {{ .Total }}, nell’ordine in cui llms.txt le elenca."

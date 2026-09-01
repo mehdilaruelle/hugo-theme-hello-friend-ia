@@ -140,4 +140,4 @@ other = "Indes"
 other = "El test compless de tütt i pagin chì sota:"
 
 [llmsFullTruncated]
-other = "I {{ .Kept }} pagin püssee recent su {{ .Total }}."
+other = "{{ .Kept }} pagin su {{ .Total }}, in de l’órden che llms.txt el dà."

@@ -140,4 +140,4 @@ other = "Cuprins"
 other = "Textul integral al tuturor paginilor de mai jos:"
 
 [llmsFullTruncated]
-other = "Cele mai recente {{ .Kept }} pagini din {{ .Total }}."
+other = "{{ .Kept }} din {{ .Total }} pagini, în ordinea în care le listează llms.txt."

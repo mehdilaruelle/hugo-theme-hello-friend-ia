@@ -144,4 +144,4 @@ other = "Зміст"
 other = "Повний текст усіх сторінок нижче:"
 
 [llmsFullTruncated]
-other = "{{ .Kept }} найновіших сторінок із {{ .Total }}."
+other = "{{ .Kept }} сторінок із {{ .Total }}, у порядку, указаному в llms.txt."

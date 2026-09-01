@@ -11,7 +11,16 @@
   wants the whole shape at once, the other for a reader that walks it.
 */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
-{{- $children := where .Pages "Params.searchable" "!=" false -}}
+{{- /*
+  .Pages on the home page is the top-level sections and the pages at the root.
+  It leaves out the ones Hugo generates — /tags/, /categories/ — so the mirror
+  published those and nothing linked them: two subtrees reachable only by
+  guessing a URL. A graph with an unreachable half is not a graph.
+*/ -}}
+{{- $children := slice -}}
+{{- range .Pages -}}{{- $children = $children | append . -}}{{- end -}}
+{{- range where site.Pages "Kind" "taxonomy" -}}{{- $children = $children | append . -}}{{- end -}}
+{{- $children = where $children "Params.searchable" "!=" false -}}
 # {{ site.Title }}
 {{ with $desc }}
 > {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}

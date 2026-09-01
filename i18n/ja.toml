@@ -141,4 +141,4 @@ other = "目次"
 other = "以下のすべてのページの全文:"
 
 [llmsFullTruncated]
-other = "{{ .Total }} ページのうち最新の {{ .Kept }} ページ。"
+other = "{{ .Total }} ページのうち {{ .Kept }} ページ、llms.txt と同じ順序です。"

@@ -140,4 +140,4 @@ other = "Daftar isi"
 other = "Teks lengkap semua halaman di bawah ini:"
 
 [llmsFullTruncated]
-other = "{{ .Kept }} halaman terbaru dari {{ .Total }}."
+other = "{{ .Kept }} dari {{ .Total }} halaman, dalam urutan yang tercantum di llms.txt."

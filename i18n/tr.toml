@@ -140,4 +140,4 @@ other = "İçindekiler"
 other = "Aşağıdaki tüm sayfaların tam metni:"
 
 [llmsFullTruncated]
-other = "{{ .Total }} sayfanın en yeni {{ .Kept }} tanesi."
+other = "{{ .Total }} sayfadan {{ .Kept }} tanesi, llms.txt içindeki sırayla."

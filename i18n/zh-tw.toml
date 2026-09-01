@@ -140,4 +140,4 @@ other = "目錄"
 other = "以下所有頁面的全文："
 
 [llmsFullTruncated]
-other = "{{ .Total }} 個頁面中最新的 {{ .Kept }} 個。"
+other = "{{ .Total }} 個頁面中的 {{ .Kept }} 個，順序與 llms.txt 一致。"

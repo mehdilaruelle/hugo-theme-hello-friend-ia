@@ -140,4 +140,4 @@ other = "Contenido"
 other = "El texto completo de todas las páginas siguientes:"
 
 [llmsFullTruncated]
-other = "Las {{ .Kept }} páginas más recientes de {{ .Total }}."
+other = "{{ .Kept }} de {{ .Total }} páginas, en el orden en que llms.txt las lista."

@@ -140,4 +140,4 @@ other = "Indhold"
 other = "Den fulde tekst af alle sider nedenfor:"
 
 [llmsFullTruncated]
-other = "De {{ .Kept }} nyeste af {{ .Total }} sider."
+other = "{{ .Kept }} af {{ .Total }} sider, i den rækkefølge llms.txt angiver."
