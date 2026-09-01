@@ -1,7 +1,24 @@
 {{- /* Hugo's built-in table markup, wrapped so a table wider than the page
-       scrolls inside its own box instead of pushing the document sideways. */ -}}
-<div class="table-wrap">
-<table>
+       scrolls inside its own box instead of pushing the document sideways.
+
+       tabindex on the wrapper is what lets a keyboard reach that scroll. A
+       table of plain text holds nothing focusable, so without it the box is
+       scrollable by mouse and trackpad only (ACT rule 0ssw9k). No role or
+       aria-label goes with it: naming the box would make every table on the
+       page an identically titled landmark, which costs a screen reader more
+       than the one tab stop does.
+
+       .Attributes carries whatever the author wrote under the table when
+       markup.goldmark.parser.attribute.block is on. Hugo's own table markup
+       emits them and this hook replaces that markup, so it has to emit them
+       too, or an id or class written in the content is dropped. It goes on
+       the table rather than the wrapper because that is where Hugo put it and
+       where a `#anchor` link or a stylesheet expects to find it. */ -}}
+<div class="table-wrap" tabindex="0">
+<table
+  {{- range $k, $v := .Attributes }}
+    {{- with $v }}{{ printf " %s=%q" $k . | safeHTMLAttr }}{{ end }}
+  {{- end }}>
   <thead>
     {{- range .THead }}
     <tr>
