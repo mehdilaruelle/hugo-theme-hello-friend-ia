@@ -108,6 +108,6 @@ A looping clip, standing in for an animated GIF:
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern looping" >}}
 
-The same clip with controls, for anything a reader may want to pause:
+The same clip without the autoplay, for anything a reader should start themselves:
 
 {{< video src="/video/demo" poster="/video/demo.jpg" width="640" height="360" alt="A test pattern" controls="true" >}}

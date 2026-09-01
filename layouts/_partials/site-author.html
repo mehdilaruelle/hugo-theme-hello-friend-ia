@@ -1,0 +1,19 @@
+{{- /*
+  The site's author as a map with name and email keys.
+
+  params.author is a string or a map, so indexing .name or .email on it is a
+  hard template error rather than a nil. Site-level on purpose: author.html
+  answers for a page, and a guest writer's name does not belong in the footer
+  or in the feed's channel metadata.
+*/ -}}
+{{- $name := "" -}}
+{{- $email := "" -}}
+{{- with site.Params.author -}}
+  {{- if reflect.IsMap . -}}
+    {{- $name = .name | default "" -}}
+    {{- $email = .email | default "" -}}
+  {{- else -}}
+    {{- $name = . -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "name" $name "email" $email -}}

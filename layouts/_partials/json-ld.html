@@ -12,14 +12,7 @@
        owner's job title, portrait and profiles under one @id, so reading its
        name from a page that names its own author would put two names on one
        entity. */ -}}
-{{- $siteAuthor := "" -}}
-{{- with site.Params.author -}}
-  {{- if reflect.IsMap . -}}
-    {{- $siteAuthor = .name -}}
-  {{- else -}}
-    {{- $siteAuthor = . -}}
-  {{- end -}}
-{{- end -}}
+{{- $siteAuthor := (partial "site-author.html" .).name -}}
 
 {{- $image := "" -}}
 {{- with .Params.images -}}
@@ -321,12 +314,26 @@
   {{- with .Parent -}}{{- if not .IsHome -}}{{- $section = . -}}{{- end -}}{{- end -}}
 {{- end -}}
 {{- with $section -}}
+  {{- /* Every ancestor, not just the parent: a fixed three-item trail dropped
+         the levels between on a nested page. Positions are counted, not
+         assumed. */ -}}
+  {{- $items := slice -}}
+  {{- $i := 0 -}}
+  {{- range $.Ancestors.Reverse -}}
+    {{- $i = add $i 1 -}}
+    {{- $name := "" -}}
+    {{- if .IsHome -}}
+      {{- $name = partial "i18n.html" (dict "key" "home" "fallback" "Home") -}}
+    {{- else -}}
+      {{- $name = .LinkTitle | plainify -}}
+    {{- end -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" $i "name" $name "item" .Permalink) -}}
+  {{- end -}}
+
+  {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "name" (partial "title.html" $ | plainify)) -}}
   {{- $trail := dict
     "@context" "https://schema.org"
     "@type" "BreadcrumbList"
-    "itemListElement" (slice
-      (dict "@type" "ListItem" "position" 1 "name" (partial "i18n.html" (dict "key" "home" "fallback" "Home")) "item" site.Home.Permalink)
-      (dict "@type" "ListItem" "position" 2 "name" (.LinkTitle | plainify) "item" .Permalink)
-      (dict "@type" "ListItem" "position" 3 "name" (partial "title.html" $ | plainify))) -}}
+    "itemListElement" $items -}}
 <script type="application/ld+json">{{ $trail | jsonify | safeJS }}</script>
 {{- end -}}
