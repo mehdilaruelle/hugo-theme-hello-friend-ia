@@ -1,0 +1,32 @@
+{{- /* Hugo's built-in table markup, wrapped so a table wider than the page
+       scrolls inside its own box instead of pushing the document sideways.
+       tabindex makes that box the tab stop, the only way a keyboard reaches
+       the scroll.
+
+       .Attributes has to be repeated here: this hook replaces the markup that
+       carried it, so an id or class written under the table is dropped. */ -}}
+<div class="table-wrap" tabindex="0">
+<table
+  {{- range $k, $v := .Attributes }}
+    {{- with $v }}{{ printf " %s=%q" $k . | safeHTMLAttr }}{{ end }}
+  {{- end }}>
+  <thead>
+    {{- range .THead }}
+    <tr>
+      {{- range . }}
+      <th{{ with .Alignment }}{{ printf " style=%q" (printf "text-align: %s" .) | safeHTMLAttr }}{{ end }}>{{ .Text }}</th>
+      {{- end }}
+    </tr>
+    {{- end }}
+  </thead>
+  <tbody>
+    {{- range .TBody }}
+    <tr>
+      {{- range . }}
+      <td{{ with .Alignment }}{{ printf " style=%q" (printf "text-align: %s" .) | safeHTMLAttr }}{{ end }}>{{ .Text }}</td>
+      {{- end }}
+    </tr>
+    {{- end }}
+  </tbody>
+</table>
+</div>

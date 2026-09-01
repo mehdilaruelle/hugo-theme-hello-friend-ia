@@ -1,11 +1,27 @@
 @use "variables" as *;
 
+// A table wider than the page scrolls here, rather than in the document.
+// Nothing inside a text table is focusable, so the box itself is the tab stop
+// or the scroll is mouse-only.
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+
+  &:focus-visible {
+    outline: 2px solid #67a2c9;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
 .post-content {
   table {
     border-collapse: collapse;
     margin: 25px auto;
     font-size: 0.9em;
-    min-width: 400px;
+    // Interpolated, or libsass reads it as Sass's own min() and fails the
+    // build on "Incompatible units: '%' and 'px'".
+    min-width: #{"min(400px, 100%)"};
     max-width: 100%;
 
     th,
