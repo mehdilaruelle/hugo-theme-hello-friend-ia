@@ -94,8 +94,7 @@
 {{- if $src -}}
   <img src="{{ $url | safeURL }}" loading="{{ $loading }}" decoding="async"
     {{- with $srcset }} srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"{{ end }}
-    {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }}
-    {{- with $alt }} alt="{{ . | plainify }}"{{ end }}
+    {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }} alt="{{ $alt | plainify }}"
     {{- with .position }} class="{{ . }}"{{ end }}
     {{- with .style }} style="{{ . | safeCSS }}"{{ end }} />
 {{- end -}}
