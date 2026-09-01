@@ -12,11 +12,10 @@
 */ -}}
 {{- $flag := index hugo.Data.langFlags .Lang -}}
 {{- $name := .Language.Label | default (upper .Lang) -}}
-<a href="{{ .Permalink }}" lang="{{ .Lang }}" hreflang="{{ .Lang }}" title="{{ $name }}">
+<a class="translation-link" href="{{ .Permalink }}" lang="{{ .Lang }}" hreflang="{{ .Lang }}" title="{{ $name }}">
     {{- with $flag -}}
         <span class="flag fi fi-{{ . }}" aria-hidden="true"></span>
     {{- else -}}
         <span class="flag flag--code" aria-hidden="true">{{ upper $.Lang }}</span>
     {{- end -}}
-    <span class="screen-reader-text">{{ $name }}</span>
-</a>
+    <span class="screen-reader-text">{{ $name }}</span></a>
