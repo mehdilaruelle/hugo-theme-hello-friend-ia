@@ -349,6 +349,8 @@ pre {
 }
 
 blockquote {
+  // Without this the absolute glyph below resolves against the page.
+  position: relative;
   border-inline-start: 3px solid #3eb0ef;
   margin: 40px;
   padding: 10px 20px;
@@ -366,6 +368,11 @@ blockquote {
     position: absolute;
     inset-inline-start: -40px;
     top: -20px;
+
+    // The phone rule pulls the margin in to 10px, so -40px would clip.
+    @media #{$media-size-phone} {
+      inset-inline-start: -10px;
+    }
   }
 
   p:first-of-type {
