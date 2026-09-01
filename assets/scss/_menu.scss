@@ -153,7 +153,6 @@
   // selector no longer names the element. The box it points at has not moved.
   .dropdown {
     display: inline-block;
-    // The panel anchors to this box rather than to the page.
     position: relative;
   }
 
@@ -161,8 +160,7 @@
     display: none;
     position: absolute;
     inset-inline-end: 0;
-    // Anchored to the parent now, so shrink-to-fit measures against a much
-    // narrower box: without this an entry wraps mid-label.
+    // Shrink-to-fit now measures against the parent, so entries would wrap.
     white-space: nowrap;
     background: $dark-background-header;
 
@@ -219,10 +217,8 @@
     display: block;
   }
 
-  // On a phone the menu is already a column pinned to the right edge. A
-  // floating panel opens past the viewport there, and :focus-within never
-  // fires on a parent that is a link, since a tap activates it rather than
-  // resting on it. Inline children need neither hover nor focus.
+  // A floating panel opens past the right-aligned mobile menu, and
+  // :focus-within never fires on a parent that is a link: a tap activates it.
   @media #{$media-size-phone} {
     .dropdown {
       display: block;
@@ -235,7 +231,8 @@
     }
 
     .dropdown-content a {
-      padding: 12px 0 12px 16px;
+      padding: 12px 0;
+      padding-inline-start: 16px;
     }
   }
 }
