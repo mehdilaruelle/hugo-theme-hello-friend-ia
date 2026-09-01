@@ -25,7 +25,7 @@
 {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
-{{- $posts := where $all "Section" "posts" -}}
+{{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}
 {{- with $posts }}
 ## {{ partial "i18n.html" (dict "key" "posts" "fallback" "Posts") }}
