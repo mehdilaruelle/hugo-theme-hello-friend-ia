@@ -38,14 +38,14 @@
   the opposite of what pagination is for: each pager is a distinct set of
   posts, so each is its own canonical.
 
-  .Paginator is only read on the kinds list.html paginates. Reading it on a
+  The paginator is only built on the kinds list.html paginates. Building it on a
   page that is never paginated would build a paginator, and with it the
   /page/2/ output files, for nothing.
 */ -}}
 {{- $canonical := .Permalink -}}
 {{- $pager := 1 -}}
 {{- if in (slice "section" "taxonomy" "term") .Kind -}}
-  {{- with .Paginator -}}
+  {{- with .Paginate (partial "list-pages.html" .) -}}
     {{- $canonical = .URL | absURL -}}
     {{- $pager = .PageNumber -}}
   {{- end -}}
@@ -122,7 +122,7 @@
       {{- $title = site.Title -}}
       {{- with site.Params.Subtitle }}{{ $title = printf "%s — %s" $title . }}{{ end -}}
     {{- else if in (slice "section" "taxonomy" "term") .Kind -}}
-      {{- with .Paginator -}}
+      {{- with .Paginate (partial "list-pages.html" .) -}}
         {{- if gt .PageNumber 1 -}}
           {{- $title = printf "%s (%s) :: %s" (partial "title.html" $) (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" .PageNumber) "fallback" (printf "page %d" .PageNumber))) site.Title -}}
         {{- end -}}

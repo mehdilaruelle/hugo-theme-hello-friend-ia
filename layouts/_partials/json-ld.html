@@ -163,7 +163,7 @@
     several collections where there is one.
   */ -}}
   {{- $first := true -}}
-  {{- with .Paginator -}}{{- $first = eq .PageNumber 1 -}}{{- end -}}
+  {{- with .Paginate (partial "list-pages.html" .) -}}{{- $first = eq .PageNumber 1 -}}{{- end -}}
   {{- if $first -}}
     {{- $data = dict
       "@context" "https://schema.org"
@@ -181,12 +181,8 @@
            shows one pager at a time. Describing a different set, or the same
            set differently ordered, would name positions nobody can see.
            numberOfItems still counts the whole collection. */ -}}
-    {{- $listed := .Pages -}}
-    {{- if eq .Kind "taxonomy" -}}{{- $listed = .Pages.ByTitle -}}{{- end -}}
-    {{- with .Paginator -}}
-      {{- $listed = .Pages -}}
-      {{- if eq $.Kind "taxonomy" -}}{{- $listed = .Pages.ByTitle -}}{{- end -}}
-    {{- end -}}
+    {{- $listed := partial "list-pages.html" . -}}
+    {{- with .Paginate $listed -}}{{- $listed = .Pages -}}{{- end -}}
     {{- with $listed -}}
       {{- $items := slice -}}
       {{- range $i, $p := first 20 . -}}

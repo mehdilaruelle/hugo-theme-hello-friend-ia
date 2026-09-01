@@ -1,5 +1,5 @@
 {{ define "main" }}
-    {{ $paginator := .Paginate .Data.Pages }}
+    {{ $paginator := .Paginate (partial "list-pages.html" .) }}
 
     <div class="content">
         <main id="main" class="posts">
@@ -12,7 +12,7 @@
             {{ if eq .Kind "taxonomy" }}
                 <div class="posts-group">
                     <ul class="posts-list">
-                        {{ range $paginator.Pages.ByTitle }}
+                        {{ range $paginator.Pages }}
                             <li class="post-item">
                                 <a href="{{ .Permalink }}" class="post-item-inner">
                                     <span class="post-title">{{ partial "title.html" . }}</span>
