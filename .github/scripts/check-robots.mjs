@@ -101,8 +101,15 @@ for (const group of ['train', 'cite']) {
 }
 
 // The Content-Signal line says the same thing to whatever reads intentions
-// rather than matching itself against a group. Both have to agree.
+// rather than matching itself against a group. Both have to agree — and both
+// have to be there: a file that refuses crawlers and states no signal has said
+// it once, and this script would have passed it while the pull request claimed
+// otherwise. A site refusing nothing needs no signal, which is the default
+// demo and stays silent.
 const signal = (wildcard ? wildcard.rules : []).find(([f]) => f === 'content-signal');
+if (!signal && refused.size) {
+  fail(`robots.txt: ${refused.size} AI crawler(s) refused and no Content-Signal to say so`);
+}
 if (signal) {
   const parsed = {};
   for (const pair of signal[1].split(',')) {

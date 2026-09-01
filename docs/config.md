@@ -877,8 +877,11 @@ Only what is refused gets a group of its own. Silence is permission in
 above does not already say.
 
 A third key, `search`, appears in `Content-Signal` and nowhere else, and
-defaults to `yes`. It is about search engines rather than about AI: refusing it
-takes the site out of results as well as out of answers.
+defaults to `yes`. The three signals split the uses cleanly, so it is worth
+being exact about which is which: `search` is being indexed and shown as a
+link, `ai-input` (your `cite`) is being read to build an answer, `ai-train`
+(your `train`) is being learned from. Setting `search = false` therefore asks
+to be left out of the results, not out of the answers — that is `cite = false`.
 
 ### Who is in each list
 
@@ -914,6 +917,13 @@ for the CDN, and no theme can change that.
 2025, added to several million domains at once, and not a standard. It costs
 one line, and it is worth saying plainly that it is a declaration of intent
 rather than a lock.
+
+And the split is only as clean as the tokens allow. `Google-Extended` governs
+both training Gemini and grounding its answers in your pages, and Google
+publishes no second token for the two, so `train = false` costs you the Google
+answer box whatever `cite` says. It stays in the training list because that is
+what people mean when they refuse training — but the promise of this feature is
+one token short of complete, and it is better said here than discovered later.
 
 Both are worth having anyway. A policy that is ignored by some is still the
 difference between having said no and never having been asked.

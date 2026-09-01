@@ -21,7 +21,12 @@ train:
   - GPTBot                # OpenAI
   - ClaudeBot             # Anthropic
   - CCBot                 # Common Crawl, whose archives train most of the rest
-  - Google-Extended       # Gemini. A token only; Googlebot is search
+  # One token, two uses: Google-Extended covers training Gemini *and* grounding
+  # its answers in your pages. There is no second token to keep the grounding
+  # and refuse the training, so refusing training here does cost the Google
+  # answer box. It sits in train because that is what people mean by refusing
+  # training; docs/config.md says what it costs.
+  - Google-Extended       # A token only; Googlebot itself is search
   - Applebot-Extended     # Apple Intelligence. A token only; Applebot is search
   - meta-externalagent    # Meta
   - Bytespider            # ByteDance
