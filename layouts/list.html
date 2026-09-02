@@ -3,7 +3,15 @@
 
     <div class="content">
         <main id="main" class="posts">
-            <h1>{{ .Title }}</h1>
+            {{- /* Named as a pager from page two on, for the reason the
+                   <title> already is: each pager is its own canonical, so each
+                   arrives at a reader on its own, headed until now by the same
+                   word as every other. */ -}}
+            {{- $heading := partial "title.html" . -}}
+            {{- if gt $paginator.PageNumber 1 -}}
+              {{- $heading = printf "%s (%s)" $heading (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $paginator.PageNumber) "fallback" (printf "page %d" $paginator.PageNumber))) -}}
+            {{- end }}
+            <h1>{{ $heading }}</h1>
 
             {{ if .Content }}
                 <div class="content">{{ .Content }}</div>
