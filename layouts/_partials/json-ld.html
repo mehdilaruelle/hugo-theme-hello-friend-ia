@@ -15,16 +15,11 @@
        entity. */ -}}
 {{- $siteAuthor := (partial "site-author.html" .).name -}}
 
-{{- /*
-  The picture that represents this page, from the partial that already answers
-  that question for Open Graph and for the Twitter card. It used to be worked
-  out here from params.images alone, so a page given a picture the theme's own
-  documented way -- a cover -- had one in its card and none in its structured
-  data, which is where Google's Article guidance asks for it.
-
-  Only a picture the page brought itself. owned is false for the site-wide
-  fallback, and the reasoning for skipping it is in social-image.html.
-*/ -}}
+{{- /* The picture, from the partial that already answers this for the card. It
+       used to be worked out here from params.images alone, so a page given a
+       cover -- the theme's own documented way -- had one in its card and none
+       here, where Google's Article guidance asks for it. Only a picture the
+       page brought itself; social-image.html says why. */ -}}
 {{- $social := partial "social-image.html" . -}}
 {{- $image := cond $social.owned $social.url "" -}}
 
