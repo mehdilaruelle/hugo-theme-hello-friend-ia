@@ -1,0 +1,62 @@
+{{- /*
+  Overrides Hugo's embedded twitter_cards.html, which head.html calls
+  unchanged. Three things it cannot do for this theme:
+
+  it picks the card type from params.images before the theme has offered a
+  cover, so a page with one announced the small square and then carried an
+  image it has no room for; it resolves the picture separately from head.html,
+  where both now ask social-image.html; and it emits twitter:site only from a
+  map-shaped params.social, which this theme does not document, so no site
+  following the documentation could produce the tag at all.
+*/ -}}
+{{- $social := partial "social-image.html" . -}}
+{{- with $social.url }}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ . }}">
+{{- with $social.alt }}
+<meta name="twitter:image:alt" content="{{ . }}">
+{{- end }}
+{{- else }}
+<meta name="twitter:card" content="summary">
+{{- end }}
+{{- with partial "title.html" . | plainify }}
+<meta name="twitter:title" content="{{ . }}">
+{{- end }}
+{{- /* The chain description.html settled on, not the embedded partial's own
+       .Description-then-.Summary one. */ -}}
+{{- $description := partial "description.html" . -}}
+{{- if not $description -}}
+  {{- $description = site.Params.description | plainify -}}
+{{- end -}}
+{{- with $description }}
+<meta name="twitter:description" content="{{ . }}">
+{{- end }}
+{{- /* The site's account, written either way round: the list form carries a
+       profile URL, the map form the handle itself. */ -}}
+{{- $handle := "" -}}
+{{- with site.Params.social -}}
+  {{- if reflect.IsMap . -}}
+    {{- with .twitter -}}{{- $handle = . -}}{{- end -}}
+  {{- else -}}
+    {{- range . -}}
+      {{- if reflect.IsMap . -}}
+        {{- $name := lower (.name | default "") -}}
+        {{- $url := .url | default "" -}}
+        {{- if and $url (in (slice "twitter" "x") $name) -}}
+          {{- /* The last segment is the handle; a URL without one leaves the
+                 host, and a host has a dot where a handle never does. */ -}}
+          {{- $candidate := path.Base (strings.TrimSuffix "/" $url) -}}
+          {{- if not (strings.Contains $candidate ".") -}}
+            {{- $handle = $candidate -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- with $handle }}
+<meta name="twitter:site" content="{{ if strings.HasPrefix . "@" }}{{ . }}{{ else }}@{{ . }}{{ end }}">
+{{- end }}
+{{- with .Params.twitter }}
+<meta name="twitter:creator" content="{{ if strings.HasPrefix . "@" }}{{ . }}{{ else }}@{{ . }}{{ end }}">
+{{- end }}

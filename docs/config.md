@@ -388,8 +388,21 @@ shown at a size of its own. The `image` shortcode does not forward them — it
 passes `src`, `alt`, `position` and `style` only.
 
 A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
-`ogImage`. Setting `params.images` yourself hands both tags back to Hugo's own
-Open Graph partial instead.
+`ogImage`; `params.images` wins over both. One partial resolves that chain for
+the Open Graph tags and the Twitter ones alike, so a card cannot name one
+picture and show another.
+
+A card with a picture is announced as `summary_large_image` rather than the
+small square, and carries an `og:image:alt` / `twitter:image:alt` — but only
+when the picture belongs to the page. The site-wide `ogImage` is the same image
+on every page, and describing it with this page's title would caption it with
+something true of the article and false of the picture.
+
+`twitter:site` is the handle of the account behind the site. It is read from the
+`params.social` entry named `twitter` or `x`, as the last segment of its profile
+URL, so `url = "https://twitter.com/janedoe"` is enough and there is nothing
+extra to configure. A URL with no handle in it — the bare
+`https://twitter.com/` — emits no tag.
 
 One trap in that partial, which the theme cannot reach: it absolutises `audio`
 and `videos` with `absURL`, and a leading slash there resolves against the host
@@ -407,6 +420,7 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 | `comments` | set to `"false"` to hide Disqus on that page |
 | `description` | overrides the summary in `<meta name="description">` and Open Graph |
 | `author` | overrides the site author for that page |
+| `twitter` | that page's author's handle, as `twitter:creator` on the card. The site's own account is `params.social`, above |
 
 `audio` has to be a list, even for one file:
 

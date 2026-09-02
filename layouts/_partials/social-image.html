@@ -1,0 +1,54 @@
+{{- /*
+  The picture a social card should show, and how to describe it. Returns a map
+  with url and alt; url is empty when there is nothing to show.
+
+  One place, because head.html writes the Open Graph tags and
+  twitter_cards.html the Twitter ones, and a card whose two halves disagree
+  shows one picture and names another.
+
+  Order: the page's images, its cover, the site's images, then ogImage. The
+  site pair is in that order because Hugo's own Open Graph partial reads
+  site images and knows nothing of ogImage, and it is the one emitting og:image
+  when they are set.
+
+  alt describes the picture, so it is only offered for one belonging to this
+  page: the site-wide fallback is the same image everywhere, and this page's
+  title would be true of the article and false of the picture. coverCaption
+  belongs to the cover alone, not to an images[0] that overrode it.
+*/ -}}
+{{- $img := "" -}}
+{{- $alt := "" -}}
+{{- with .Params.images -}}
+  {{- $img = index . 0 -}}
+  {{- $alt = partial "title.html" $ -}}
+{{- else -}}
+  {{- with .Params.cover -}}
+    {{- $img = . -}}
+    {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
+  {{- else -}}
+    {{- with site.Params.images -}}
+      {{- $img = index . 0 -}}
+    {{- else -}}
+      {{- with site.Params.ogImage -}}{{- $img = . -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
+       is left alone. */ -}}
+{{- $url := "" -}}
+{{- with $img -}}
+  {{- $url = . -}}
+  {{- if not (partial "is-remote.html" $url) -}}
+    {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) -}}
+      {{- $url = .Permalink -}}
+    {{- else -}}
+      {{- $url = urls.JoinPath site.BaseURL $url -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- /* coverCaption is Markdown, and an attribute is text. */ -}}
+{{- with $alt -}}
+  {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
+{{- end -}}
+{{- return dict "url" $url "alt" $alt -}}

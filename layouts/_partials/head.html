@@ -217,27 +217,28 @@
 
 {{ partial "opengraph.html" . }}
 
-{{- /* Hugo's partial takes og:image from params.images and nothing else, so a
-       page with a cover has a card with no picture in it. Skipped when the site
-       does set images, which is the one case the partial above covers. */ -}}
+{{- /* Hugo's partial takes og:image from images and nothing else, so a page
+       with a cover had a card with no picture in it. The picture comes from
+       social-image.html, which twitter_cards.html asks too, so the two tag
+       sets cannot name different files; twitter:image is written there.
+
+       The alt sits outside the guard because Hugo emits the image but never a
+       description of it, whichever of the two emitted the URL. */ -}}
+{{- $social := partial "social-image.html" . }}
 {{- if not (or .Params.images site.Params.images) }}
-  {{- with or .Params.cover site.Params.ogImage }}
-    {{- $url := . }}
-    {{- if not (partial "is-remote.html" $url) }}
-      {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) }}
-        {{- $url = .Permalink }}
-      {{- else }}
-        {{- $url = urls.JoinPath site.BaseURL $url }}
-      {{- end }}
-    {{- end }}
-<meta property="og:image" content="{{ $url }}" />
-<meta name="twitter:image" content="{{ $url }}" />
+  {{- with $social.url }}
+<meta property="og:image" content="{{ . }}" />
+  {{- end }}
+{{- end }}
+{{- if $social.url }}
+  {{- with $social.alt }}
+<meta property="og:image:alt" content="{{ . }}" />
   {{- end }}
 {{- end }}
 
-{{ range .Params.categories }}
-    <meta property="article:section" content="{{ . }}" />
-{{ end }}
+{{- /* No article:section here. It is single-valued and the opengraph partial
+       already emits one from the section, so ranging over the categories
+       published a second, contradictory value. */ -}}
 
 <!-- RSS -->
 {{ with .OutputFormats.Get "rss" -}}
