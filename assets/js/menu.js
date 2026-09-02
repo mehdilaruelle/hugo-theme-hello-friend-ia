@@ -71,16 +71,10 @@ if (languageSwitcher) {
 const logo = document.querySelector(".logo__pathname");
 if (logo) {
   window.addEventListener("load", () => {
-    // Where this site starts, written by logo.html: the deployment prefix and
-    // the language directory in one string, ending in "/". This used to strip
-    // the leading "/" and the language code and take the first segment of what
-    // was left, which is the section only when the site is at the domain root.
-    // Under a prefix the first segment is the prefix, so every page named it
-    // instead of the section — as this theme's own showcase does in production.
-    //
-    // Stripping the language separately was its own bug: replace() finds its
-    // argument anywhere, so an English site with a /green/ section matched the
-    // "en/" inside it and printed "grex".
+    // Where this site starts: the deployment prefix and the language directory
+    // in one string. Taking the first segment of location.pathname named the
+    // prefix under a subpath, and the old unanchored language strip matched
+    // "en/" inside a section called "green" and printed "grex".
     const base = logo.dataset.base || "/";
     const path = window.location.pathname;
     const rest = path.startsWith(base) ? path.slice(base.length) : path.replace(/^\//, "");
