@@ -1,20 +1,10 @@
 {{- /*
-  Overrides Hugo's embedded opengraph.html, which head.html called unchanged.
-
-  Everything here matches the embedded partial except the picture. That one
-  reads _funcs/get-page-images, which knows about images and page resources and
-  nothing about this theme's cover, so head.html emitted the theme's own
-  og:image only when neither .Params.images nor site.Params.images was set and
-  left the rest to Hugo. twitter_cards.html meanwhile took its picture from
-  social-image.html, which ranks cover above the site's images. A site setting
-  params.images therefore named the site image in og:image and the cover in
-  twitter:image on every page with a cover, and the og:image:alt written beside
-  it described the cover either way.
-
-  Both tag sets now ask social-image.html, so there is one picture per page and
-  one place that decides which. That partial answers with a single image rather
-  than the six the embedded one would range over: a card shows one, and the two
-  halves cannot disagree about which it is.
+  Overrides Hugo's embedded opengraph.html, matching it except for the picture.
+  The embedded one reads _funcs/get-page-images, which knows nothing of this
+  theme's cover, while twitter_cards.html asks social-image.html, which ranks
+  cover above the site's images: a site setting params.images named one file in
+  og:image and another in twitter:image on every page with a cover. Both tag
+  sets ask social-image.html now, so one partial decides.
 */ -}}
 <meta property="og:url" content="{{ .Permalink }}">
 {{- with or site.Title site.Params.title | plainify }}
@@ -47,8 +37,8 @@
 {{- else }}
 <meta property="og:type" content="website">
 {{- end }}
-{{- /* The alt is emitted here, beside the picture it describes, rather than
-       from head.html where it outlived the image it belonged to. */ -}}
+{{- /* The alt sits beside the picture it describes: from head.html it
+       outlived the image it belonged to. */ -}}
 {{- $social := partial "social-image.html" . }}
 {{- with $social.url }}
 <meta property="og:image" content="{{ . }}">
