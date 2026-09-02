@@ -1,0 +1,51 @@
+{{- /*
+  Hugo's built-in sitemap, with two corrections. Everything else here is the
+  built-in template as it stands, kept line for line so the next Hugo release
+  is a readable diff rather than an archaeology exercise.
+
+  A page carrying noindex was still submitted. Search Console reports that as
+  "Submitted URL marked 'noindex'": the site asks for a page to be indexed and
+  then, on the page itself, tells the crawler not to. noindex is the theme's
+  own front matter, so the built-in template cannot know about it.
+
+  The alternates were named by .Language.Locale, while head.html names them by
+  .Language.Lang, so a site setting locale = "en-US" announced hreflang="en"
+  in its pages and hreflang="en-US" in its sitemap: two annotation sets for
+  one URL, which is the inconsistency Google's guidance warns about. The
+  built-in template also has no x-default. Both now say the same thing, which
+  is the only reason this file names languages at all.
+
+  The alternates deliberately do not drop a noindex translation. head.html
+  lists it, and a sitemap that disagreed with the page would reintroduce the
+  problem this file exists to fix; hreflang says which version suits a reader,
+  not which version to index.
+*/ -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+{{- $primary := (index hugo.Sites 0).Language.Lang }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  {{- range where .Pages "Sitemap.Disable" "ne" true }}
+  {{- if and .Permalink (not .Params.noindex) }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    {{- if not .Lastmod.IsZero }}
+    <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    {{- end }}
+    {{- with .Sitemap.ChangeFreq }}
+    <changefreq>{{ . }}</changefreq>
+    {{- end }}
+    {{- if ge .Sitemap.Priority 0.0 }}
+    <priority>{{ .Sitemap.Priority }}</priority>
+    {{- end }}
+    {{- if .IsTranslated }}
+    {{- range .AllTranslations }}
+    <xhtml:link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+    {{- if eq .Language.Lang $primary }}
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  </url>
+  {{- end }}
+  {{- end }}
+</urlset>
