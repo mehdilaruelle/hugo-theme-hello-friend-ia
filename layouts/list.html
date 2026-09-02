@@ -46,7 +46,26 @@
                                 <li class="post-item">
                                     <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
-                                            {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
+                                            {{- /* Through image.html, like every other picture in the
+                                                   theme. thumbnail.html took the cover's own URL and
+                                                   shipped it whole: a 900 px file into a 52 px box, on
+                                                   the page a crawler reaches first and a reader scrolls
+                                                   most. It also looked for the file in assets/ but not
+                                                   under _static, so a cover mounted from static/ arrived
+                                                   with no width or height and shifted the row when it
+                                                   loaded, where the same cover on the article page had
+                                                   both.
+
+                                                   156 is the 52 px box at 3x, which is as much detail as
+                                                   any screen can show here. One width, so image.html
+                                                   emits one resized WebP and drops the srcset as saying
+                                                   nothing -- and there is no sizes to pass, since it is
+                                                   only ever written next to a srcset.
+
+                                                   alt is empty because the post title beside it is the
+                                                   link's name, and naming the same link twice is worse
+                                                   than not describing a decorative picture. */ -}}
+                                            {{ partial "image.html" (dict "src" .Params.cover "alt" "" "page" . "position" "post-thumbnail" "maxWidth" 156) }}
                                         {{- end }}
                                         <span class="post-title">{{ partial "title.html" . }}</span>
                                         {{ if not .Date.IsZero }}{{- /* An undated page has the zero time, and "Jan 1" reads like a real date rather than a missing one. */ -}}<time class="post-day" datetime="{{ .Date.Format "2006-01-02" }}">
