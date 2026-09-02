@@ -61,6 +61,10 @@
          none of the rest, so it is trimmed to a length a result can hold and
          flattened to one line. A description written by hand is left exactly
          as written. */ -}}
-  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 160 "" -}}
+  {{- /* chomp takes newlines and not spaces, and the flattening above turns the
+         summary's trailing newline into one, so the string ended in a space and
+         the tag shipped it. Invisible until something is appended to it, which
+         head.html now does on a pager. */ -}}
+  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | strings.TrimSpace | truncate 160 "" -}}
 {{- end -}}
 {{- return $description -}}
