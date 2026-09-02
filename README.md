@@ -32,8 +32,9 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
   their deprecated forms.
 - Uses the template layout introduced in Hugo 0.146 (`layouts/_partials/`,
   `_shortcodes/`, `_markup/`, `page.html`, `list.html`, `home.html`).
-- SCSS uses the Sass module system (`@use`) and compiles with Dart Sass, with
-  an automatic fallback to LibSass when Dart Sass is not installed.
+- SCSS uses the Sass module system (`@use`) and compiles with Dart Sass, which
+  is now required: LibSass does not implement `@use` and silently emitted a
+  stylesheet with no CSS in it.
 - Fixes two selectors that made inline code lose its styling entirely.
 - Emits JSON-LD structured data, and completes the `hreflang` set with
   `x-default`. See [SEO](#seo).
@@ -259,11 +260,10 @@ languages orders this too.
 
 - **Hugo extended**, version **0.158.0 or newer** (tested against 0.164.0). The
   extended edition is required because the theme compiles SCSS.
-- **[Dart Sass](https://sass-lang.com/install/)** — recommended, but optional.
+- **[Dart Sass](https://sass-lang.com/install/)** — required.
 
-Hugo has deprecated LibSass and will remove it in a future release, so the theme
-compiles its SCSS with Dart Sass, which Hugo does *not* bundle. Install it with
-one of:
+The stylesheet is written in the Sass module system (`@use`), which only Dart
+Sass implements, and Hugo does not bundle it. Install it with one of:
 
 ``` bash
 brew install sass/sass/sass          # macOS / Linuxbrew
@@ -272,8 +272,10 @@ snap install dart-sass               # Linux
 npm install -g sass-embedded         # any platform
 ```
 
-If Dart Sass is not found, the theme automatically falls back to LibSass so the
-site still builds; Hugo then prints a deprecation warning until you install it.
+Without it the build stops and says so. It used to fall back to LibSass
+instead, which does not implement `@use`: it passed the rules through as
+unknown at-rules and emitted a stylesheet with no CSS in it, reporting no
+error — a build that looked successful and shipped an unstyled site.
 
 ## How to start
 

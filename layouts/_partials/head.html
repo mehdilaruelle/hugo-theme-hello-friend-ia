@@ -149,22 +149,22 @@
 {{ end }}
 
 <!-- CSS -->
-{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment -}}
-{{- $dartOpts := merge $opts (dict "transpiler" "dartsass") -}}
+{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment "transpiler" "dartsass" -}}
 {{- $scss := resources.Get "scss/main.scss" -}}
 {{- with $scss -}}
   {{- $css := "" -}}
   {{- /*
-    Prefer Dart Sass, and fall back to libsass when Dart Sass is not installed.
-    Resource transformations are lazy, so .Content is read inside try to force
-    the transpilation and surface any error here instead of at render time.
+    Dart Sass only. The stylesheet is written in the module system, and libsass
+    does not implement @use: it passes the rules through as unknown at-rules
+    and emits a stylesheet with no CSS in it, reporting no error. Falling back
+    to it shipped an unstyled site that looked like a successful build.
+    .Content is read inside try so a missing Dart Sass is reported here.
   */ -}}
-  {{- $res := try (($scss | toCSS $dartOpts).Content) -}}
+  {{- $res := try (($scss | toCSS $opts).Content) -}}
   {{- with $res.Err -}}
-    {{- warnidf "sass-dartsass-unavailable" "%s" "Dart Sass is not available, falling back to the deprecated libsass transpiler which Hugo will remove in a future release. Install Dart Sass to fix this: https://gohugo.io/functions/css/sass/#dart-sass" -}}
-    {{- $css = $scss | toCSS (merge $opts (dict "transpiler" "libsass")) -}}
+    {{- errorf "Dart Sass is required to build this theme and is not available: %s\nInstall it: https://gohugo.io/functions/css/sass/#dart-sass" . -}}
   {{- else -}}
-    {{- $css = $scss | toCSS $dartOpts -}}
+    {{- $css = $scss | toCSS $opts -}}
   {{- end -}}
   {{- /* The metric-matched fallback, concatenated into the same stylesheet
          rather than written into a style element. An inline style forces
