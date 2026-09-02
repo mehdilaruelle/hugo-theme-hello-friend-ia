@@ -1,27 +1,18 @@
 {{- /* The guard from json-ld.html: a map-shaped params.social yields strings
-       here, and .url on a string ends the build.
-
-       Support for that shape is half-present rather than absent — twitter_cards
-       reads the handle out of it — so a site written that way builds, renders
-       no icons at all, and is told nothing. The warning is the missing half. */ -}}
+       here, and .url on a string ends the build. twitter_cards reads the handle
+       out of that same shape, so support is half-present rather than absent —
+       the warning is the missing half. */ -}}
 {{- if and . (reflect.IsMap .) -}}
   {{- warnidf "social-map-shape" "params.social is a map, so no social icons are rendered. The theme draws icons from the list form: a [[params.social]] entry per network, each with name and url." -}}
 {{- end -}}
 {{ range . -}}
 {{- if reflect.IsMap . -}}
-{{- /* Same tab by default, which is what this has always done: nonewpage was
-       set by neither demo site nor by any site following the documentation,
-       and eq nil 0 is false, so target="_blank" was never emitted. The only way
-       to get a new tab was to write nonewpage = 0 — the opposite of what the
-       name says.
-
-       newTab says what it does and keeps the behaviour sites already have.
-       nonewpage = 0 still works, deprecated, so a site that found it does not
-       silently lose its new tab.
+{{- /* Same tab by default, which is what every site already has: nonewpage was
+       nil unless written, and eq nil 0 is false, so target="_blank" was never
+       emitted. newTab says what it does; nonewpage = 0 still works, deprecated.
 
        Read over the keys rather than by name: Hugo keeps the case a nested
-       param was written in, so index . "newtab" would miss the newTab the
-       documentation asks for. */ -}}
+       param was written in, so index . "newtab" would miss newTab. */ -}}
 {{- $newTab := false -}}
 {{- $legacy := false -}}
 {{- range $k, $v := . -}}
