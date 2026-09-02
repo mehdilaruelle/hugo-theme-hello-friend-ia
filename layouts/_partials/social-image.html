@@ -1,6 +1,7 @@
 {{- /*
   The picture a social card should show, and how to describe it. Returns a map
-  with url, alt, svg and owned; url is empty when there is nothing to show.
+  with url, alt, svg, owned and the picture's size; url is empty when there is
+  nothing to show.
 
   One place, because head.html writes the Open Graph tags and
   twitter_cards.html the Twitter ones, and a card whose two halves disagree
@@ -58,15 +59,36 @@
 {{- end -}}
 
 {{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
-       is left alone. */ -}}
+       is left alone.
+
+       The size comes off the same resource, for og:image:width and
+       og:image:height. Without them Facebook and LinkedIn hold the first render
+       back until they have fetched and measured the file, which is why a
+       freshly shared link so often appears with no picture on it. It is nearly
+       free here, since the resource is already in hand.
+
+       Only a local file can be asked. The guard is image.html's, for image.html's
+       reason: an SVG reports ResourceType "image" and answers neither .Width nor
+       .Resize, so asking aborts the build -- which is the same fact that makes
+       an SVG unusable on a card, and why the chain above skips one. Where a
+       format will not give its dimensions up Hugo returns 0, and 0 asserted as a
+       width is worse than saying nothing. */ -}}
 {{- $url := "" -}}
 {{- $svg := false -}}
+{{- $width := 0 -}}
+{{- $height := 0 -}}
 {{- with $img -}}
   {{- $svg = eq (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
   {{- $url = . -}}
   {{- if not (partial "is-remote.html" $url) -}}
     {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) -}}
       {{- $url = .Permalink -}}
+      {{- if reflect.IsImageResourceWithMeta . -}}
+        {{- if gt .Width 0 -}}
+          {{- $width = .Width -}}
+          {{- $height = .Height -}}
+        {{- end -}}
+      {{- end -}}
     {{- else -}}
       {{- $url = urls.JoinPath site.BaseURL $url -}}
     {{- end -}}
@@ -76,4 +98,4 @@
 {{- with $alt -}}
   {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
 {{- end -}}
-{{- return dict "url" $url "alt" $alt "svg" $svg "owned" $owned -}}
+{{- return dict "url" $url "alt" $alt "svg" $svg "owned" $owned "width" $width "height" $height -}}

@@ -403,6 +403,14 @@ own `cover` or `images`. A site-wide `ogImage` still shows on the card and is
 left out of the structured data, because it would claim one file as the subject
 of every article on the site.
 
+Where the picture resolves to a local file Hugo can measure, `og:image:width`
+and `og:image:height` go out with it. Facebook and LinkedIn hold the first
+render back until they have fetched and measured the file otherwise, which is
+why a freshly shared link so often appears without its picture. A remote URL
+carries no dimensions, since there is nothing to measure at build time, and
+neither does an SVG — asking one for its size is a build error, which is the
+same fact that keeps it off a card in the first place.
+
 An SVG cover is passed over rather than announced, since no platform renders
 one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and
 an article illustrated with a diagram still shares with a picture on it.
