@@ -2,9 +2,12 @@
   Hugo's built-in sitemap, kept line for line apart from two corrections, so
   the next Hugo release is a readable diff.
 
-  A page carrying noindex was still submitted, which Search Console reports as
-  "Submitted URL marked 'noindex'". noindex is the theme's own front matter, so
-  the built-in template cannot know about it.
+  A page kept out of the index was still submitted, which Search Console reports
+  as "Submitted URL marked 'noindex'". Whether a page is kept out is the theme's
+  own answer -- its noindex front matter, and the search layout, which is thin
+  content a crawler should never have been sent to -- so the built-in template
+  cannot know about it. noindex.html holds the rule, and head.html asks the same
+  partial, so the tag on the page and the entry in this file cannot disagree.
 
   Alternates were named by .Language.Locale where head.html uses
   .Language.Lang, and there was no x-default: two annotation sets for one URL.
@@ -17,7 +20,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   {{- range where .Pages "Sitemap.Disable" "ne" true }}
-  {{- if and .Permalink (not .Params.noindex) }}
+  {{- if and .Permalink (not (partial "noindex.html" .)) }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}
@@ -29,8 +32,13 @@
     {{- if ge .Sitemap.Priority 0.0 }}
     <priority>{{ .Sitemap.Priority }}</priority>
     {{- end }}
-    {{- /* A set naming only this page says nothing worth saying. */}}
-    {{- $alternates := where .AllTranslations "Params.noindex" "ne" true }}
+    {{- /* A set naming only this page says nothing worth saying. Ranged rather
+           than filtered with where, because the rule is noindex.html's and a
+           where clause can only read a param. */}}
+    {{- $alternates := slice }}
+    {{- range .AllTranslations }}
+    {{- if not (partial "noindex.html" .) }}{{ $alternates = $alternates | append . }}{{ end }}
+    {{- end }}
     {{- if gt (len $alternates) 1 }}
     {{- range $alternates }}
     <xhtml:link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />

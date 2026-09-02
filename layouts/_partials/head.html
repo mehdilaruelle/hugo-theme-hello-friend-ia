@@ -1,7 +1,14 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-{{ if .Params.noindex }}
+{{- /* One robots tag, never two. max-image-preview:large is what lets Google
+       show a full-width picture beside the page in Search and in Discover
+       instead of a thumbnail; without it the theme's covers are wasted there.
+       It is meaningless on a page that is not indexed at all, so the two are
+       one tag with two possible values rather than a directive list. */ -}}
+{{ if partial "noindex.html" . }}
 <meta name="robots" content="noindex" />
+{{ else }}
+<meta name="robots" content="max-image-preview:large" />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 {{- /* Blocking, and before the stylesheet: it has to run before first paint.
@@ -102,18 +109,23 @@
   exists in another language depends on that language's own post count, which
   is not knowable from here, so the honest answer is to say nothing.
 */ -}}
-{{- if and .IsTranslated (eq $pager 1) (not .Params.noindex) }}
+{{- if and .IsTranslated (eq $pager 1) (not (partial "noindex.html" .)) }}
 {{- /*
   x-default names the version to serve when no hreflang matches the visitor.
   hugo.Sites is ordered by language weight, so its first entry is the site's
   primary language: give that one the x-default alongside its own hreflang.
 
   A noindex translation is left out, here and in sitemap.xml alike: the sitemap
-  can only advertise a variant it also carries a <url> entry for, and a set
-  naming only this page says nothing worth saying.
+  can only advertise a variant it also carries a <url> entry for, and a page
+  kept out of the index does not get one, and a set naming only this page says
+  nothing worth saying. Ranged rather than filtered with where, because the rule
+  is now noindex.html's and a where clause can only read a param.
 */ -}}
 {{- $primary := (index hugo.Sites 0).Language.Lang }}
-{{- $alternates := where .AllTranslations "Params.noindex" "ne" true }}
+{{- $alternates := slice }}
+{{- range .AllTranslations }}
+  {{- if not (partial "noindex.html" .) }}{{ $alternates = $alternates | append . }}{{ end }}
+{{- end }}
 {{- if gt (len $alternates) 1 }}
 {{- range $alternates }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />

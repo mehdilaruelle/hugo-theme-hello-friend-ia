@@ -147,6 +147,14 @@ which is the canonical Facebook and LinkedIn read, names the same URL as the
 `<link rel="canonical">` beside it. `og:title` and the `<title>` both say which
 pager it is.
 
+**`max-image-preview:large`**, so Google can show a full-width picture beside
+the page in Search and in Discover instead of a thumbnail — except on a page
+that is kept out of the index, where the directive would say nothing. There is
+one `robots` tag either way. A search page is kept out without being asked: it
+is thin by construction, and Google's guidance is to keep internal search
+results unindexed. See
+[Keeping a page out of things](docs/config.md#keeping-a-page-out-of-things).
+
 **JSON-LD**, and only JSON-LD. Google reads it in preference to microdata, and
 the theme no longer emits any: Hugo's embedded `schema.html` wrote six
 `itemprop` attributes with no `itemscope` to hold them, which parses to nothing.

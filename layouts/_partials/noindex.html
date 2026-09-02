@@ -1,0 +1,23 @@
+{{- /*
+  Whether this page should be kept out of a search engine's index. Returns a
+  boolean.
+
+  Two answers used to be one. noindex in the front matter is the site's own
+  decision and every template knew about it; a search page is the theme's, and
+  no template did. The showcase's search.md carries searchable: false, which
+  only keeps it out of the theme's own JSON index -- crawlers were never told
+  anything, so four languages' worth of an empty results list and a form went
+  into the sitemap and into the index. Google's guidance is to keep internal
+  search results out: they are thin content and can be crawled without end.
+
+  In a partial because three templates need the answer -- head.html for the
+  robots tag and the hreflang set, sitemap.xml for the entry and its alternates
+  -- and until now only one of them knew the whole rule.
+
+  Reached by layout rather than by path, because the theme does not choose where
+  a search page lives: a page becomes one by asking for `layout: search`.
+*/ -}}
+{{- $noindex := false -}}
+{{- if .Params.noindex -}}{{- $noindex = true -}}{{- end -}}
+{{- if eq .Layout "search" -}}{{- $noindex = true -}}{{- end -}}
+{{- return $noindex -}}
