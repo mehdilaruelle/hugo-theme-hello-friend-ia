@@ -68,12 +68,23 @@ if (languageSwitcher) {
   });
 }
 
-const language = document.getElementsByTagName('html')[0].lang;
 const logo = document.querySelector(".logo__pathname");
-if(logo){
+if (logo) {
   window.addEventListener("load", () => {
-    let path = window.location.pathname.substring(1);
-    path = path.replace(language+'/','')
-    logo.textContent += path.substring(0,path.indexOf('/'));
+    // Where this site starts, written by logo.html: the deployment prefix and
+    // the language directory in one string, ending in "/". This used to strip
+    // the leading "/" and the language code and take the first segment of what
+    // was left, which is the section only when the site is at the domain root.
+    // Under a prefix the first segment is the prefix, so every page named it
+    // instead of the section — as this theme's own showcase does in production.
+    //
+    // Stripping the language separately was its own bug: replace() finds its
+    // argument anywhere, so an English site with a /green/ section matched the
+    // "en/" inside it and printed "grex".
+    const base = logo.dataset.base || "/";
+    const path = window.location.pathname;
+    const rest = path.startsWith(base) ? path.slice(base.length) : path.replace(/^\//, "");
+    // The home page has no section to name, and adds nothing.
+    logo.textContent += rest.split("/").filter(Boolean)[0] || "";
   });
 }
