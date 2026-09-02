@@ -96,3 +96,17 @@ jobs:
       - name: Check llms.txt and the Markdown copies
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-llms.mjs public https://example.com/subpath/showcase/
+
+      # Every one of these is a thing the build reports nothing about. A page
+      # can name two different URLs as its own, announce a card picture no
+      # platform renders, or carry two contradictory robots directives, and
+      # Hugo calls that a successful build — which is how four of the six got
+      # in. Run against both demos: the showcase is the one with covers, four
+      # languages, pagers and a search page.
+      - name: Check the SEO invariants (showcase)
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-seo.mjs public
+
+      - name: Check the SEO invariants (demo)
+        working-directory: hello-friend-ng/exampleSite
+        run: node ../.github/scripts/check-seo.mjs public
