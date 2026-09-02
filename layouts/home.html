@@ -29,13 +29,9 @@
                        dense screen and no larger. Only a value given in px can
                        be doubled; anything else falls back to a size generous
                        for a portrait. */ -}}
-                {{- /* The inline style is formatted only when there is a width
-                       to state. printf on an unset maxWidth produced a Go
-                       formatting error, and safeCSS put it in the page:
-                       style="max-width:%!s(<nil>)". image.html omits the
-                       attribute entirely for an empty value, which is what a
-                       missing width should produce. sizes takes the same value
-                       raw, where its own default already absorbs the nil. */ -}}
+                {{- /* Formatted only when there is a width to state: printf on
+                       an unset maxWidth put style="max-width:%!s(<nil>)" in the
+                       page. image.html omits the attribute for an empty value. */ -}}
                 {{- $cap := 512 -}}
                 {{- $style := "" -}}
                 {{- with site.Params.portrait.maxWidth -}}

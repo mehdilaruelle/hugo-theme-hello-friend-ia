@@ -184,16 +184,10 @@
     text-align: start;
   }
 
-  // The hover state used to set the colour the panel already has, in both
-  // themes, so hovering a submenu link changed nothing at all. Nothing else
-  // changed either: .submenu .dropdown-content a is (0,3,1) and beats
-  // .menu a:hover at (0,2,1), so the underline that rule gives every other menu
-  // link never landed here. secondary is the theme's own "this row is picked
-  // out" colour, and it is what the panel sits against rather than what it is.
-  //
-  // :focus-visible gets the same treatment: a keyboard had no indication for
-  // exactly the same reason, and the panel opens on focus-within, so a link
-  // reached by tabbing is a link a visitor can see but could not locate.
+  // This used to set the colour the panel already has, so hovering changed
+  // nothing — and .submenu .dropdown-content a (0,3,1) beats .menu a:hover
+  // (0,2,1), so that rule's underline never landed either. The panel opens on
+  // focus-within, so :focus-visible needs the same feedback.
   .dropdown-content a:hover,
   .dropdown-content a:focus-visible {
     background: $dark-background-secondary;
