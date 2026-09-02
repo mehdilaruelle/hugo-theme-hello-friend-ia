@@ -370,7 +370,6 @@ pagination.pagerSize     = 10
 
   # Metadata mostly used in document's head
   description = "My new homepage or blog"
-  keywords = "homepage, blog"
   images = [""]
 
 [taxonomies]
@@ -381,7 +380,6 @@ pagination.pagerSize     = 10
 [languages]
   [languages.en]
     title = "Hello Friend NG"
-    keywords = ""
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
     readOtherPosts = "Read other posts"
 

@@ -346,7 +346,6 @@ templates.
 | `backgroundImage` | an image behind the front page, `cover`-sized and fixed. Used in dark mode |
 | `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
 | `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
-| `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
 | `ogImage` | the picture a social card falls back to when a page has no `cover`. Use PNG or JPEG — no platform renders an SVG card |
 | `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts`. It does **not** decide which template renders an article: those resolve by section name, so articles belong in `content/posts/` |
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
@@ -364,7 +363,7 @@ templates.
   customJS     = ["js/extra.js"]
 ```
 
-`themeColor` and `keywords` are only emitted when set. An empty `content` is not
+`themeColor` is only emitted when set. An empty `content` is not
 a neutral default — it is a tag asserting the value is blank.
 
 #### Responsive images
