@@ -1,6 +1,7 @@
 {{- /*
-  Structured data as JSON-LD. Hugo's embedded schema.html already emits the same
-  facts as microdata, but Google reads JSON-LD in preference to it.
+  Structured data as JSON-LD, which is the form Google prefers and the only
+  structured data the theme emits: Hugo's embedded schema.html wrote the same
+  facts as microdata with no itemscope to hold them.
 
   Home pages describe the site, dated single pages describe the article, and
   anything else is skipped rather than described badly.

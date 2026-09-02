@@ -139,11 +139,14 @@ as the theme does. What the theme contributes is the part it controls:
 ## SEO
 
 Nothing to configure. Every page already carries a canonical link, Open Graph
-and Twitter Card tags, and microdata from Hugo's embedded `schema.html`. On top
-of that:
+and Twitter Card tags. On top of that:
 
-**JSON-LD.** Google reads JSON-LD in preference to microdata, so the theme emits
-it as well. The home page is described as a `WebSite`, and any dated single page
+**JSON-LD**, and only JSON-LD. Google reads it in preference to microdata, and
+the theme no longer emits any: Hugo's embedded `schema.html` wrote six
+`itemprop` attributes with no `itemscope` to hold them, which parses to nothing.
+Structured data of your own goes in
+[`layouts/_partials/extra-head.html`](#how-to-edit-the-theme). The home page is
+described as a `WebSite`, and any dated single page
 as a `BlogPosting` carrying its headline, description, dates, author, publisher,
 language, word count, and its image and tags when it has them. Pages that are
 neither are left alone rather than described badly.
