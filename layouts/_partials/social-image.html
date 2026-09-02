@@ -1,6 +1,6 @@
 {{- /*
   The picture a social card should show, and how to describe it. Returns a map
-  with url and alt; url is empty when there is nothing to show.
+  with url, alt and svg; url is empty when there is nothing to show.
 
   One place, because head.html writes the Open Graph tags and
   twitter_cards.html the Twitter ones, and a card whose two halves disagree
@@ -10,6 +10,12 @@
   site pair is in that order because Hugo's own Open Graph partial reads
   site images and knows nothing of ogImage, and it is the one emitting og:image
   when they are set.
+
+  An SVG is passed over: no platform renders one on a card, so a cover in that
+  format falls through to a fallback that will show. The two keys Hugo also
+  reads are not skipped, because it emits og:image from them whatever the
+  theme decides and the two halves have to name the same file -- svg reports
+  that case so the card is not announced as one with a picture in it.
 
   alt describes the picture, so it is only offered for one belonging to this
   page: the site-wide fallback is the same image everywhere, and this page's
@@ -21,23 +27,30 @@
 {{- with .Params.images -}}
   {{- $img = index . 0 -}}
   {{- $alt = partial "title.html" $ -}}
-{{- else -}}
+{{- end -}}
+{{- if not $img -}}
   {{- with .Params.cover -}}
-    {{- $img = . -}}
-    {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
-  {{- else -}}
-    {{- with site.Params.images -}}
-      {{- $img = index . 0 -}}
-    {{- else -}}
-      {{- with site.Params.ogImage -}}{{- $img = . -}}{{- end -}}
+    {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
+      {{- $img = . -}}
+      {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
     {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $img -}}
+  {{- with site.Params.images -}}{{- $img = index . 0 -}}{{- end -}}
+{{- end -}}
+{{- if not $img -}}
+  {{- with site.Params.ogImage -}}
+    {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}{{- $img = . -}}{{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
        is left alone. */ -}}
 {{- $url := "" -}}
+{{- $svg := false -}}
 {{- with $img -}}
+  {{- $svg = eq (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
   {{- $url = . -}}
   {{- if not (partial "is-remote.html" $url) -}}
     {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) -}}
@@ -51,4 +64,4 @@
 {{- with $alt -}}
   {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
 {{- end -}}
-{{- return dict "url" $url "alt" $alt -}}
+{{- return dict "url" $url "alt" $alt "svg" $svg -}}

@@ -11,7 +11,7 @@
 */ -}}
 {{- $social := partial "social-image.html" . -}}
 {{- with $social.url }}
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="{{ cond $social.svg "summary" "summary_large_image" }}">
 <meta name="twitter:image" content="{{ . }}">
 {{- with $social.alt }}
 <meta name="twitter:image:alt" content="{{ . }}">
