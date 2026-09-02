@@ -129,3 +129,6 @@ other = "Distribuie pe {{ .Network }}"
 
 [shareViaEmail]
 other = "Distribuie prin e-mail"
+
+[search]
+other = "Căutare"

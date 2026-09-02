@@ -129,3 +129,6 @@ other = "Condivid sü {{ .Network }}"
 
 [shareViaEmail]
 other = "Condivid per e-mail"
+
+[search]
+other = "Cerca"

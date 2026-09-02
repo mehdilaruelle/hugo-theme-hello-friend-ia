@@ -129,3 +129,6 @@ other = "{{ .Network }} üzerinde paylaş"
 
 [shareViaEmail]
 other = "E-posta ile paylaş"
+
+[search]
+other = "Ara"

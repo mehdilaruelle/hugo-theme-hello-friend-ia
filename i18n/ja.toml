@@ -130,3 +130,6 @@ other = "{{ .Network }} で共有"
 
 [shareViaEmail]
 other = "メールで共有"
+
+[search]
+other = "検索"

@@ -129,3 +129,6 @@ other = "Compartir en {{ .Network }}"
 
 [shareViaEmail]
 other = "Compartir por correo electrónico"
+
+[search]
+other = "Buscar"

@@ -129,3 +129,6 @@ other = "分享到 {{ .Network }}"
 
 [shareViaEmail]
 other = "透過電子郵件分享"
+
+[search]
+other = "搜尋"
