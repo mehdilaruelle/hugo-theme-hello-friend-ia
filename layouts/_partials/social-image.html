@@ -1,6 +1,6 @@
 {{- /*
   The picture a social card should show, and how to describe it. Returns a map
-  with url, alt and svg; url is empty when there is nothing to show.
+  with url, alt, svg and owned; url is empty when there is nothing to show.
 
   One place, because head.html writes the Open Graph tags and
   twitter_cards.html the Twitter ones, and a card whose two halves disagree
@@ -21,18 +21,30 @@
   page: the site-wide fallback is the same image everywhere, and this page's
   title would be true of the article and false of the picture. coverCaption
   belongs to the cover alone, not to an images[0] that overrode it.
+
+  owned says which half of the chain answered, because the two are read for
+  different purposes. A card shows whatever picture it is handed and asks no
+  questions of it, so the site-wide fallback belongs there. Structured data is a
+  claim about the subject of this page, and one file asserted as the subject of
+  two hundred articles is worse data than no file at all -- the argument
+  description.html already makes about not repeating the site description in the
+  structured data of every page. json-ld.html reads this key and takes the
+  picture only when the page brought one of its own.
 */ -}}
 {{- $img := "" -}}
 {{- $alt := "" -}}
+{{- $owned := false -}}
 {{- with .Params.images -}}
   {{- $img = index . 0 -}}
   {{- $alt = partial "title.html" $ -}}
+  {{- $owned = true -}}
 {{- end -}}
 {{- if not $img -}}
   {{- with .Params.cover -}}
     {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
       {{- $img = . -}}
       {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
+      {{- $owned = true -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -64,4 +76,4 @@
 {{- with $alt -}}
   {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
 {{- end -}}
-{{- return dict "url" $url "alt" $alt "svg" $svg -}}
+{{- return dict "url" $url "alt" $alt "svg" $svg "owned" $owned -}}

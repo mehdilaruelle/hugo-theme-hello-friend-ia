@@ -153,7 +153,12 @@ neither are left alone rather than described badly.
 
 The values come from what you already set: `author` (a string or a map with a
 `name`, in the page or in the site params), `description` — falling back to a
-trimmed summary — and `images`, falling back to the site-wide list.
+trimmed summary — and the picture, which is the one the social card shows: the
+page's `images` or its `cover`, resolved by the same partial so the two can
+never disagree. The site-wide fallback is not borrowed here. It is the right
+picture for a card, which shows whatever it is handed, and the wrong one for
+structured data, where it would assert one file as the subject of every article
+on the site.
 
 **`Person`.** A name on its own is a string. What makes it an entity a search
 engine can recognise is the evidence tying it to the same person elsewhere, so

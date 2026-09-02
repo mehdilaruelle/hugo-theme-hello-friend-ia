@@ -397,6 +397,12 @@ A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 the Open Graph tags and the Twitter ones alike, so a card cannot name one
 picture and show another.
 
+The same picture becomes the `image` of the page's `BlogPosting`, which is where
+Google's Article guidance asks for one — but only when it came from the page's
+own `cover` or `images`. A site-wide `ogImage` still shows on the card and is
+left out of the structured data, because it would claim one file as the subject
+of every article on the site.
+
 An SVG cover is passed over rather than announced, since no platform renders
 one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and
 an article illustrated with a diagram still shares with a picture on it.
