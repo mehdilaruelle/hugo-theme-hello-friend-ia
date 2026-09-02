@@ -85,17 +85,24 @@
   exists in another language depends on that language's own post count, which
   is not knowable from here, so the honest answer is to say nothing.
 */ -}}
-{{- if and .IsTranslated (eq $pager 1) }}
+{{- if and .IsTranslated (eq $pager 1) (not .Params.noindex) }}
 {{- /*
   x-default names the version to serve when no hreflang matches the visitor.
   hugo.Sites is ordered by language weight, so its first entry is the site's
   primary language: give that one the x-default alongside its own hreflang.
+
+  A noindex translation is left out, here and in sitemap.xml alike: the sitemap
+  can only advertise a variant it also carries a <url> entry for, and a set
+  naming only this page says nothing worth saying.
 */ -}}
 {{- $primary := (index hugo.Sites 0).Language.Lang }}
-{{- range .AllTranslations }}
+{{- $alternates := where .AllTranslations "Params.noindex" "ne" true }}
+{{- if gt (len $alternates) 1 }}
+{{- range $alternates }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
 {{- if eq .Language.Lang $primary }}
 <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

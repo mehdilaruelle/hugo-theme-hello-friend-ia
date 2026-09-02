@@ -403,7 +403,7 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 | `cover` / `coverCaption` | image above the article, caption takes Markdown |
 | `toc` | table of contents above the article. `notoc` on a heading keeps it out |
 | `audio` | an audio player above the article. **A list**, see below |
-| `noindex` | `<meta name="robots" content="noindex">` on that page alone. The sitemap is a separate switch — see [Keeping a page out of things](#keeping-a-page-out-of-things) |
+| `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things) |
 | `comments` | set to `"false"` to hide Disqus on that page |
 | `description` | overrides the summary in `<meta name="description">` and Open Graph |
 | `author` | overrides the site author for that page |
@@ -422,24 +422,25 @@ build before the theme is reached — and it absolutises what it finds with
 ### Keeping a page out of things
 
 `noindex` is the one to know about: it is how you keep a page out of a search
-engine's results without touching `robots.txt`. It puts the tag on that page and
-does nothing else, which is worth being precise about, because a page can be
-listed in three other places and each has its own switch:
+engine's results without touching `robots.txt`. It puts the tag on the page and
+takes the page out of `sitemap.xml`, because a site that submits a URL and then
+tells the crawler not to index what it finds is contradicting itself — a
+contradiction search consoles report, and crawl budget spent on nothing. Its
+translations stop pointing at it with `hreflang` for the same reason.
+
+It does not touch this site's search, which is a separate switch:
 
 ```yaml
 ---
 title: "A page nobody should find"
-noindex: true          # <meta name="robots" content="noindex">
-sitemap:
-  disable: true        # keep it out of sitemap.xml — Hugo's own switch
+noindex: true          # <meta name="robots" content="noindex">, and no sitemap entry
 searchable: false      # keep it out of this site's search
 ---
 ```
 
-The sitemap one matters more than it looks. Left out, the page still appears in
-`sitemap.xml`, so the site invites a crawler to a URL that then tells it not to
-index what it finds — a contradiction search consoles report, and crawl budget
-spent on nothing.
+`sitemap.disable` is Hugo's own switch and still works on its own, for a page
+that should stay out of the sitemap while remaining indexable — a thin page
+that is fine to land on but not worth submitting, such as `/search/`.
 
 `_build.list: never` is the blunt version: it removes the page from the sitemap,
 the lists, the feeds and the search index in one line, while still rendering it.
