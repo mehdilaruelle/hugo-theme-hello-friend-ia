@@ -14,7 +14,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const NAME = "[A-Za-z_:][-A-Za-z0-9_:.]*";
-const ENTITY = new RegExp(`^&(?:#[0-9]+|#[xX][0-9a-fA-F]+|${NAME});`);
+// XML predefines five entity names and nothing else. Anything further needs
+// a DTD, and these documents declare none, so &nbsp; is as fatal as a bare &.
+const ENTITY = /^&(?:#[0-9]+|#[xX][0-9a-fA-F]+|lt|gt|amp|quot|apos);/;
+// Every attribute needs a quoted value, and no value may hold a raw <.
+const ATTRS = new RegExp(`^(?:\\s+${NAME}\\s*=\\s*("[^"<]*"|'[^'<]*'))*\\s*$`);
+const ONE_ATTR = new RegExp(`${NAME}\\s*=\\s*("[^"<]*"|'[^'<]*')`, "g");
 
 function* walk(dir) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -83,6 +88,24 @@ function scan(s) {
     const closing = raw.startsWith("/");
     const selfClosing = raw.endsWith("/");
     const name = (raw.replace(/^\//, "").match(new RegExp(`^${NAME}`)) || [])[0];
+    if (name) {
+      // What follows the name has to be a well-formed attribute list: an
+      // unquoted value is not XML, however happily a browser reads it.
+      const rest = raw.slice((closing ? 1 : 0) + name.length).replace(/\/$/, "");
+      if (!ATTRS.test(rest)) {
+        bad.push(`${at(i)}: <${name}> has an attribute with no quoted value`);
+      } else {
+        for (const m of rest.matchAll(ONE_ATTR)) {
+          const value = m[1].slice(1, -1);
+          for (let k = value.indexOf("&"); k !== -1; k = value.indexOf("&", k + 1)) {
+            if (!ENTITY.test(value.slice(k))) {
+              bad.push(`${at(i)}: <${name}> has an "&" that starts no entity in an attribute`);
+              break;
+            }
+          }
+        }
+      }
+    }
     if (!name) {
       bad.push(`${at(i)}: "<" that starts no tag`);
     } else if (closing) {
