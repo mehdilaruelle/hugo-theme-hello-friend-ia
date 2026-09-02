@@ -427,10 +427,13 @@ URL, so `url = "https://twitter.com/janedoe"` is enough and there is nothing
 extra to configure. A URL with no handle in it — the bare
 `https://twitter.com/` — emits no tag.
 
-One trap in that partial, which the theme cannot reach: it absolutises `audio`
-and `videos` with `absURL`, and a leading slash there resolves against the host
-rather than the base URL. On a site served from a subpath, write them without
-one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
+One trap remains in the Open Graph partial: it absolutises `audio` and `videos`
+with `absURL`, and a leading slash there resolves against the host rather than
+the base URL. On a site served from a subpath, write them without one —
+`audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`. The theme now carries
+its own copy of that partial and could correct it, but the copy is deliberately
+Hugo's line for line apart from the two URLs it had to fix, so the next Hugo
+release stays a readable diff; the correction belongs in a change of its own.
 
 ### Front matter
 
@@ -451,9 +454,9 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 audio: ["audio/episode-01.mp3"]
 ```
 
-Hugo's own Open Graph partial ranges over this key, so a bare string stops the
-build before the theme is reached — and it absolutises what it finds with
-`absURL`, which is why there is no leading slash above. See
+The Open Graph partial ranges over this key, so a bare string stops the build —
+and it absolutises what it finds with `absURL`, which is why there is no leading
+slash above. See
 [Everything else the theme reads](#everything-else-the-theme-reads).
 
 ### Keeping a page out of things

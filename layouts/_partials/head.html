@@ -41,25 +41,12 @@
 {{- with .Site.Params.themeColor }}
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
-{{- /*
-  Every pager of a paginated list shares one .Permalink, so page 2 and beyond
-  used to name page 1 as their canonical. That tells a search engine they are
-  duplicates of it and their posts are not worth indexing from here, which is
-  the opposite of what pagination is for: each pager is a distinct set of
-  posts, so each is its own canonical.
-
-  The paginator is only built on the kinds list.html paginates. Building it on a
-  page that is never paginated would build a paginator, and with it the
-  /page/2/ output files, for nothing.
-*/ -}}
-{{- $canonical := .Permalink -}}
-{{- $pager := 1 -}}
-{{- if in (slice "section" "taxonomy" "term") .Kind -}}
-  {{- with .Paginate (partial "list-pages.html" .) -}}
-    {{- $canonical = .URL | absURL -}}
-    {{- $pager = .PageNumber -}}
-  {{- end -}}
-{{- end -}}
+{{- /* Which URL this page names as its own, and which pager of a list it is.
+       Both come from canonical.html, because opengraph.html and json-ld.html
+       need the same two answers and used to work them out for themselves. */ -}}
+{{- $self := partial "canonical.html" . -}}
+{{- $canonical := $self.url -}}
+{{- $pager := $self.pager -}}
 <link rel="canonical" href="{{ $canonical }}" />
 {{- with .OutputFormats.Get "md" }}
 <link rel="alternate" type="text/markdown" href="{{ .Permalink }}" />
@@ -134,16 +121,16 @@
   called "Blog".
 */ -}}
 {{ block "title" . }}
+    {{- /* A block is its own template, so the pager number above is out of
+           scope here and canonical.html is asked again rather than the
+           paginator being built a second time by hand. */ -}}
+    {{- $page := (partial "canonical.html" .).pager -}}
     {{- $title := printf "%s :: %s" (partial "title.html" .) site.Title -}}
     {{- if .IsHome -}}
       {{- $title = site.Title -}}
       {{- with site.Params.Subtitle }}{{ $title = printf "%s — %s" $title . }}{{ end -}}
-    {{- else if in (slice "section" "taxonomy" "term") .Kind -}}
-      {{- with .Paginate (partial "list-pages.html" .) -}}
-        {{- if gt .PageNumber 1 -}}
-          {{- $title = printf "%s (%s) :: %s" (partial "title.html" $) (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" .PageNumber) "fallback" (printf "page %d" .PageNumber))) site.Title -}}
-        {{- end -}}
-      {{- end -}}
+    {{- else if gt $page 1 -}}
+      {{- $title = printf "%s (%s) :: %s" (partial "title.html" .) (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $page) "fallback" (printf "page %d" $page))) site.Title -}}
     {{- end }}
     <title>{{ $title }}</title>
 {{ end }}
