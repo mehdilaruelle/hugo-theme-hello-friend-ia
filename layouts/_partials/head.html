@@ -4,6 +4,11 @@
 <meta name="robots" content="noindex" />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{{- /* Blocking, and before the stylesheet: it has to run before first paint. */ -}}
+{{- with resources.Get "js/theme-init.js" }}
+{{- $init := . | resources.Minify | resources.Fingerprint "sha512" }}
+<script src="{{ $init.RelPermalink }}" integrity="{{ $init.Data.Integrity }}"></script>
+{{- end }}
 {{- with partial "author.html" . }}
 <meta name="author" content="{{ . }}" />
 {{- end }}
