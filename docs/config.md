@@ -300,9 +300,13 @@ a list with no thumbnails renders exactly as it did before.
 ```
 
 The image is taken from the page's `cover` front matter, the same value the
-article page already uses. When it resolves to a page resource or an asset,
-Hugo's dimensions are emitted so the row reserves its space before the image
-arrives; a path under `static/` or a remote URL is used as given.
+article page already uses, and goes through the same partial: it is resized to
+156 px — the 52 px box at 3× — and re-encoded as WebP, so a list of twenty posts
+with full-size covers costs a few kilobytes rather than a few megabytes. The
+dimensions are emitted with it, so the row reserves its space before the image
+arrives. A cover mounted from `static/` is resolved the same way as one in
+`assets/`; a remote URL, and an SVG, are used as given and carry no dimensions,
+since neither can be measured or resized.
 
 ## Post excerpts
 
