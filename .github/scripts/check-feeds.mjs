@@ -1,14 +1,12 @@
 // Asserts that every XML output is well-formed.
 //
-// Nothing in the build parses the XML it writes, so a feed could stop being XML
-// and still ship. The way it did: content:encoded wrapped the rendered article
-// in a literal CDATA section, and a "]]>" anywhere inside closed that section
-// early — the rest of the article became markup, and the whole document stopped
-// parsing rather than just the one item.
+// Nothing else parses the XML the build writes, so a feed could stop being XML
+// and still ship: an unescaped "]]>" closed a CDATA section early and took the
+// whole document with it.
 //
-// This is a scanner, not a validator: it checks the things a template can get
-// wrong — a "]]>" loose in character data, unbalanced or crossed tags, an
-// unterminated section, an ampersand that starts nothing.
+// A scanner, not a validator — it checks what a template can get wrong: a "]]>"
+// loose in character data, unbalanced or crossed tags, an unterminated section,
+// an ampersand that starts nothing.
 //
 //   node .github/scripts/check-feeds.mjs <public-dir>
 

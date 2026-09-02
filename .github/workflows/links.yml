@@ -100,6 +100,10 @@ jobs:
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-feeds.mjs public
 
+      - name: Check the example site's XML outputs parse
+        working-directory: hello-friend-ng/exampleSite
+        run: node ../.github/scripts/check-feeds.mjs public
+
       # A broken llms.txt is still a valid text file.
       - name: Check llms.txt and the Markdown copies
         working-directory: hello-friend-ng/showcaseSite

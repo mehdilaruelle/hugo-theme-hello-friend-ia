@@ -144,10 +144,8 @@
       {{ partial "pagination-single.html" . }}
 
       {{ if .Site.Config.Services.Disqus.Shortname }}
-        {{- /* Both spellings. The test used to compare against the string
-               "false" alone, so the boolean a writer naturally reaches for was
-               not equal to it and the block rendered on a page that had asked
-               for no comments. */}}
+        {{- /* Both spellings: the test compared against the string alone, so
+               the boolean a writer reaches for did not match it. */}}
         {{ if not (in (slice false "false") .Params.Comments) }}
           <div id="comments">
             {{ partial "disqus.html" . }}

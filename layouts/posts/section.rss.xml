@@ -34,15 +34,11 @@
             {{- /* description is the summary, content:encoded the whole
                    article: the split every reader expects. */}}
             <description>{{ .Summary | html }}</description>
-            {{- /* A "]]>" anywhere in the article closes the CDATA section early,
-                   and the rest of the article becomes markup in a feed that no
-                   longer parses — one item breaks the whole document. Splitting
-                   the sequence across two sections is the standard escape: the
-                   reader joins them back into the same three characters.
-
-                   Goldmark escapes ">" in prose and Chroma escapes it in code,
-                   so this needs raw HTML to reach .Content — which is only
-                   markup.goldmark.renderer.unsafe away. */}}
+            {{- /* A "]]>" in the article closes the CDATA section early and the
+                   whole feed stops parsing, not just this item. Splitting the
+                   sequence across two sections is the standard escape; readers
+                   join them back. Passthrough and unsafe raw HTML both carry
+                   one through to .Content unescaped. */}}
             <content:encoded>{{ printf `<![CDATA[%s]]>` (replace .Content "]]>" "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
         </item>
         {{ end }}
