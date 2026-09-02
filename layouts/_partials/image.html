@@ -8,8 +8,9 @@
   or assets/. A site whose images sit in static/ can mount that directory into
   assets to opt in; without it the image is still emitted, just unprocessed.
 
-  Accepts: src, alt, position, style, page, and three options: loading, to say
-  eager where lazy would delay the largest paint; maxWidth, to cap a picture
+  Accepts: src, alt, position, style, page, and four options: loading, to say
+  eager where lazy would delay the largest paint; fetchpriority, to put that
+  picture ahead of the requests queued beside it; maxWidth, to cap a picture
   that is never shown at the width articles get; and sizes, to say how wide it
   will be shown when that is not the measure of an article.
 */ -}}
@@ -18,6 +19,8 @@
 {{- $alt := .alt | default "" -}}
 {{- $page := .page -}}
 {{- $loading := .loading | default "lazy" -}}
+{{- /* No default: marking every picture high priority prioritises none. */ -}}
+{{- $fetchpriority := .fetchpriority -}}
 {{- /* How wide the picture will be shown. The default is the measure of an
        article, and anything narrower than that fills the viewport. A caller
        showing a picture at a fixed size passes its own. */ -}}
@@ -93,6 +96,7 @@
 
 {{- if $src -}}
   <img src="{{ $url | safeURL }}" loading="{{ $loading }}" decoding="async"
+    {{- with $fetchpriority }} fetchpriority="{{ . }}"{{ end }}
     {{- with $srcset }} srcset="{{ delimit . ", " }}" sizes="{{ $sizes }}"{{ end }}
     {{- if $measurable }} width="{{ $rendered.Width }}" height="{{ $rendered.Height }}"{{ end }} alt="{{ $alt | plainify }}"
     {{- with .position }} class="{{ . }}"{{ end }}
