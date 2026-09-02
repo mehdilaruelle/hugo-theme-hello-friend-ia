@@ -1,3 +1,7 @@
+{{- /* The guard from json-ld.html: a map-shaped params.social yields strings
+       here, and .url on a string ends the build. */ -}}
 {{ range . -}}
+{{- if reflect.IsMap . -}}
     &nbsp; <a href="{{ .url }}" {{if eq .nonewpage 0}} target="_blank" {{end}} rel="me noopener {{ .rel }}" title="{{ .name | humanize }}">{{ partial "svg.html" . }}</a> &nbsp;
+{{- end -}}
 {{- end -}}

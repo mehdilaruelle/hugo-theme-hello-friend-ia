@@ -83,11 +83,16 @@
   {{- end -}}
 {{- end -}}
 
+{{- /* Hugo's embedded partials read params.social as a map, where this theme
+       documents a list of tables. Ranging over a map yields strings, and .url
+       on a string ended the build instead of finding no links. */ -}}
 {{- $sameAs := slice -}}
 {{- range site.Params.social -}}
-  {{- with .url -}}
-    {{- if not (strings.HasPrefix (lower .) "mailto:") -}}
-      {{- $sameAs = $sameAs | append . -}}
+  {{- if reflect.IsMap . -}}
+    {{- with .url -}}
+      {{- if not (strings.HasPrefix (lower .) "mailto:") -}}
+        {{- $sameAs = $sameAs | append . -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
