@@ -425,7 +425,7 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 | `cover` / `coverCaption` | image above the article, caption takes Markdown |
 | `toc` | table of contents above the article. `notoc` on a heading keeps it out |
 | `audio` | an audio player above the article. **A list**, see below |
-| `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things) |
+| `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things). A page with `layout: search` is already treated this way and does not need it |
 | `comments` | set to `"false"` to hide Disqus on that page |
 | `description` | overrides the summary in `<meta name="description">` and Open Graph |
 | `author` | overrides the site author for that page |
@@ -451,7 +451,22 @@ tells the crawler not to index what it finds is contradicting itself — a
 contradiction search consoles report, and crawl budget spent on nothing. Its
 translations stop pointing at it with `hreflang` for the same reason.
 
-It does not touch this site's search, which is a separate switch:
+The search page is kept out the same way, without being asked. A page with
+`layout: search` is thin by construction — an empty results list and a form —
+and Google's guidance is to keep internal search results out of the index, since
+there is no end to the URLs a crawler can generate from one. So the tag, the
+sitemap entry and the `hreflang` set all follow the layout, in every language,
+and there is nothing to write in the front matter. `searchable: false` does not
+do this: it only keeps a page out of *this* site's search index, and says
+nothing to a crawler.
+
+Every page that is not kept out carries `max-image-preview:large` in the same
+tag instead. It is what lets Google show a full-width picture beside the page in
+Search and in Discover rather than a thumbnail. There is only ever one
+`robots` tag: the directive is meaningless on a page that is not indexed, so
+`noindex` replaces it rather than joining it.
+
+`noindex` does not touch this site's search, which is a separate switch:
 
 ```yaml
 ---
@@ -462,8 +477,8 @@ searchable: false      # keep it out of this site's search
 ```
 
 `sitemap.disable` is Hugo's own switch and still works on its own, for a page
-that should stay out of the sitemap while remaining indexable — a thin page
-that is fine to land on but not worth submitting, such as `/search/`.
+that should stay out of the sitemap while remaining indexable — a thin page that
+is fine to land on but not worth submitting.
 
 `_build.list: never` is the blunt version: it removes the page from the sitemap,
 the lists, the feeds and the search index in one line, while still rendering it.
