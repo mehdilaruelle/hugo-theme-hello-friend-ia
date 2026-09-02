@@ -283,6 +283,11 @@ The value is rendered server-side onto `<html>`, so the page arrives in the
 right scheme rather than switching once JavaScript runs. A visitor who picks a
 scheme with the toggle still overrides it, on every later visit.
 
+That override is restored by `assets/js/theme-init.js`, a small blocking script
+in the `<head>`, so it too is in place before the first paint. It is a file
+rather than an inline script: a strict policy already allows `script-src
+'self'` for the theme's bundle, so this needs no hash and no `'unsafe-inline'`.
+
 ## Post thumbnails
 
 `params.enableThumbnails` shows each post's `cover` image beside its title in

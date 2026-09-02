@@ -6,8 +6,8 @@
  *
  */
 const themeToggle = document.querySelector(".theme-toggle");
-// Rendered by the server from params.defaultTheme, read before any script
-// changes the attribute.
+// params.defaultTheme, as rendered. theme-init.js replaces it only when a
+// stored choice exists, and this is read only when none does.
 const defaultTheme = document.documentElement.getAttribute("data-theme");
 
 // Storage throws rather than returning null in some privacy modes, and a
