@@ -92,6 +92,14 @@ jobs:
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-image-sizing.mjs public
 
+      # Open Graph and Twitter tags are written by two partials. They used to
+      # take their picture from two different sources, so a site setting
+      # params.images showed one image and named another on every page with a
+      # cover — and nothing failed.
+      - name: Check both halves of a social card name one picture
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-cards.mjs public
+
       # A broken llms.txt is still a valid text file.
       - name: Check llms.txt and the Markdown copies
         working-directory: hello-friend-ng/showcaseSite

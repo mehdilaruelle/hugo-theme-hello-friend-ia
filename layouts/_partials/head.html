@@ -226,26 +226,13 @@
 {{ partial "json-ld.html" . }}
 {{ partial "twitter_cards.html" . }}
 
+{{- /* The theme owns opengraph.html now, the way it owns twitter_cards.html, so
+       the picture and its description are written there beside the rest of the
+       Open Graph tags. This used to be a guard that suppressed the theme's
+       og:image whenever images was set and deferred to Hugo's embedded partial,
+       which does not know about cover — the two tag sets named different files
+       on every page with a cover once a site set params.images. */ -}}
 {{ partial "opengraph.html" . }}
-
-{{- /* Hugo's partial takes og:image from images and nothing else, so a page
-       with a cover had a card with no picture in it. The picture comes from
-       social-image.html, which twitter_cards.html asks too, so the two tag
-       sets cannot name different files; twitter:image is written there.
-
-       The alt sits outside the guard because Hugo emits the image but never a
-       description of it, whichever of the two emitted the URL. */ -}}
-{{- $social := partial "social-image.html" . }}
-{{- if not (or .Params.images site.Params.images) }}
-  {{- with $social.url }}
-<meta property="og:image" content="{{ . }}" />
-  {{- end }}
-{{- end }}
-{{- if $social.url }}
-  {{- with $social.alt }}
-<meta property="og:image:alt" content="{{ . }}" />
-  {{- end }}
-{{- end }}
 
 {{- /* No article:section here. It is single-valued and the opengraph partial
        already emits one from the section, so ranging over the categories
