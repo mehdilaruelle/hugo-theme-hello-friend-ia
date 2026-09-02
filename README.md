@@ -148,8 +148,9 @@ Structured data of your own goes in
 [`layouts/_partials/extra-head.html`](#how-to-edit-the-theme). The home page is
 described as a `WebSite`, and any dated single page
 as a `BlogPosting` carrying its headline, description, dates, author, publisher,
-language, word count, and its image and tags when it has them. Pages that are
-neither are left alone rather than described badly.
+language, word count, and its image and tags when it has them. A page with no
+date is a `WebPage`: its URL, name, language and its own description, and
+nothing the theme would have to invent to say.
 
 The values come from what you already set: `author` (a string or a map with a
 `name`, in the page or in the site params), `description` — falling back to a
