@@ -19,6 +19,12 @@
 # The point is coverage as much as marketing. A feature no demo exercises is a
 # feature nobody notices is broken.
 
+# Small enough that the posts here fill more than one pager. The exampleSite
+# keeps 20 and never reaches a page two, so nothing built the pager canonical,
+# the pager title or the pager heading until this line existed.
+[pagination]
+  pagerSize = 3
+
 [params]
   ogImage = "img/example.png"
   # Every option below is off in the exampleSite, which is why it is here.
