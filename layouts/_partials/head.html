@@ -27,6 +27,26 @@
 {{- if not $description -}}
   {{- $description = .Site.Params.description | plainify -}}
 {{- end -}}
+{{- /* Named as a pager from page two on, the way the title, the heading and
+       og:title already are. Each pager is its own canonical, so each reaches an
+       index on its own; without this they arrived carrying one sentence between
+       them and read as copies of each other, which is the one thing they are
+       not.
+
+       Suffixed here rather than in description.html, because the sentence a
+       pager beyond the first ends up with is often the site-wide fallback, and
+       that fallback is deliberately applied here and not there -- json-ld.html
+       asks the same partial and must not see either.
+
+       canonical.html is asked for the number rather than the $pager computed
+       further down, which is not in scope yet: the answer is the same one, from
+       the same place, and the paginator behind it is built once per page. */ -}}
+{{- $page := (partial "canonical.html" .).pager -}}
+{{- if gt $page 1 -}}
+  {{- with $description -}}
+    {{- $description = printf "%s (%s)" . (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $page) "fallback" (printf "page %d" $page))) -}}
+  {{- end -}}
+{{- end -}}
 {{- with $description }}
 <meta name="description" content="{{ . }}" />
 {{- end }}
