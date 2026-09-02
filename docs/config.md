@@ -397,6 +397,10 @@ A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 the Open Graph tags and the Twitter ones alike, so a card cannot name one
 picture and show another.
 
+An SVG cover is passed over rather than announced, since no platform renders
+one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and
+an article illustrated with a diagram still shares with a picture on it.
+
 A card with a picture is announced as `summary_large_image` rather than the
 small square, and carries an `og:image:alt` / `twitter:image:alt` — but only
 when the picture belongs to the page. The site-wide `ogImage` is the same image
