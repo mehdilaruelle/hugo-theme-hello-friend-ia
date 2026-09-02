@@ -109,15 +109,19 @@ jobs:
       - name: The build refuses, and says why
         working-directory: hello-friend-ng/exampleSite
         run: |
-          if out=$(hugo --themesDir ../.. --gc --minify 2>&1); then
-            echo "expected the build to fail without Dart Sass, it succeeded"
-            echo "$out" | tail -20
-            exit 1
-          fi
+          # timeout, not just an assertion: a hang here is a failure mode of its
+          # own and should be reported as one rather than as a job timeout.
+          set +e
+          out=$(timeout 300 hugo --themesDir ../.. --gc --minify 2>&1)
+          code=$?
+          set -e
           echo "$out" | tail -20
+          case "$code" in
+            0)   echo "::error::expected the build to fail without Dart Sass, it succeeded"; exit 1 ;;
+            124) echo "::error::the build hung instead of failing"; exit 1 ;;
+          esac
           echo "$out" | grep -q "Dart Sass is required" \
-            || { echo "failed, but not with the message that tells you what to install"; exit 1; }
-
+            || { echo "::error::failed, but not with the message naming what to install"; exit 1; }
   latest:
     name: Build exampleSite (latest Hugo, canary)
     runs-on: ubuntu-latest
