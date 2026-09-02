@@ -35,20 +35,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    name: Build exampleSite (${{ matrix.name }})
+    name: Build exampleSite
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: github.event_name != 'schedule'
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Dart Sass, no warnings allowed
-            dart-sass: true
-            flags: --panicOnWarning
-          - name: libsass fallback
-            dart-sass: false
-            flags: ""
     steps:
       - uses: actions/checkout@v7
         with:
@@ -61,7 +51,6 @@ jobs:
           sudo dpkg -i hugo.deb
 
       - name: Install Dart Sass ${{ env.DART_SASS_VERSION }}
-        if: matrix.dart-sass
         run: |
           curl -sSLf \
             "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz" \
@@ -71,20 +60,68 @@ jobs:
       - name: Show toolchain versions
         run: |
           hugo version
-          command -v sass >/dev/null && sass --version || echo "Dart Sass: not installed (testing the fallback)"
+          sass --version
 
       - name: Build
         working-directory: hello-friend-ng/exampleSite
-        run: hugo --themesDir ../.. --gc --minify ${{ matrix.flags }}
+        run: hugo --themesDir ../.. --gc --minify --panicOnWarning
 
       # The showcase turns on everything the default demo leaves off, so a
       # template change that only breaks an optional feature still fails here.
       - name: Build the showcase
         working-directory: hello-friend-ng/showcaseSite
         run: |
-          hugo --themesDir ../.. --gc --minify ${{ matrix.flags }} \
+          hugo --themesDir ../.. --gc --minify --panicOnWarning \
             --config ../exampleSite/config.toml,config.toml
 
+      # A stylesheet can be emitted and still carry no rules — that is exactly
+      # what the libsass fallback used to do, silently. Assert there is CSS in
+      # it, not just a file.
+      - name: The stylesheet has rules in it
+        working-directory: hello-friend-ng/exampleSite
+        run: |
+          css=$(find public -name 'main-*.css' | head -1)
+          [ -n "$css" ] || { echo "no stylesheet was emitted"; exit 1; }
+          rules=$(tr -cd '{' < "$css" | wc -c)
+          bytes=$(wc -c < "$css")
+          echo "$css: $bytes bytes, $rules rule blocks"
+          [ "$rules" -ge 200 ] || { echo "stylesheet carries almost no CSS"; exit 1; }
+
+  no-dart-sass:
+    name: Build fails clearly without Dart Sass
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name != 'schedule'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: hello-friend-ng
+
+      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
+        run: |
+          curl -sSLf -o hugo.deb \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+      # The theme is written in the Sass module system, which only Dart Sass
+      # implements. It used to fall back to libsass and ship a site with no
+      # styles at all; it now refuses. This holds that contract.
+      - name: The build refuses, and says why
+        working-directory: hello-friend-ng/exampleSite
+        run: |
+          # timeout, not just an assertion: a hang here is a failure mode of its
+          # own and should be reported as one rather than as a job timeout.
+          set +e
+          out=$(timeout 300 hugo --themesDir ../.. --gc --minify 2>&1)
+          code=$?
+          set -e
+          echo "$out" | tail -20
+          case "$code" in
+            0)   echo "::error::expected the build to fail without Dart Sass, it succeeded"; exit 1 ;;
+            124) echo "::error::the build hung instead of failing"; exit 1 ;;
+          esac
+          echo "$out" | grep -q "Dart Sass is required" \
+            || { echo "::error::failed, but not with the message naming what to install"; exit 1; }
   latest:
     name: Build exampleSite (latest Hugo, canary)
     runs-on: ubuntu-latest

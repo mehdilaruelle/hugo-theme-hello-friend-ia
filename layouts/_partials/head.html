@@ -149,37 +149,38 @@
 {{ end }}
 
 <!-- CSS -->
-{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment -}}
-{{- $dartOpts := merge $opts (dict "transpiler" "dartsass") -}}
 {{- $scss := resources.Get "scss/main.scss" -}}
+{{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment "transpiler" "dartsass" -}}
 {{- with $scss -}}
-  {{- $css := "" -}}
   {{- /*
-    Prefer Dart Sass, and fall back to libsass when Dart Sass is not installed.
-    Resource transformations are lazy, so .Content is read inside try to force
-    the transpilation and surface any error here instead of at render time.
+    Dart Sass only. The stylesheet is written in the module system, and libsass
+    does not implement @use: it passed the rules through as unknown at-rules
+    and emitted a stylesheet with no CSS in it, reporting no error — an
+    unstyled site that looked like a successful build.
+
+    .Content is read inside try so a missing Dart Sass is reported here, and
+    nothing downstream runs on that path.
   */ -}}
-  {{- $res := try (($scss | toCSS $dartOpts).Content) -}}
+  {{- $res := try (($scss | toCSS $opts).Content) -}}
   {{- with $res.Err -}}
-    {{- warnidf "sass-dartsass-unavailable" "%s" "Dart Sass is not available, falling back to the deprecated libsass transpiler which Hugo will remove in a future release. Install Dart Sass to fix this: https://gohugo.io/functions/css/sass/#dart-sass" -}}
-    {{- $css = $scss | toCSS (merge $opts (dict "transpiler" "libsass")) -}}
+    {{- errorf "Dart Sass is required to build this theme and is not available. Install it: https://gohugo.io/functions/css/sass/#dart-sass — %s" . -}}
   {{- else -}}
-    {{- $css = $scss | toCSS $dartOpts -}}
-  {{- end -}}
-  {{- /* The metric-matched fallback, concatenated into the same stylesheet
-         rather than written into a style element. An inline style forces
-         style-src 'unsafe-inline' on a site with a strict policy, which is
-         why the mermaid initialiser is a file too. It also keeps this to one
-         request and one fingerprint. */ -}}
-  {{- with partial "font-fallback.html" . }}
-    {{- /* The target path is the cache key for Concat, so it carries a digest
-           of the face: two languages configuring different metrics would
-           otherwise be handed whichever bundle was built first. */ -}}
-    {{- $key := printf "main-%s.css" (substr (sha256 .) 0 8) -}}
-    {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat $key -}}
-  {{- end -}}
-  {{- with $css | minify | fingerprint }}
-  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+    {{- $css := $scss | toCSS $opts -}}
+    {{- /* The metric-matched fallback, concatenated into the same stylesheet
+           rather than written into a style element. An inline style forces
+           style-src 'unsafe-inline' on a site with a strict policy, which is
+           why the mermaid initialiser is a file too. It also keeps this to one
+           request and one fingerprint. */ -}}
+    {{- with partial "font-fallback.html" . }}
+      {{- /* The target path is the cache key for Concat, so it carries a digest
+             of the face: two languages configuring different metrics would
+             otherwise be handed whichever bundle was built first. */ -}}
+      {{- $key := printf "main-%s.css" (substr (sha256 .) 0 8) -}}
+      {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat $key -}}
+    {{- end -}}
+    {{- with $css | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+    {{- end -}}
   {{- end -}}
 {{- else -}}
   {{- errorf "assets/scss/main.scss is missing, the site would be built without any stylesheet." -}}
