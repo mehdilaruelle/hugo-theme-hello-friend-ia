@@ -300,13 +300,19 @@ a list with no thumbnails renders exactly as it did before.
 ```
 
 The image is taken from the page's `cover` front matter, the same value the
-article page already uses, and goes through the same partial: it is resized to
-156 px — the 52 px box at 3× — and re-encoded as WebP, so a list of twenty posts
-with full-size covers costs a few kilobytes rather than a few megabytes. The
-dimensions are emitted with it, so the row reserves its space before the image
-arrives. A cover mounted from `static/` is resolved the same way as one in
-`assets/`; a remote URL, and an SVG, are used as given and carry no dimensions,
-since neither can be measured or resized.
+article page already uses, and goes through the same partial: it is cropped to
+156×156 — the 52 px box at 3× — and re-encoded as WebP, so a list of twenty
+posts with full-size covers costs a few kilobytes rather than a few megabytes.
+The crop is centred, and is the one `object-fit: cover` was already making at
+display time. The dimensions are emitted with it, so the row reserves its space
+before the image arrives.
+
+A cover mounted from `static/` is resolved the same way as one in `assets/`.
+Three kinds are passed through at full size instead, because none of them can
+be cropped: a remote URL, an SVG, and a GIF — the last deliberately, since
+resizing one loses its animation everywhere else in the theme and a thumbnail is
+not worth a second rule. A GIF cover on a long list is the one case where the
+old cost remains; use a still image as the `cover` if that matters.
 
 ## Post excerpts
 
