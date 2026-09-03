@@ -1,10 +1,9 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-{{- /* One robots tag, never two. max-image-preview:large is what lets Google
-       show a full-width picture beside the page in Search and in Discover
-       instead of a thumbnail; without it the theme's covers are wasted there.
-       It is meaningless on a page that is not indexed at all, so the two are
-       one tag with two possible values rather than a directive list. */ -}}
+{{- /* One tag with two possible values, not a directive list: without
+       max-image-preview:large Google may show a thumbnail where the theme's
+       covers would fill the width, and the directive says nothing about a page
+       nobody is indexing. */ -}}
 {{ if partial "noindex.html" . }}
 <meta name="robots" content="noindex" />
 {{ else }}
