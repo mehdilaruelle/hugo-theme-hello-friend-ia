@@ -21,17 +21,23 @@ import { join } from "node:path";
 
 const PROVIDERS = /facebook|twitter|tumblr|pinterest|linkedin|reddit|xing|telegram|vk\.com|whatsapp|hacker/i;
 
+// An attribute name starts where no name character precedes it. \b is not that
+// test: there is a word boundary between "-" and "r" too, so \brel matched the
+// rel inside data-rel, and a link whose attribute had been renamed would have
+// been read as carrying the real one and passed.
+const NAME = "(?<![-\\w])";
+
 // Quoted, single-quoted or bare. The demo deploys with --minify, which drops
 // the quotes around any attribute value that does not need them, so a pattern
 // that required them checked 128 of the showcase's 136 sharing links and said
 // nothing about the eight it never saw. Same shape as ATTR in check-links.mjs.
-const HREF = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+const HREF = new RegExp(`${NAME}href\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "gi");
 
 // The opening tag of a sharing anchor, whole, so its rel can be read beside its
 // href. Matched on the class the theme puts on every one of them, which is also
 // what the stylesheet hangs the button off, so the two cannot drift apart.
-const ANCHOR = /<a\b[^>]*\bclass\s*=\s*(?:"[^"]*resp-sharing-button__link[^"]*"|'[^']*resp-sharing-button__link[^']*'|[^\s>]*resp-sharing-button__link[^\s>]*)[^>]*>/gi;
-const REL = /\brel\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i;
+const ANCHOR = new RegExp(`<a\\b[^>]*${NAME}class\\s*=\\s*(?:"[^"]*resp-sharing-button__link[^"]*"|'[^']*resp-sharing-button__link[^']*'|[^\\s>]*resp-sharing-button__link[^\\s>]*)[^>]*>`, "gi");
+const REL = new RegExp(`${NAME}rel\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
 
 function* walk(dir) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
