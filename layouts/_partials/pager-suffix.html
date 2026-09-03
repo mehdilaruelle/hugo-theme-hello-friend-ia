@@ -1,0 +1,14 @@
+{{- /*
+  "Posts" becomes "Posts (page 2)". Takes text and pager, returns the text
+  unchanged on the first pager and an empty string unchanged always.
+
+  One place because six things say it -- the title, the heading, the meta
+  description, og:title, og:description and twitter:description -- and they have
+  to agree. The phrasing is a translated string, not a format to re-type.
+*/ -}}
+{{- $text := .text -}}
+{{- $pager := .pager | default 1 -}}
+{{- if and $text (gt $pager 1) -}}
+  {{- $text = printf "%s (%s)" $text (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $pager) "fallback" (printf "page %d" $pager))) -}}
+{{- end -}}
+{{- return $text -}}

@@ -1,12 +1,12 @@
 {{- /*
   Overrides Hugo's embedded opengraph.html, which head.html calls unchanged.
   Copied from Hugo 0.164, the version CI pins, and kept line for line apart
-  from the two corrections below, so the next release is a readable diff.
+  from the three corrections below, so the next release is a readable diff.
 
   og:url was .Permalink, the same URL on every pager, while the canonical link
   beside it named the pager: the page claimed two URLs at once, and og:url is
-  the canonical Facebook and LinkedIn read. og:title gained the pager suffix the
-  title element already carried, for the same reason.
+  the canonical Facebook and LinkedIn read. og:title and og:description carry
+  the pager suffix the title element already had, for the same reason.
 
   Everything else is Hugo's, unchanged -- including og:image, which still comes
   from its _funcs/get-page-images, and is why head.html emits the theme's
@@ -20,15 +20,11 @@
 {{- end }}
 
 {{- with or .Title site.Title site.Params.title | plainify }}
-	{{- $title := . }}
-	{{- if gt $canonical.pager 1 }}
-		{{- $title = printf "%s (%s)" $title (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $canonical.pager) "fallback" (printf "page %d" $canonical.pager))) }}
-	{{- end }}
-	<meta property="og:title" content="{{ $title }}">
+	<meta property="og:title" content="{{ partial "pager-suffix.html" (dict "text" . "pager" $canonical.pager) }}">
 {{- end }}
 
 {{- with or .Description .Summary site.Params.description | plainify | htmlUnescape }}
-	<meta property="og:description" content="{{ trim . "\n\r\t " }}">
+	<meta property="og:description" content="{{ partial "pager-suffix.html" (dict "text" (trim . "\n\r\t ") "pager" $canonical.pager) }}">
 {{- end }}
 
 {{- with or .Params.locale site.Language.Locale }}
