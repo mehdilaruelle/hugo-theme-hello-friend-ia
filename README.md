@@ -141,6 +141,12 @@ as the theme does. What the theme contributes is the part it controls:
 Nothing to configure. Every page already carries a canonical link, Open Graph
 and Twitter Card tags. On top of that:
 
+**One URL per page.** A paginated list gives each pager its own canonical, since
+each is a distinct set of posts rather than a copy of page one — and `og:url`,
+which is the canonical Facebook and LinkedIn read, names the same URL as the
+`<link rel="canonical">` beside it. `og:title` and the `<title>` both say which
+pager it is.
+
 **JSON-LD**, and only JSON-LD. Google reads it in preference to microdata, and
 the theme no longer emits any: Hugo's embedded `schema.html` wrote six
 `itemprop` attributes with no `itemscope` to hold them, which parses to nothing.

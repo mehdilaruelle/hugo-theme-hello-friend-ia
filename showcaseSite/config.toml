@@ -143,6 +143,10 @@
     locale = "fr-FR"
     label  = "Français"
   [languages.fr.params]
+    # Only the French site sets images, and only so CI builds the one
+    # configuration where the card halves used to disagree: site images plus a
+    # page cover. English keeps ogImage, so both fallbacks stay exercised.
+    images       = ["img/example.png"]
     subtitle     = "Vitrine des fonctionnalités"
     description  = "Toutes les options du thème, activées d’un coup"
     homeSubtitle = "Tous les interrupteurs enclenchés, pour voir ce qu’ils font"

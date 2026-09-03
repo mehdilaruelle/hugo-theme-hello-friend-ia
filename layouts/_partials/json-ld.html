@@ -164,8 +164,7 @@
     collection seen further down, and describing each as its own would claim
     several collections where there is one.
   */ -}}
-  {{- $first := true -}}
-  {{- with .Paginate (partial "list-pages.html" .) -}}{{- $first = eq .PageNumber 1 -}}{{- end -}}
+  {{- $first := eq (partial "canonical.html" .).pager 1 -}}
   {{- if $first -}}
     {{- $data = dict
       "@context" "https://schema.org"
