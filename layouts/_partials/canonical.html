@@ -12,13 +12,10 @@
   page that is never paginated would build a paginator, and with it the
   /page/2/ output files, for nothing.
 
-  In a partial because four templates need this answer: head.html for the
-  canonical link, the hreflang set and the title, opengraph.html for og:url and
-  og:title, and json-ld.html to know whether this is the pager it describes.
-  Working it out in each of them is four templates that will disagree one day,
-  and that is the bug this file was extracted to fix -- og:url named page 1 on
-  every pager while the canonical beside it named the pager itself, so the page
-  claimed to be two different URLs.
+  Here rather than in head.html, opengraph.html and json-ld.html, which all need
+  it and used to work it out apart. That is the bug this file was extracted to
+  fix: og:url named page 1 on every pager while the canonical beside it named
+  the pager, so the page claimed two URLs at once.
 */ -}}
 {{- $canonical := .Permalink -}}
 {{- $pager := 1 -}}

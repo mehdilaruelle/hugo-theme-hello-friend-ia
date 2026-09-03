@@ -3,18 +3,13 @@
   Copied from Hugo 0.164, the version CI pins, and kept line for line apart
   from the three corrections below, so the next release is a readable diff.
 
-  og:url was .Permalink, which is the same URL for every pager of a paginated
-  list. The canonical link beside it names the pager itself, so page two
-  claimed to be two different URLs at once -- and og:url is the canonical
-  Facebook and LinkedIn read. Both now ask canonical.html.
+  og:url was .Permalink, the same URL on every pager, while the canonical link
+  beside it named the pager: the page claimed two URLs at once, and og:url is
+  the canonical Facebook and LinkedIn read. og:title and og:description carry
+  the pager suffix the title element already had, for the same reason.
 
-  og:title and og:description carry the pager suffix, for the same reason: each
-  pager is its own canonical, so each arrives at a reader on its own, and six of
-  them called "Blog" and described identically tell it nothing.
-
-  Everything else -- og:locale, the article:* set, og:see_also, the audio and
-  video handling, fb:app_id -- is Hugo's, unchanged. og:image still comes from
-  Hugo's own _funcs/get-page-images, which is why head.html emits the theme's
+  Everything else is Hugo's, unchanged -- including og:image, which still comes
+  from its _funcs/get-page-images, and is why head.html emits the theme's
   picture only when that partial found none.
 */ -}}
 {{- $canonical := partial "canonical.html" . -}}
