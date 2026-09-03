@@ -23,20 +23,23 @@
   title would be true of the article and false of the picture. coverCaption
   belongs to the cover alone, not to an images[0] that overrode it.
 
-  owned says which half of the chain answered, because the two are read for
-  different purposes. A card shows whatever picture it is handed and asks no
-  questions of it, so the site-wide fallback belongs there. Structured data is a
-  claim about the subject of this page, and one file asserted as the subject of
-  two hundred articles is worse data than no file at all -- the argument
-  description.html already makes about not repeating the site description in the
-  structured data of every page. json-ld.html reads this key and takes the
-  picture only when the page brought one of its own.
+  owned says whether the picture is the page's own, and json-ld.html takes it
+  only then. A card shows whatever it is handed, so the site-wide fallback
+  belongs there; structured data is a claim about the subject of this page, and
+  one file asserted as the subject of two hundred articles is worse data than
+  no file.
+
+  alt and owned are set from $img rather than beside it, because an entry that
+  is present but empty -- images = [""], which the README's own sample ships --
+  passes `with` and then falls through to the site's picture.
 */ -}}
 {{- $img := "" -}}
 {{- $alt := "" -}}
 {{- $owned := false -}}
 {{- with .Params.images -}}
   {{- $img = index . 0 -}}
+{{- end -}}
+{{- with $img -}}
   {{- $alt = partial "title.html" $ -}}
   {{- $owned = true -}}
 {{- end -}}
