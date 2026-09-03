@@ -6,13 +6,10 @@
 // parameters swallows everything after it into the preceding value, and the
 // build says nothing.
 //
-// Two, that each anchor carries rel="nofollow". These are eleven generated
-// links to eleven networks, identical on every article and chosen by nobody, so
-// they are the textbook case for the attribute; without it every article passed
-// a share of its standing to facebook.com, x.com, reddit.com and the rest. The
-// row is a block of eleven near-identical anchors, which is exactly the shape a
-// twelfth gets added to by copying a neighbour and changing the URL, so the
-// assertion lives here rather than in a reviewer's head.
+// Two, that each anchor carries rel="nofollow". The row is a block of eleven
+// near-identical anchors, which is exactly the shape a twelfth gets added to by
+// copying a neighbour and changing the URL, so the assertion lives here rather
+// than in a reviewer's head.
 //
 //   node .github/scripts/check-sharing.mjs <public-dir>
 
