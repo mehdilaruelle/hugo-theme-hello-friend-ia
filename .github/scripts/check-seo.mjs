@@ -49,6 +49,20 @@ const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase
 const ALIAS = /http-equiv\s*=\s*["']?refresh/i;
 
 const LINK = /<link\b[^>]*>/gi;
+// The tags whose content is prose a person reads, not a URL or a token.
+const DESCRIBES = /^(?:description|og:description|twitter:description|og:image:alt|twitter:image:alt|og:title|twitter:title)$/;
+// One decode, matching what a parser does to an attribute value: whatever is
+// still an entity afterwards was escaped twice.
+const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+const decode = (v) =>
+  v.replace(/&(#[0-9]+|#x[0-9a-f]+|[a-z]+[0-9]*);/gi, (m, n) => {
+    const k = n.toLowerCase();
+    if (k in ENTITIES) return ENTITIES[k];
+    if (k.startsWith("#x")) return String.fromCodePoint(parseInt(k.slice(2), 16));
+    if (k.startsWith("#")) return String.fromCodePoint(parseInt(k.slice(1), 10));
+    return m;
+  });
+
 const META = /<meta\b[^>]*>/gi;
 const REL = new RegExp(attr("rel"), "i");
 const HREF = new RegExp(attr("href"), "i");
@@ -152,6 +166,20 @@ for (const file of walk(root)) {
   if (SEARCH_FORM.test(html) && !directives.includes("noindex")) {
     failures.push([file, "a search page", "is not marked noindex"]);
   }
+
+  // 7. An entity that survived into the text. plainify strips tags and leaves
+  //    entities behind, and Goldmark makes them out of ordinary punctuation, so
+  //    an apostrophe reached the attribute as &rsquo; and was escaped a second
+  //    time: the tag shipped "site&rsquo;s" for a search engine to read as text.
+  //    The parser has already decoded the value once, so anything still shaped
+  //    like an entity here was escaped twice over.
+  for (const [key, values] of [...og, ...named]) {
+    if (!DESCRIBES.test(key)) continue;
+    for (const value of values) {
+      const m = decode(value).match(/&(?:#[0-9]+|#x[0-9a-f]+|[a-z]+[0-9]*);/i);
+      if (m) failures.push([file, key + " carries " + m[0], "an entity escaped twice, read as text"]);
+    }
+  }
 }
 
 // A directory that exists and holds no pages is the shape a wrong path takes,
@@ -169,3 +197,4 @@ if (failures.length) {
 }
 console.log("canonical and og:url agree, one robots tag each, no SVG on a card");
 console.log("every JSON-LD block parses, an owned picture is in its BlogPosting, search is noindex");
+console.log("no description or alt carries an entity that was escaped twice");
