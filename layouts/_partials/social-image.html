@@ -62,20 +62,14 @@
 {{- end -}}
 
 {{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
-       is left alone.
+       is left alone. The size comes off that same resource, for og:image:width
+       and og:image:height: without them Facebook and LinkedIn hold the first
+       render back until they have fetched and measured the file.
 
-       The size comes off the same resource, for og:image:width and
-       og:image:height. Without them Facebook and LinkedIn hold the first render
-       back until they have fetched and measured the file, which is why a
-       freshly shared link so often appears with no picture on it. It is nearly
-       free here, since the resource is already in hand.
-
-       Only a local file can be asked. The guard is image.html's, for image.html's
-       reason: an SVG reports ResourceType "image" and answers neither .Width nor
-       .Resize, so asking aborts the build -- which is the same fact that makes
-       an SVG unusable on a card, and why the chain above skips one. Where a
-       format will not give its dimensions up Hugo returns 0, and 0 asserted as a
-       width is worse than saying nothing. */ -}}
+       image.html's guard, for image.html's reason -- an SVG answers neither
+       .Width nor .Resize and asking aborts the build, and a format that will
+       not give its dimensions up returns 0, which is worse asserted than
+       omitted. */ -}}
 {{- $url := "" -}}
 {{- $svg := false -}}
 {{- $width := 0 -}}
