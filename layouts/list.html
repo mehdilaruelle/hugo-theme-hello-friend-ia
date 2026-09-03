@@ -46,17 +46,15 @@
                                 <li class="post-item">
                                     <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
-                                            {{- /* Through image.html, like every other picture in the
-                                                   theme. thumbnail.html took the cover's own URL and
-                                                   shipped it whole: a 900 px file into a 52 px box, on
-                                                   the page a crawler reaches first and a reader scrolls
-                                                   most. It also looked in assets/ but not under _static,
-                                                   so a cover mounted from static/ arrived with no width
-                                                   or height and shifted the row when it loaded.
+                                            {{- /* Through image.html, like every other picture here.
+                                                   thumbnail.html shipped the cover whole -- a 900 px
+                                                   file into a 52 px box -- and looked in assets/ but
+                                                   not under _static, so a cover mounted from static/
+                                                   arrived with no dimensions and shifted the row.
 
-                                                   156 square is the 52 px box at 3x, cut to the shape
-                                                   the stylesheet shows it in. alt is empty because the
-                                                   post title beside it already names the link. */ -}}
+                                                   156 square is that box at 3x, cut to the shape the
+                                                   stylesheet shows it in. alt is empty: the post title
+                                                   beside it already names the link. */ -}}
                                             {{ partial "image.html" (dict "src" .Params.cover "alt" "" "page" . "position" "post-thumbnail" "fill" "156x156") }}
                                         {{- end }}
                                         <span class="post-title">{{ partial "title.html" . }}</span>

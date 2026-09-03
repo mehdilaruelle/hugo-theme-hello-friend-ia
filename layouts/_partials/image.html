@@ -66,12 +66,11 @@
 {{- $srcset := slice -}}
 {{- $processable := and $img (reflect.IsImageResourceProcessable $img) (ne $img.MediaType.SubType "gif") -}}
 {{- /* A caller showing the picture in a box of its own shape asks for that
-       shape, and gets one copy cut to it. Capping the width instead only fixes
-       one axis: a 900x600 cover capped at 156 is 156x104, and a box 156 square
-       stretches those 104 rows to fill it -- a panoramic cover is upscaled that
-       way even on a 1x screen, where the unresized original never was. Fill
-       crops from the centre, which is what object-fit: cover was doing to the
-       oversized file anyway. */ -}}
+       shape and gets one copy cut to it. Capping the width fixes one axis only:
+       a 900x600 cover capped at 156 is 156x104, and a square box stretches
+       those 104 rows to fill it -- a panoramic cover is upscaled that way even
+       at 1x. Fill crops from the centre, which is what object-fit: cover was
+       doing to the oversized file anyway. */ -}}
 {{- if and $processable .fill -}}
   {{- $rendered = $img.Fill (printf "%s q85 webp" .fill) -}}
 {{- else if $processable -}}
