@@ -7,10 +7,7 @@
                    <title> already is: each pager is its own canonical, so each
                    arrives at a reader on its own, headed until now by the same
                    word as every other. */ -}}
-            {{- $heading := partial "title.html" . -}}
-            {{- if gt $paginator.PageNumber 1 -}}
-              {{- $heading = printf "%s (%s)" $heading (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $paginator.PageNumber) "fallback" (printf "page %d" $paginator.PageNumber))) -}}
-            {{- end }}
+            {{- $heading := partial "pager-suffix.html" (dict "text" (partial "title.html" .) "pager" $paginator.PageNumber) }}
             <h1>{{ $heading }}</h1>
 
             {{- /* The section's own _index.md body, on the first pager only. It
