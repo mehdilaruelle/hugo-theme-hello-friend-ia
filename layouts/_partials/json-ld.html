@@ -281,16 +281,11 @@
   {{- $data = merge $data (dict "publisher" $publisher) -}}
 {{- else if .IsPage -}}
   {{- /*
-    A page with no date and no schema of its own used to fall off the end of
-    this chain and get nothing: the showcase's three cover-* pages and its
-    search page carried no structured data at all.
-
-    The reasoning above -- that anything the theme cannot describe honestly is
-    skipped rather than described badly -- is about BlogPosting, which would
-    have to invent a publication date and an author. A WebPage claims none of
-    that. It says the page exists at a URL, under a name, in a language, and
-    what the page already says about itself, all of which the page has said
-    itself in the head above. There is nothing in it to be wrong about.
+    A page with no date and no schema of its own fell off the end of this chain
+    and got nothing. The rule above -- skipped rather than described badly -- is
+    about BlogPosting, which would have to invent a date and an author. A
+    WebPage invents nothing: a URL, a name, a language, and the sentence the
+    page already carries in its own head.
   */ -}}
   {{- $data = dict
     "@context" "https://schema.org"
