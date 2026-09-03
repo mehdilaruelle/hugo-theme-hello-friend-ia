@@ -4,12 +4,11 @@
 {{- /* Pinterest wants a picture, and it is the one every other card shows, so
        it comes from the partial the rest of the theme asks. */ -}}
 {{- $media := (partial "social-image.html" .).url -}}
-{{- /* Every one of these is rel="noopener nofollow". They are generated links
-       to eleven networks, identical on every article and chosen by nobody, and
-       a machine-written non-editorial link is what nofollow is for: without it
-       each article passed a share of its standing to facebook.com, x.com,
-       reddit.com and the rest, eleven times over. check-sharing.mjs asserts it,
-       so a twelfth button cannot arrive without one. */ -}}
+{{- /* Every one of these is rel="noopener nofollow". Eleven generated links,
+       identical on every article and chosen by nobody, which is what nofollow
+       is for: without it each article passed a share of its standing to
+       facebook.com, reddit.com and the rest. check-sharing.mjs asserts it, so a
+       twelfth button cannot arrive without one. */ -}}
 {{- define "partials/inline/share-label" -}}
   {{- partial "i18n.html" (dict "key" "shareOn" "args" (dict "Network" .) "fallback" (printf "Share on %s" .)) -}}
 {{- end -}}
