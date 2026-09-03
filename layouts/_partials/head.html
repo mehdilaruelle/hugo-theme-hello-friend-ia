@@ -30,18 +30,14 @@
 {{- with $description }}
 <meta name="description" content="{{ . }}" />
 {{- end }}
-{{- /* There is no meta keywords tag.
+{{- /* There is no meta keywords tag. No major search engine has read one since
+       around 2009, and what it did instead was disagree with the microdata twin
+       beside it: one read .Params.tags as written, the other through GetTerms,
+       so a page shipped both "hugo" and "Hugo". The tags are still in the
+       keywords of its BlogPosting.
 
-       No major search engine has read one since around 2009, and every one of
-       them has said so. What it did instead was disagree with the microdata
-       twin that used to sit beside it: this read .Params.tags as written and
-       that went through GetTerms, so one page shipped content="hugo" and
-       itemprop keywords "Hugo". The twin has since gone, and the tags a page
-       carries are still stated in the keywords property of its BlogPosting,
-       which is where a consumer would look for them.
-
-       params.keywords is therefore read by nothing. It is left undocumented
-       rather than made an error: a site that still sets it builds unchanged. */ -}}
+       params.keywords is read by nothing now. Left undocumented rather than
+       made an error, so a site that still sets it builds unchanged. */ -}}
 {{- with .Site.Params.themeColor }}
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
