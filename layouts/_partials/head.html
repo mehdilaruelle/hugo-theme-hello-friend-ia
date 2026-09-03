@@ -27,15 +27,13 @@
 {{- if not $description -}}
   {{- $description = .Site.Params.description | plainify -}}
 {{- end -}}
-{{- /* Named as a pager from page two on, the way the title and the heading are.
-       Each pager is its own canonical, so each reaches an index on its own;
-       without this they arrived carrying one sentence between them and read as
-       copies of each other, which is the one thing they are not.
+{{- /* Named as a pager, like the title and the heading: each is its own
+       canonical and reaches an index alone, and they used to arrive carrying
+       one sentence between them.
 
-       Suffixed here rather than in description.html, because the sentence a
-       pager beyond the first ends up with is often the site-wide fallback, and
-       that fallback is deliberately applied here and not there -- json-ld.html
-       asks the same partial and must not see either. */ -}}
+       Suffixed here and not in description.html, because the sentence a pager
+       ends up with is often the site-wide fallback, which is applied here and
+       not there -- json-ld.html asks that partial and must see neither. */ -}}
 {{- $page := (partial "canonical.html" .).pager -}}
 {{- $description = partial "pager-suffix.html" (dict "text" $description "pager" $page) -}}
 {{- with $description }}
