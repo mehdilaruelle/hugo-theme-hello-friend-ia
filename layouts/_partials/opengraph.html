@@ -3,25 +3,18 @@
   Copied from Hugo 0.164, the version CI pins, and kept line for line apart
   from the three corrections below, so the next release is a readable diff.
 
-  og:url was .Permalink, which is the same URL for every pager of a paginated
-  list. The canonical link beside it names the pager itself, so page two
-  claimed to be two different URLs at once -- and og:url is the canonical
-  Facebook and LinkedIn read. Both now ask canonical.html.
+  og:url was .Permalink, the same URL on every pager, while the canonical link
+  beside it named the pager: the page claimed two URLs at once, and og:url is
+  the canonical Facebook and LinkedIn read. og:title gained the pager suffix the
+  title element already carried, for the same reason.
 
-  og:title gained the pager suffix the title element has carried since the
-  pagination fix, for the same reason: each pager is its own canonical, so each
-  arrives at a reader on its own, and six of them called "Blog" tell it nothing.
+  og:image asks social-image.html, which twitter_cards.html asks too. It was
+  Hugo's _funcs/get-page-images, which knows nothing of this theme's cover,
+  while social-image.html ranks cover above the site's images: a site setting
+  params.images named one file here and another in twitter:image on every page
+  with a cover. One partial decides now, and answers with a single picture.
 
-  og:image asks social-image.html, which is what twitter_cards.html asks. It
-  used to be Hugo's _funcs/get-page-images, which knows nothing of this theme's
-  cover, while social-image.html ranks cover above the site's images: a site
-  setting params.images named one file in og:image and another in twitter:image
-  on every page with a cover. One partial decides now, and it answers with a
-  single picture rather than the six ranged over here, so the two halves cannot
-  disagree about which one the card shows.
-
-  Everything else -- og:locale, the article:* set, og:see_also, the audio and
-  video handling, fb:app_id -- is Hugo's, unchanged.
+  Everything else is Hugo's, unchanged.
 */ -}}
 {{- $canonical := partial "canonical.html" . -}}
 <meta property="og:url" content="{{ $canonical.url }}">
