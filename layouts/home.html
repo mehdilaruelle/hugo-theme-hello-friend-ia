@@ -29,8 +29,13 @@
                        dense screen and no larger. Only a value given in px can
                        be doubled; anything else falls back to a size generous
                        for a portrait. */ -}}
+                {{- /* Formatted only when there is a width to state: printf on
+                       an unset maxWidth put style="max-width:%!s(<nil>)" in the
+                       page. image.html omits the attribute for an empty value. */ -}}
                 {{- $cap := 512 -}}
+                {{- $style := "" -}}
                 {{- with site.Params.portrait.maxWidth -}}
+                  {{- $style = printf "max-width:%s" . -}}
                   {{- if findRE "^[0-9]+px$" . -}}
                     {{- $cap = mul (int (replaceRE "px$" "" .)) 2 -}}
                   {{- end -}}
@@ -40,7 +45,7 @@
                   "src" .
                   "alt" $.Site.Params.Portrait.Alt
                   "position" "circle"
-                  "style" (printf "max-width:%s" $.Site.Params.Portrait.MaxWidth)
+                  "style" $style
                   "loading" "eager"
                   "maxWidth" $cap
                   "sizes" $.Site.Params.Portrait.MaxWidth

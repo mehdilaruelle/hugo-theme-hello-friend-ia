@@ -184,19 +184,24 @@
     text-align: start;
   }
 
-  .dropdown-content a:hover {
-    background: $dark-background-header;
-    
+  // This used to set the colour the panel already has, so hovering changed
+  // nothing — and .submenu .dropdown-content a (0,3,1) beats .menu a:hover
+  // (0,2,1), so that rule's underline never landed either. The panel opens on
+  // focus-within, so :focus-visible needs the same feedback.
+  .dropdown-content a:hover,
+  .dropdown-content a:focus-visible {
+    background: $dark-background-secondary;
+
     @media (prefers-color-scheme: light) {
-      background: $light-background-header;
+      background: $light-background-secondary;
     }
 
     [data-theme=dark] & {
-      background: $dark-background-header;
+      background: $dark-background-secondary;
     }
-  
+
     [data-theme=light] & {
-      background: $light-background-header;
+      background: $light-background-secondary;
     }
   }
 
