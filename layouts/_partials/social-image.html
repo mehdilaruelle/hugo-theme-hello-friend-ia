@@ -93,6 +93,10 @@
 {{- end -}}
 {{- /* coverCaption is Markdown, and an attribute is text. */ -}}
 {{- with $alt -}}
-  {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
+  {{- /* htmlUnescape because plainify strips tags but leaves entities, and
+         markdownify makes them: an apostrophe became &rsquo;, which the
+         attribute escaped again into a literal "&rsquo;" for the reader.
+         Hugo treats og:description the same way. */ -}}
+  {{- $alt = . | markdownify | plainify | htmlUnescape | replaceRE "\\s+" " " | chomp -}}
 {{- end -}}
 {{- return dict "url" $url "alt" $alt "svg" $svg "owned" $owned "width" $width "height" $height -}}
