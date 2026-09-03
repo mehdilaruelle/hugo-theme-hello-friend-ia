@@ -68,12 +68,17 @@ if (languageSwitcher) {
   });
 }
 
-const language = document.getElementsByTagName('html')[0].lang;
 const logo = document.querySelector(".logo__pathname");
-if(logo){
+if (logo) {
   window.addEventListener("load", () => {
-    let path = window.location.pathname.substring(1);
-    path = path.replace(language+'/','')
-    logo.textContent += path.substring(0,path.indexOf('/'));
+    // Where this site starts: the deployment prefix and the language directory
+    // in one string. Taking the first segment of location.pathname named the
+    // prefix under a subpath, and the old unanchored language strip matched
+    // "en/" inside a section called "green" and printed "grex".
+    const base = logo.dataset.base || "/";
+    const path = window.location.pathname;
+    const rest = path.startsWith(base) ? path.slice(base.length) : path.replace(/^\//, "");
+    // The home page has no section to name, and adds nothing.
+    logo.textContent += rest.split("/").filter(Boolean)[0] || "";
   });
 }

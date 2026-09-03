@@ -16,7 +16,13 @@
             <img src="{{ $logo | safeURL }}" alt="{{ .Site.Params.Logo.alt }}" />
         {{ else }}
             <span class="logo__mark" aria-hidden="true">{{ with .Site.Params.Logo.logoMark }}{{ . }}{{ else }}>{{ end }}</span>
-            <span class="logo__text {{ with.Site.Params.Logo.logoCursorPathname}}logo__pathname{{ end }}">
+            {{- /* Where this site starts, for menu.js: it worked the section
+                   out of location.pathname alone and so named the deployment
+                   prefix under one. Home.RelPermalink carries the prefix and
+                   the language directory together. */ -}}
+            {{- $cursorPath := .Site.Params.Logo.logoCursorPathname -}}
+            <span class="logo__text{{ if $cursorPath }} logo__pathname{{ end }}"
+                  {{- if $cursorPath }} data-base="{{ site.Home.RelPermalink }}"{{ end }}>
                 {{ with .Site.Params.Logo.logoText }}{{ . }}{{ else }}hello{{ end }}</span>
             <span class="logo__cursor" style=
                   "{{ with.Site.Params.Logo.logoCursorDisabled }}visibility:hidden;{{ end }}
