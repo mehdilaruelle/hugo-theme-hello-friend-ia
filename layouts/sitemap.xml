@@ -3,11 +3,9 @@
   the next Hugo release is a readable diff.
 
   A page kept out of the index was still submitted, which Search Console reports
-  as "Submitted URL marked 'noindex'". Whether a page is kept out is the theme's
-  own answer -- its noindex front matter, and the search layout, which is thin
-  content a crawler should never have been sent to -- so the built-in template
-  cannot know about it. noindex.html holds the rule, and head.html asks the same
-  partial, so the tag on the page and the entry in this file cannot disagree.
+  as "Submitted URL marked 'noindex'". Which pages those are is the theme's own
+  answer, so the built-in template cannot know it: noindex.html holds the rule
+  and head.html asks the same partial, so the tag and the entry cannot disagree.
 
   Alternates were named by .Language.Locale where head.html uses
   .Language.Lang, and there was no x-default: two annotation sets for one URL.
