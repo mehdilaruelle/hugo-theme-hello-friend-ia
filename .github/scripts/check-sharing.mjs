@@ -1,9 +1,15 @@
-// Asserts that every sharing link parses into the parameters it means.
+// Asserts two things about the sharing links.
 //
-// The values themselves are escaped by Go's contextual auto-escaping inside an
-// href, so encoding is not the risk. The risk is a separator that is not one:
-// a literal ";" between parameters swallows everything after it into the
-// preceding value, and the build says nothing.
+// One, that each parses into the parameters it means. The values themselves are
+// escaped by Go's contextual auto-escaping inside an href, so encoding is not
+// the risk. The risk is a separator that is not one: a literal ";" between
+// parameters swallows everything after it into the preceding value, and the
+// build says nothing.
+//
+// Two, that each anchor carries rel="nofollow". The row is a block of eleven
+// near-identical anchors, which is exactly the shape a twelfth gets added to by
+// copying a neighbour and changing the URL, so the assertion lives here rather
+// than in a reviewer's head.
 //
 //   node .github/scripts/check-sharing.mjs <public-dir>
 
@@ -12,11 +18,23 @@ import { join } from "node:path";
 
 const PROVIDERS = /facebook|twitter|tumblr|pinterest|linkedin|reddit|xing|telegram|vk\.com|whatsapp|hacker/i;
 
+// An attribute name starts where no name character precedes it. \b is not that
+// test: there is a word boundary between "-" and "r" too, so \brel matched the
+// rel inside data-rel, and a link whose attribute had been renamed would have
+// been read as carrying the real one and passed.
+const NAME = "(?<![-\\w])";
+
 // Quoted, single-quoted or bare. The demo deploys with --minify, which drops
 // the quotes around any attribute value that does not need them, so a pattern
 // that required them checked 128 of the showcase's 136 sharing links and said
 // nothing about the eight it never saw. Same shape as ATTR in check-links.mjs.
-const HREF = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+const HREF = new RegExp(`${NAME}href\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "gi");
+
+// The opening tag of a sharing anchor, whole, so its rel can be read beside its
+// href. Matched on the class the theme puts on every one of them, which is also
+// what the stylesheet hangs the button off, so the two cannot drift apart.
+const ANCHOR = new RegExp(`<a\\b[^>]*${NAME}class\\s*=\\s*(?:"[^"]*resp-sharing-button__link[^"]*"|'[^']*resp-sharing-button__link[^']*'|[^\\s>]*resp-sharing-button__link[^\\s>]*)[^>]*>`, "gi");
+const REL = new RegExp(`${NAME}rel\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
 
 function* walk(dir) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -29,10 +47,26 @@ function* walk(dir) {
 const root = process.argv[2] || "public";
 const failures = [];
 let checked = 0;
+let anchors = 0;
 const seen = new Set();
+const seenFollowed = new Set();
 
 for (const file of walk(root)) {
   const html = readFileSync(file, "utf8").replace(/\n/g, " ");
+  for (const tag of html.matchAll(ANCHOR)) {
+    anchors++;
+    const rel = (tag[0].match(REL) ?? []).slice(1).find((v) => v !== undefined) ?? "";
+    if (!rel.split(/\s+/).includes("nofollow")) {
+      // One report per destination host rather than per page: the same button
+      // is wrong on every article, and 200 identical lines hide the others.
+      const href = (tag[0].match(new RegExp(HREF.source, "i")) ?? []).slice(1).find((v) => v !== undefined) ?? "";
+      const key = href.replace(/&amp;/g, "&").split("?")[0];
+      if (!seenFollowed.has(key)) {
+        seenFollowed.add(key);
+        failures.push([file, key, "a sharing link without rel=\"nofollow\""]);
+      }
+    }
+  }
   for (const m of html.matchAll(HREF)) {
     const raw = (m[1] ?? m[2] ?? m[3] ?? "").replace(/&amp;/g, "&");
     if (!raw.startsWith("https://")) continue;
@@ -51,10 +85,11 @@ for (const file of walk(root)) {
   }
 }
 
-console.log(`checked ${checked} sharing links`);
+console.log(`checked ${checked} sharing links and ${anchors} sharing anchors`);
 if (failures.length) {
   console.error(`\n${failures.length} broken:\n`);
   for (const [file, what, why] of failures) console.error(`  ${file}\n    ${what}  (${why})`);
   process.exit(1);
 }
 console.log("every parameter is separated by an ampersand");
+console.log("every sharing link is nofollow");

@@ -1,7 +1,13 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-{{ if .Params.noindex }}
+{{- /* One tag with two possible values, not a directive list: without
+       max-image-preview:large Google may show a thumbnail where the theme's
+       covers would fill the width, and the directive says nothing about a page
+       nobody is indexing. */ -}}
+{{ if partial "noindex.html" . }}
 <meta name="robots" content="noindex" />
+{{ else }}
+<meta name="robots" content="max-image-preview:large" />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 {{- /* Blocking, and before the stylesheet: it has to run before first paint.
@@ -27,17 +33,26 @@
 {{- if not $description -}}
   {{- $description = .Site.Params.description | plainify -}}
 {{- end -}}
+{{- /* Named as a pager, like the title and the heading: each is its own
+       canonical and reaches an index alone, and they used to arrive carrying
+       one sentence between them.
+
+       Suffixed here and not in description.html, because the sentence a pager
+       ends up with is often the site-wide fallback, which is applied here and
+       not there -- json-ld.html asks that partial and must see neither. */ -}}
+{{- $page := (partial "canonical.html" .).pager -}}
+{{- $description = partial "pager-suffix.html" (dict "text" $description "pager" $page) -}}
 {{- with $description }}
 <meta name="description" content="{{ . }}" />
 {{- end }}
-{{- /* Emitted only when there is something to say. An empty content attribute
-       is not a neutral default: it is a tag asserting the value is blank. */ -}}
-{{- $keywords := slice }}
-{{- with .Site.Params.keywords }}{{ $keywords = $keywords | append . }}{{ end }}
-{{- with .Params.tags }}{{ $keywords = $keywords | append . }}{{ end }}
-{{- with delimit $keywords ", " }}
-<meta name="keywords" content="{{ . }}" />
-{{- end }}
+{{- /* There is no meta keywords tag. No major search engine has read one since
+       around 2009, and what it did instead was disagree with the microdata twin
+       beside it: one read .Params.tags as written, the other through GetTerms,
+       so a page shipped both "hugo" and "Hugo". The tags are still in the
+       keywords of its BlogPosting.
+
+       params.keywords is read by nothing now. Left undocumented rather than
+       made an error, so a site that still sets it builds unchanged. */ -}}
 {{- with .Site.Params.themeColor }}
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
@@ -82,18 +97,23 @@
   exists in another language depends on that language's own post count, which
   is not knowable from here, so the honest answer is to say nothing.
 */ -}}
-{{- if and .IsTranslated (eq $pager 1) (not .Params.noindex) }}
+{{- if and .IsTranslated (eq $pager 1) (not (partial "noindex.html" .)) }}
 {{- /*
   x-default names the version to serve when no hreflang matches the visitor.
   hugo.Sites is ordered by language weight, so its first entry is the site's
   primary language: give that one the x-default alongside its own hreflang.
 
   A noindex translation is left out, here and in sitemap.xml alike: the sitemap
-  can only advertise a variant it also carries a <url> entry for, and a set
-  naming only this page says nothing worth saying.
+  can only advertise a variant it also carries a <url> entry for, and a page
+  kept out of the index does not get one, and a set naming only this page says
+  nothing worth saying. Ranged rather than filtered with where, because the rule
+  is now noindex.html's and a where clause can only read a param.
 */ -}}
 {{- $primary := (index hugo.Sites 0).Language.Lang }}
-{{- $alternates := where .AllTranslations "Params.noindex" "ne" true }}
+{{- $alternates := slice }}
+{{- range .AllTranslations }}
+  {{- if not (partial "noindex.html" .) }}{{ $alternates = $alternates | append . }}{{ end }}
+{{- end }}
 {{- if gt (len $alternates) 1 }}
 {{- range $alternates }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
@@ -125,12 +145,10 @@
            scope here and canonical.html is asked again rather than the
            paginator being built a second time by hand. */ -}}
     {{- $page := (partial "canonical.html" .).pager -}}
-    {{- $title := printf "%s :: %s" (partial "title.html" .) site.Title -}}
+    {{- $title := printf "%s :: %s" (partial "pager-suffix.html" (dict "text" (partial "title.html" .) "pager" $page)) site.Title -}}
     {{- if .IsHome -}}
       {{- $title = site.Title -}}
       {{- with site.Params.Subtitle }}{{ $title = printf "%s — %s" $title . }}{{ end -}}
-    {{- else if gt $page 1 -}}
-      {{- $title = printf "%s (%s) :: %s" (partial "title.html" .) (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $page) "fallback" (printf "page %d" $page))) site.Title -}}
     {{- end }}
     <title>{{ $title }}</title>
 {{ end }}

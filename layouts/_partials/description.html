@@ -29,7 +29,7 @@
   {{- /* homeSubtitle is the line under the title, written to be read on the
          page. A front page with a description of its own says what the site is
          for at the length a search result gives it, so that wins. */ -}}
-  {{- $description = .Site.Params.homeSubtitle | plainify -}}
+  {{- $description = .Site.Params.homeSubtitle | plainify | htmlUnescape -}}
 {{- else if .Description -}}
   {{- $description = .Description -}}
 {{- else if and (eq .Kind "taxonomy") (not .Summary) -}}
@@ -61,6 +61,15 @@
          none of the rest, so it is trimmed to a length a result can hold and
          flattened to one line. A description written by hand is left exactly
          as written. */ -}}
-  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 160 "" -}}
+  {{- /* chomp takes newlines and not spaces, and the flattening above turns the
+         summary's trailing newline into one, so the string ended in a space and
+         the tag shipped it. Invisible until something is appended to it, which
+         head.html now does on a pager. */ -}}
+  {{- /* htmlUnescape because plainify strips tags and leaves entities, and
+         Goldmark makes them: an apostrophe in the prose became &rsquo;, which
+         the meta attribute escaped again, so the tag shipped a literal
+         "&rsquo;" for a search engine to read. Before truncate, so a cut can
+         no longer land inside an entity and leave "&rsq" behind. */ -}}
+  {{- $description = .Summary | plainify | htmlUnescape | replaceRE "\\s+" " " | strings.TrimSpace | truncate 160 "" -}}
 {{- end -}}
 {{- return $description -}}

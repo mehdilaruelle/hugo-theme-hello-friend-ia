@@ -5,8 +5,8 @@
 
   og:url was .Permalink, the same URL on every pager, while the canonical link
   beside it named the pager: the page claimed two URLs at once, and og:url is
-  the canonical Facebook and LinkedIn read. og:title gained the pager suffix the
-  title element already carried, for the same reason.
+  the canonical Facebook and LinkedIn read. og:title and og:description carry
+  the pager suffix the title element already had, for the same reason.
 
   og:image asks social-image.html, which twitter_cards.html asks too. It was
   Hugo's _funcs/get-page-images, which knows nothing of this theme's cover,
@@ -24,15 +24,11 @@
 {{- end }}
 
 {{- with or .Title site.Title site.Params.title | plainify }}
-	{{- $title := . }}
-	{{- if gt $canonical.pager 1 }}
-		{{- $title = printf "%s (%s)" $title (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $canonical.pager) "fallback" (printf "page %d" $canonical.pager))) }}
-	{{- end }}
-	<meta property="og:title" content="{{ $title }}">
+	<meta property="og:title" content="{{ partial "pager-suffix.html" (dict "text" . "pager" $canonical.pager) }}">
 {{- end }}
 
 {{- with or .Description .Summary site.Params.description | plainify | htmlUnescape }}
-	<meta property="og:description" content="{{ trim . "\n\r\t " }}">
+	<meta property="og:description" content="{{ partial "pager-suffix.html" (dict "text" (trim . "\n\r\t ") "pager" $canonical.pager) }}">
 {{- end }}
 
 {{- with or .Params.locale site.Language.Locale }}
@@ -65,6 +61,14 @@
 	<meta property="og:image" content="{{ . }}">
 	{{- with $social.alt }}
 		<meta property="og:image:alt" content="{{ . }}">
+	{{- end }}
+	{{- /* Beside the picture they measure. Facebook and LinkedIn hold the first
+	       render back until they have fetched and sized the file; an SVG and a
+	       format that will not give its dimensions up both answer 0, which is
+	       worse asserted than omitted. */ -}}
+	{{- with $social.width }}
+		<meta property="og:image:width" content="{{ . }}">
+		<meta property="og:image:height" content="{{ $social.height }}">
 	{{- end }}
 {{- end }}
 

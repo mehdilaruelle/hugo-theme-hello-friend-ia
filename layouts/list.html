@@ -7,13 +7,13 @@
                    <title> already is: each pager is its own canonical, so each
                    arrives at a reader on its own, headed until now by the same
                    word as every other. */ -}}
-            {{- $heading := partial "title.html" . -}}
-            {{- if gt $paginator.PageNumber 1 -}}
-              {{- $heading = printf "%s (%s)" $heading (partial "i18n.html" (dict "key" "pageNumber" "args" (dict "Number" $paginator.PageNumber) "fallback" (printf "page %d" $paginator.PageNumber))) -}}
-            {{- end }}
+            {{- $heading := partial "pager-suffix.html" (dict "text" (partial "title.html" .) "pager" $paginator.PageNumber) }}
             <h1>{{ $heading }}</h1>
 
-            {{ if .Content }}
+            {{- /* The section's own _index.md body, on the first pager only. It
+                   introduces the list, not each screenful of it, and repeated
+                   it was the longest thing every pager had in common. */ -}}
+            {{ if and .Content (eq $paginator.PageNumber 1) }}
                 <div class="content">{{ .Content }}</div>
             {{ end }}
 
@@ -46,7 +46,16 @@
                                 <li class="post-item">
                                     <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
-                                            {{ partial "thumbnail.html" (dict "page" . "cover" .Params.cover) }}
+                                            {{- /* Through image.html, like every other picture here.
+                                                   thumbnail.html shipped the cover whole -- a 900 px
+                                                   file into a 52 px box -- and looked in assets/ but
+                                                   not under _static, so a cover mounted from static/
+                                                   arrived with no dimensions and shifted the row.
+
+                                                   156 square is that box at 3x, cut to the shape the
+                                                   stylesheet shows it in. alt is empty: the post title
+                                                   beside it already names the link. */ -}}
+                                            {{ partial "image.html" (dict "src" .Params.cover "alt" "" "page" . "position" "post-thumbnail" "fill" "156x156") }}
                                         {{- end }}
                                         <span class="post-title">{{ partial "title.html" . }}</span>
                                         {{ if not .Date.IsZero }}{{- /* An undated page has the zero time, and "Jan 1" reads like a real date rather than a missing one. */ -}}<time class="post-day" datetime="{{ .Date.Format "2006-01-02" }}">

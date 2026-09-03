@@ -15,17 +15,13 @@
        entity. */ -}}
 {{- $siteAuthor := (partial "site-author.html" .).name -}}
 
-{{- $image := "" -}}
-{{- with .Params.images -}}
-  {{- $image = index . 0 -}}
-{{- else -}}
-  {{- with site.Params.images -}}
-    {{- $image = index . 0 -}}
-  {{- end -}}
-{{- end -}}
-{{- with $image -}}
-  {{- $image = . | absURL -}}
-{{- end -}}
+{{- /* The picture, from the partial that already answers this for the card. It
+       used to be worked out here from params.images alone, so a page given a
+       cover -- the theme's own documented way -- had one in its card and none
+       here, where Google's Article guidance asks for it. Only a picture the
+       page brought itself; social-image.html says why. */ -}}
+{{- $social := partial "social-image.html" . -}}
+{{- $image := cond $social.owned $social.url "" -}}
 
 {{- /*
   The Person behind the site, for the home page.
@@ -283,6 +279,28 @@
     {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
   {{- end -}}
   {{- $data = merge $data (dict "publisher" $publisher) -}}
+{{- else if .IsPage -}}
+  {{- /*
+    A page with no date and no schema of its own fell off the end of this chain
+    and got nothing. The rule above -- skipped rather than described badly -- is
+    about BlogPosting, which would have to invent a date and an author. A
+    WebPage invents nothing: a URL, a name, a language, and the sentence the
+    page already carries in its own head.
+  */ -}}
+  {{- $data = dict
+    "@context" "https://schema.org"
+    "@type" "WebPage"
+    "@id" .Permalink
+    "url" .Permalink
+    "name" (partial "title.html" . | plainify)
+    "inLanguage" .Language.Lang
+  -}}
+  {{- /* The page's own words only, through the partial the rest of the theme
+         asks. The site-wide fallback belongs in a meta tag and not here, for
+         the reason description.html gives. */ -}}
+  {{- with partial "description.html" . -}}
+    {{- $data = merge $data (dict "description" .) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /*

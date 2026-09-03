@@ -1,6 +1,7 @@
 {{- /*
   The picture a social card should show, and how to describe it. Returns a map
-  with url, alt and svg; url is empty when there is nothing to show.
+  with url, alt, svg, owned and the picture's size; url is empty when there is
+  nothing to show.
 
   One place, because head.html writes the Open Graph tags and
   twitter_cards.html the Twitter ones, and a card whose two halves disagree
@@ -21,18 +22,33 @@
   page: the site-wide fallback is the same image everywhere, and this page's
   title would be true of the article and false of the picture. coverCaption
   belongs to the cover alone, not to an images[0] that overrode it.
+
+  owned says whether the picture is the page's own, and json-ld.html takes it
+  only then. A card shows whatever it is handed, so the site-wide fallback
+  belongs there; structured data is a claim about the subject of this page, and
+  one file asserted as the subject of two hundred articles is worse data than
+  no file.
+
+  alt and owned are set from $img rather than beside it, because an entry that
+  is present but empty -- images = [""], which the README's own sample ships --
+  passes `with` and then falls through to the site's picture.
 */ -}}
 {{- $img := "" -}}
 {{- $alt := "" -}}
+{{- $owned := false -}}
 {{- with .Params.images -}}
   {{- $img = index . 0 -}}
+{{- end -}}
+{{- with $img -}}
   {{- $alt = partial "title.html" $ -}}
+  {{- $owned = true -}}
 {{- end -}}
 {{- if not $img -}}
   {{- with .Params.cover -}}
     {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
       {{- $img = . -}}
       {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
+      {{- $owned = true -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -46,15 +62,30 @@
 {{- end -}}
 
 {{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
-       is left alone. */ -}}
+       is left alone. The size comes off that same resource, for og:image:width
+       and og:image:height: without them Facebook and LinkedIn hold the first
+       render back until they have fetched and measured the file.
+
+       image.html's guard, for image.html's reason -- an SVG answers neither
+       .Width nor .Resize and asking aborts the build, and a format that will
+       not give its dimensions up returns 0, which is worse asserted than
+       omitted. */ -}}
 {{- $url := "" -}}
 {{- $svg := false -}}
+{{- $width := 0 -}}
+{{- $height := 0 -}}
 {{- with $img -}}
   {{- $svg = eq (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
   {{- $url = . -}}
   {{- if not (partial "is-remote.html" $url) -}}
     {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) -}}
       {{- $url = .Permalink -}}
+      {{- if reflect.IsImageResourceWithMeta . -}}
+        {{- if gt .Width 0 -}}
+          {{- $width = .Width -}}
+          {{- $height = .Height -}}
+        {{- end -}}
+      {{- end -}}
     {{- else -}}
       {{- $url = urls.JoinPath site.BaseURL $url -}}
     {{- end -}}
@@ -68,4 +99,4 @@
          Hugo treats og:description the same way. */ -}}
   {{- $alt = . | markdownify | plainify | htmlUnescape | replaceRE "\\s+" " " | chomp -}}
 {{- end -}}
-{{- return dict "url" $url "alt" $alt "svg" $svg -}}
+{{- return dict "url" $url "alt" $alt "svg" $svg "owned" $owned "width" $width "height" $height -}}
