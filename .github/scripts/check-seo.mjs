@@ -29,10 +29,24 @@ import { join } from "node:path";
 
 // Quoted, single-quoted or bare. The demo deploys with --minify, which drops
 // the quotes around any attribute value that does not need them, so a pattern
-// that required them would silently check a subset. Same shape as HREF in
-// check-sharing.mjs, which is where that was learned.
-const attr = (name) => String.raw`\b${name}\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`;
+// that required them would silently check a subset. The lookbehind is the name
+// test \b is not: a word boundary sits between "-" and a letter too, so \brel
+// reads the rel inside data-rel. Same shape as HREF in check-sharing.mjs, which
+// is where both were learned.
+const attr = (name) => String.raw`(?<![-\w])${name}\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`;
 const pick = (m) => (m ? (m[1] ?? m[2] ?? m[3] ?? "") : null);
+
+// Every occurrence, not the last one. Open Graph allows a property to repeat --
+// Hugo's partial writes up to six og:image -- and a map keyed by property kept
+// only the final value, so an SVG card picture followed by a usable one passed.
+const add = (map, key, value) => map.set(key, [...(map.get(key) ?? []), value]);
+const all = (map, key) => map.get(key) ?? [];
+const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg");
+
+// A Hugo alias is a redirect stub: a meta refresh and a canonical, with no head
+// of its own. It is not a page these invariants describe, and requiring an
+// og:url of one would fail on markup Hugo writes.
+const ALIAS = /http-equiv\s*=\s*["']?refresh/i;
 
 const LINK = /<link\b[^>]*>/gi;
 const META = /<meta\b[^>]*>/gi;
@@ -61,10 +75,11 @@ let checked = 0;
 
 for (const file of walk(root)) {
   const html = readFileSync(file, "utf8");
+  if (ALIAS.test(html)) continue;
 
-  let canonical = null;
+  const canonicals = [];
   for (const tag of html.match(LINK) ?? []) {
-    if ((pick(tag.match(REL)) ?? "").toLowerCase() === "canonical") canonical = pick(tag.match(HREF));
+    if ((pick(tag.match(REL)) ?? "").toLowerCase() === "canonical") canonicals.push(pick(tag.match(HREF)));
   }
 
   const robots = [];
@@ -75,8 +90,8 @@ for (const file of walk(root)) {
     const name = (pick(tag.match(NAME)) ?? "").toLowerCase();
     const content = pick(tag.match(CONTENT)) ?? "";
     if (name === "robots") robots.push(content);
-    if (property) og.set(property, content);
-    if (name) named.set(name, content);
+    if (property) add(og, property, content);
+    if (name) add(named, name, content);
   }
 
   const blocks = [];
@@ -89,11 +104,15 @@ for (const file of walk(root)) {
   }
   checked++;
 
-  // 1. The page names one URL as its own. og:url is the canonical Facebook and
-  //    LinkedIn read; disagreeing with the link element asserts two.
-  const ogUrl = og.get("og:url");
-  if (canonical && ogUrl && canonical !== ogUrl) {
-    failures.push([file, `canonical ${canonical}`, `og:url says ${ogUrl}`]);
+  // 1. The page names one URL as its own, in both places. og:url is the
+  //    canonical Facebook and LinkedIn read; disagreeing with the link element
+  //    asserts two. Presence is asserted as well as agreement -- comparing only
+  //    when both are there made deleting either of them a way to pass.
+  const ogUrls = all(og, "og:url");
+  if (canonicals.length !== 1 || ogUrls.length !== 1) {
+    failures.push([file, `${canonicals.length} canonical, ${ogUrls.length} og:url`, "a page names its own URL once in each"]);
+  } else if (canonicals[0] !== ogUrls[0]) {
+    failures.push([file, `canonical ${canonicals[0]}`, `og:url says ${ogUrls[0]}`]);
   }
 
   // 2. One robots meta, never two. A second is a directive nobody can order
@@ -104,22 +123,17 @@ for (const file of walk(root)) {
 
   // 3. No SVG on a card. Facebook, X and LinkedIn render none, so the card is
   //    announced and then arrives empty.
-  for (const key of ["og:image", "og:image:secure_url"]) {
-    const v = og.get(key);
-    if (v && new URL(v, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg")) {
-      failures.push([file, `${key} ${v}`, "no platform renders an SVG on a card"]);
+  for (const key of ["og:image", "og:image:secure_url", "twitter:image"]) {
+    for (const v of [...all(og, key), ...all(named, key)]) {
+      if (v && isSvg(v)) failures.push([file, `${key} ${v}`, "no platform renders an SVG on a card"]);
     }
-  }
-  const twitterImage = named.get("twitter:image");
-  if (twitterImage && new URL(twitterImage, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg")) {
-    failures.push([file, `twitter:image ${twitterImage}`, "no platform renders an SVG on a card"]);
   }
 
   // 4. An article whose picture is its own says so in its structured data.
   //    og:image:alt is the marker: head.html offers it only for a picture that
   //    belongs to the page, which is exactly the case json-ld.html takes.
   const article = blocks.find((b) => b && b["@type"] === "BlogPosting");
-  if (article && og.get("og:image") && og.has("og:image:alt") && !article.image) {
+  if (article && all(og, "og:image").length && all(og, "og:image:alt").length && !article.image) {
     failures.push([file, "a BlogPosting with the page's own og:image", "carries no image of its own"]);
   }
 
@@ -132,10 +146,19 @@ for (const file of walk(root)) {
   }
 
   // 6. A search page is not for an index. Thin by construction, and a crawler
-  //    can generate URLs from one without end.
-  if (SEARCH_FORM.test(html) && !robots.some((r) => r.toLowerCase().includes("noindex"))) {
+  //    can generate URLs from one without end. Split into directives rather
+  //    than searched as a substring, which "noindexing" would have satisfied.
+  const directives = robots.flatMap((r) => r.toLowerCase().split(/[\s,]+/)).filter(Boolean);
+  if (SEARCH_FORM.test(html) && !directives.includes("noindex")) {
     failures.push([file, "a search page", "is not marked noindex"]);
   }
+}
+
+// A directory that exists and holds no pages is the shape a wrong path takes,
+// and every assertion above is vacuously true over nothing.
+if (checked === 0) {
+  console.error(`no pages under ${root}: nothing was checked`);
+  process.exit(1);
 }
 
 console.log(`checked ${checked} pages`);
