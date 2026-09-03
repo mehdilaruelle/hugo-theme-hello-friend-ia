@@ -22,13 +22,10 @@
                        carries the size, so this changes the outline and not the
                        look.
 
-                       Not a link. It pointed at the page it was already on,
+                       Not a link: it pointed at the page it was already on,
                        which takes a visitor nowhere and puts one more edge in
-                       the internal link graph of every page on the site. The
-                       anchor was styled with nothing but text-decoration: none
-                       and a { color: inherit }, so removing it changes the
-                       markup and not a pixel. search.html already writes the
-                       heading this way. */ -}}
+                       every page's link graph. The anchor carried no styling of
+                       its own, so this changes the markup and not a pixel. */ -}}
                 <h1 class="post-title">{{ partial "title.html" . | markdownify }}</h1>
 
                 {{ if .Params.Cover }}
