@@ -11,11 +11,8 @@
             <h1>{{ $heading }}</h1>
 
             {{- /* The section's own _index.md body, on the first pager only. It
-                   introduces the list, and the list continues on page two: it
-                   is not a preamble to each screenful. Repeated, it was the
-                   longest thing every pager had in common, which is what made
-                   them look like copies of one another to anything reading
-                   them. */ -}}
+                   introduces the list, not each screenful of it, and repeated
+                   it was the longest thing every pager had in common. */ -}}
             {{ if and .Content (eq $paginator.PageNumber 1) }}
                 <div class="content">{{ .Content }}</div>
             {{ end }}
