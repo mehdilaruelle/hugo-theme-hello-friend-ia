@@ -263,16 +263,10 @@
   {{- with $social.url }}
 <meta property="og:image" content="{{ . }}" />
   {{- end }}
-  {{- /* The size, so Facebook and LinkedIn can lay the card out before they
-         have fetched the file — without it the first render waits on the
-         download, which is why a freshly shared link so often appears with no
-         picture on it.
-
-         Only in this branch. og:image:width attaches to the og:image above it,
-         and the branch not taken is the one where Hugo's partial writes the
-         images: it may write up to six of them, and social-image.html answers
-         for the first, so a pair emitted there would give the last picture the
-         first one's dimensions. Saying nothing is the honest answer. */ -}}
+  {{- /* Only in this branch: og:image:width attaches to the og:image above it,
+         and the branch not taken is Hugo's, which may write six images where
+         social-image.html answers for the first. A pair emitted there would
+         give the last picture the first one's dimensions. */ -}}
   {{- if and $social.url $social.width }}
 <meta property="og:image:width" content="{{ $social.width }}" />
 <meta property="og:image:height" content="{{ $social.height }}" />
