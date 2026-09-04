@@ -17,7 +17,9 @@ const attr = (name) => String.raw`(?<![-\w])${name}\s*=\s*(?:"([^"]*)"|'([^']*)'
 const pick = (m) => (m ? (m[1] ?? m[2] ?? m[3] ?? "") : null);
 
 // Every occurrence, not the last one: Open Graph allows a property to repeat,
-// and a map keyed by property hid an SVG followed by a usable picture.
+// and a map keyed by property hid an SVG followed by a usable picture. The
+// theme writes one og:image now, so this is a regression test rather than a
+// finding -- a shortcode or a custom head can still add a second.
 const add = (map, key, value) => map.set(key, [...(map.get(key) ?? []), value]);
 const all = (map, key) => map.get(key) ?? [];
 const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg");
