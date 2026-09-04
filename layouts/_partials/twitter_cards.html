@@ -1,17 +1,14 @@
 {{- /*
-  Overrides Hugo's embedded twitter_cards.html, which head.html calls
-  unchanged. Three things it cannot do for this theme:
-
+  Overrides Hugo's embedded twitter_cards.html. Three things it cannot do here:
   it picks the card type from params.images before the theme has offered a
-  cover, so a page with one announced the small square and then carried an
-  image it has no room for; it resolves the picture separately from head.html,
-  where both now ask social-image.html; and it emits twitter:site only from a
-  map-shaped params.social, which this theme does not document, so no site
-  following the documentation could produce the tag at all.
+  cover, so a page with one announced the large card and then had nothing to
+  fill it; it resolves the picture apart from the Open Graph tags, where both
+  now ask social-image.html; and it emits twitter:site only from a map-shaped
+  params.social, which this theme does not document.
 */ -}}
 {{- $social := partial "social-image.html" . -}}
 {{- with $social.url }}
-<meta name="twitter:card" content="{{ cond $social.svg "summary" "summary_large_image" }}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{{ . }}">
 {{- with $social.alt }}
 <meta name="twitter:image:alt" content="{{ . }}">

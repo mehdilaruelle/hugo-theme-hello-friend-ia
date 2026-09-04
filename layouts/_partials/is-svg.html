@@ -1,0 +1,3 @@
+{{- /* Whether a URL names an SVG. No platform renders one on a social card, and
+       Hugo answers neither .Width nor .Resize for one. */ -}}
+{{- return eq (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}

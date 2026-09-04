@@ -2,20 +2,25 @@
   The sentence a meta tag publishes: the page's own, the site's when it has
   none, and named as a pager when it is one.
 
-  head.html, twitter_cards.html and opengraph.html all need this exact answer.
-  The first two worked it out in the same four lines; opengraph.html used Hugo's
-  own .Description-then-.Summary chain instead, so the same page described
-  itself two ways -- an untruncated, unflattened summary in og:description
-  against the 160 characters the other two carry, and none of the descriptions
-  description.html generates for a taxonomy or a term.
+  head.html, opengraph.html and twitter_cards.html all need this exact answer
+  and worked it out three ways -- opengraph.html through Hugo's own chain, so
+  one page described itself twice: an unflattened summary in og:description
+  against the 160 characters the other two carried.
 
   The site-wide fallback and the pager suffix belong here rather than in
-  description.html, which json-ld.html asks and must see neither: repeating one
-  sentence in the structured data of every page without its own is the
-  duplication that chain exists to avoid.
+  description.html, which json-ld.html asks and must see neither.
 */ -}}
 {{- $description := partial "description.html" . -}}
 {{- if not $description -}}
   {{- $description = site.Params.description | plainify | htmlUnescape -}}
 {{- end -}}
-{{- return partial "pager-suffix.html" (dict "text" $description "pager" (partial "canonical.html" .).pager) -}}
+{{- $pager := (partial "canonical.html" .).pager -}}
+{{- $out := partial "pager-suffix.html" (dict "text" $description "pager" $pager) -}}
+{{- /* The suffix is appended after description.html has truncated to 160, so a
+       pager shipped a longer tag than any other page. Cut the sentence to make
+       room for the suffix, rather than the suffix that says which pager. */ -}}
+{{- if gt (strings.RuneCount $out) 160 -}}
+  {{- $room := sub (strings.RuneCount $description) (sub (strings.RuneCount $out) 160) -}}
+  {{- $out = partial "pager-suffix.html" (dict "text" (truncate $room "" $description) "pager" $pager) -}}
+{{- end -}}
+{{- return $out -}}

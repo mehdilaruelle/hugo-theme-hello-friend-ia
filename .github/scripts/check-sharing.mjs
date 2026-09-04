@@ -6,10 +6,11 @@
 // parameters swallows everything after it into the preceding value, and the
 // build says nothing.
 //
-// Two, that each anchor carries rel="nofollow". The row is a block of eleven
-// near-identical anchors, which is exactly the shape a twelfth gets added to by
-// copying a neighbour and changing the URL, so the assertion lives here rather
-// than in a reviewer's head.
+// Two, that each http(s) anchor carries rel="nofollow". The row is a block of
+// eleven near-identical anchors, which is exactly the shape a twelfth gets
+// added to by copying a neighbour, so the assertion lives here rather than in a
+// reviewer's head. mailto: and whatsapp: are exempt: there is no link equity to
+// withhold on a scheme no crawler follows.
 //
 //   node .github/scripts/check-sharing.mjs <public-dir>
 
@@ -48,19 +49,22 @@ const root = process.argv[2] || "public";
 const failures = [];
 let checked = 0;
 let anchors = 0;
+let files = 0;
 const seen = new Set();
 const seenFollowed = new Set();
 
 for (const file of walk(root)) {
   const html = readFileSync(file, "utf8").replace(/\n/g, " ");
+  files++;
   for (const tag of html.matchAll(ANCHOR)) {
     anchors++;
     const rel = (tag[0].match(REL) ?? []).slice(1).find((v) => v !== undefined) ?? "";
+    const target = (tag[0].match(new RegExp(HREF.source, "i")) ?? []).slice(1).find((v) => v !== undefined) ?? "";
+    if (!/^https?:/i.test(target.replace(/&amp;/g, "&"))) continue;
     if (!rel.split(/\s+/).includes("nofollow")) {
       // One report per destination host rather than per page: the same button
       // is wrong on every article, and 200 identical lines hide the others.
-      const href = (tag[0].match(new RegExp(HREF.source, "i")) ?? []).slice(1).find((v) => v !== undefined) ?? "";
-      const key = href.replace(/&amp;/g, "&").split("?")[0];
+      const key = target.replace(/&amp;/g, "&").split("?")[0];
       if (!seenFollowed.has(key)) {
         seenFollowed.add(key);
         failures.push([file, key, "a sharing link without rel=\"nofollow\""]);
@@ -85,6 +89,13 @@ for (const file of walk(root)) {
   }
 }
 
+// A build that produced nothing, or a wrong working-directory, otherwise reads
+// as a pass: no files, no failures, exit 0.
+if (files === 0) {
+  console.error(`no HTML found under ${root}`);
+  process.exit(1);
+}
+
 console.log(`checked ${checked} sharing links and ${anchors} sharing anchors`);
 if (failures.length) {
   console.error(`\n${failures.length} broken:\n`);
@@ -92,4 +103,4 @@ if (failures.length) {
   process.exit(1);
 }
 console.log("every parameter is separated by an ampersand");
-console.log("every sharing link is nofollow");
+console.log("every http(s) sharing link is nofollow");

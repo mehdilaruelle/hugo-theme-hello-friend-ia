@@ -1,20 +1,15 @@
 {{- /*
-  Overrides Hugo's embedded opengraph.html, which head.html called unchanged.
-  Copied from Hugo 0.164, the version CI pins, and kept line for line apart
-  from the three corrections below, so the next release is a readable diff.
+  Overrides Hugo's embedded opengraph.html. Copied from Hugo 0.164, the version
+  CI pins, and kept line for line apart from the three corrections below, so the
+  next release is a readable diff.
 
   og:url was .Permalink, the same URL on every pager, while the canonical link
-  beside it named the pager: the page claimed two URLs at once, and og:url is
-  the canonical Facebook and LinkedIn read. og:title and og:description carry
-  the pager suffix the title element already had, for the same reason.
+  beside it named the pager: the page claimed two URLs at once. og:title and
+  og:description carry the pager suffix the title element already had.
 
-  og:image asks social-image.html, which twitter_cards.html asks too. It was
-  Hugo's _funcs/get-page-images, which knows nothing of this theme's cover,
-  while social-image.html ranks cover above the site's images: a site setting
-  params.images named one file here and another in twitter:image on every page
-  with a cover. One partial decides now, and answers with a single picture.
-
-  Everything else is Hugo's, unchanged.
+  og:image asks social-image.html, which twitter_cards.html asks too. Hugo's own
+  _funcs/get-page-images knows nothing of this theme's cover, so a site setting
+  params.images named one file here and another in twitter:image.
 */ -}}
 {{- $canonical := partial "canonical.html" . -}}
 <meta property="og:url" content="{{ $canonical.url }}">
@@ -54,18 +49,14 @@
 	<meta property="og:type" content="website">
 {{- end }}
 
-{{- /* The alt sits beside the picture it describes: from head.html it outlived
-       the image it belonged to. */ -}}
+{{- /* The alt and the dimensions sit beside the picture they describe: from
+       head.html the alt outlived the image it belonged to. */ -}}
 {{- $social := partial "social-image.html" . }}
 {{- with $social.url }}
 	<meta property="og:image" content="{{ . }}">
 	{{- with $social.alt }}
 		<meta property="og:image:alt" content="{{ . }}">
 	{{- end }}
-	{{- /* Beside the picture they measure. Facebook and LinkedIn hold the first
-	       render back until they have fetched and sized the file; an SVG and a
-	       format that will not give its dimensions up both answer 0, which is
-	       worse asserted than omitted. */ -}}
 	{{- with $social.width }}
 		<meta property="og:image:width" content="{{ . }}">
 		<meta property="og:image:height" content="{{ $social.height }}">

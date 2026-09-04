@@ -2,20 +2,15 @@
   The URL this page names as its own, and which pager of a list it is. Returns
   a map with url and pager.
 
-  Every pager of a paginated list shares one .Permalink, so page 2 and beyond
-  used to name page 1 as their canonical. That tells a search engine they are
-  duplicates of it and their posts are not worth indexing from here, which is
-  the opposite of what pagination is for: each pager is a distinct set of
-  posts, so each is its own canonical.
+  Every pager shares one .Permalink, so page 2 and beyond used to name page 1
+  as their canonical -- telling a search engine they are duplicates of it, which
+  is the opposite of what pagination is for.
 
-  The paginator is only built on the kinds list.html paginates. Building it on a
-  page that is never paginated would build a paginator, and with it the
-  /page/2/ output files, for nothing.
+  The paginator is built only on the kinds list.html paginates: building it
+  elsewhere would write the /page/2/ output files for nothing.
 
   Here rather than in head.html, opengraph.html and json-ld.html, which all need
-  it and used to work it out apart. That is the bug this file was extracted to
-  fix: og:url named page 1 on every pager while the canonical beside it named
-  the pager, so the page claimed two URLs at once.
+  the same answer and used to work it out apart.
 */ -}}
 {{- $canonical := .Permalink -}}
 {{- $pager := 1 -}}

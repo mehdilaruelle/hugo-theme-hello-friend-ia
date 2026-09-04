@@ -11,10 +11,11 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, dirname, resolve, relative, posix } from "node:path";
 
-// poster carries a URL like src does, and is built the same way, so it belongs
-// in the same net. The boundary keeps the names from matching inside a longer
-// attribute.
-const ATTR = /\b(?:href|src|poster)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+// poster carries a URL like src does, so it belongs in the same net. An
+// attribute name starts where no name character precedes it: \b is not that
+// test, since there is a boundary between "-" and "s" too, so \bsrc matched the
+// src inside data-src.
+const ATTR = /(?<![-\w])(?:href|src|poster)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
 const CSS_URL = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]+))\s*\)/gi;
 const SKIP = /^(?:https?:|mailto:|tel:|data:|javascript:|\/\/|#)/i;
 

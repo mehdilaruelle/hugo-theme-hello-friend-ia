@@ -11,9 +11,13 @@ import { join } from "node:path";
 
 // Quoted, single-quoted or bare: --minify drops the quotes around any value
 // that does not need them, so a pattern requiring them matches nothing.
+//
+// An attribute name starts where no name character precedes it. \b is not that
+// test -- there is a boundary between "-" and "c" too, so \bcontent matched the
+// content inside data-content. Same prefix as check-sharing.mjs.
 const META = /<meta\b[^>]*>/gi;
 const ATTR = (name) =>
-  new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
+  new RegExp(`(?<![-\\w])${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
 
 const PROPERTY = ATTR("property");
 const NAME = ATTR("name");
@@ -36,9 +40,11 @@ const root = process.argv[2] || "public";
 const failures = [];
 let pages = 0;
 let withImage = 0;
+let files = 0;
 
 for (const file of walk(root)) {
   const html = readFileSync(file, "utf8");
+  files++;
   const tags = { "og:image": [], "og:image:alt": [], "twitter:image": [], "twitter:image:alt": [] };
 
   for (const m of html.matchAll(META)) {
@@ -75,6 +81,13 @@ for (const file of walk(root)) {
   // used to outlive the image it belonged to.
   if (tags["og:image:alt"].length && !og) failures.push([file, "og:image:alt with no og:image", "an alt with no picture"]);
   if (tags["twitter:image:alt"].length && !tw) failures.push([file, "twitter:image:alt with no twitter:image", "an alt with no picture"]);
+}
+
+// A build that produced nothing, or a wrong working-directory, otherwise reads
+// as a pass: no files, no failures, exit 0.
+if (files === 0) {
+  console.error(`no HTML found under ${root}`);
+  process.exit(1);
 }
 
 console.log(`checked ${pages} pages carrying card tags, ${withImage} of them with a picture`);

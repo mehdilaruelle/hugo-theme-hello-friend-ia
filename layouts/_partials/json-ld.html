@@ -1,10 +1,9 @@
 {{- /*
-  Structured data as JSON-LD, which is the form Google prefers and the only
-  structured data the theme emits: Hugo's embedded schema.html wrote the same
-  facts as microdata with no itemscope to hold them.
+  Structured data as JSON-LD, the only kind the theme emits: Hugo's embedded
+  schema.html wrote the same facts as microdata with no itemscope to hold them.
 
-  Home pages describe the site, dated single pages describe the article, and
-  anything else is skipped rather than described badly.
+  Home pages describe the site, dated single pages the article, and anything
+  else is skipped rather than described badly.
 */ -}}
 
 {{- $author := partial "author.html" . -}}
@@ -15,25 +14,21 @@
        entity. */ -}}
 {{- $siteAuthor := (partial "site-author.html" .).name -}}
 
-{{- /* The picture, from the partial that already answers this for the card. It
-       used to be worked out here from params.images alone, so a page given a
-       cover -- the theme's own documented way -- had one in its card and none
-       here, where Google's Article guidance asks for it. Only a picture the
-       page brought itself; social-image.html says why. */ -}}
+{{- /* From the partial that already answers this for the card: worked out here
+       from params.images alone, a page given a cover had a picture in its card
+       and none here. Only one the page brought itself. */ -}}
 {{- $social := partial "social-image.html" . -}}
 {{- $image := cond $social.owned $social.url "" -}}
 
 {{- /*
   The Person behind the site, for the home page.
 
-  A name on its own is a string; what makes it an entity a search engine can
-  recognise is the evidence tying it to the same person elsewhere. sameAs
-  carries the social profiles for that — the same claim rel="me" already makes
-  on the links themselves. mailto: is an address, not a profile, so it is left
-  out.
+  What makes a name an entity rather than a string is the evidence tying it to
+  the same person elsewhere, which is what sameAs carries -- the claim rel="me"
+  already makes on the links. mailto: is an address, not a profile.
 
-  jobTitle, description, knowsAbout and hasCredential all come from
-  params.author when it is written as a map.
+  jobTitle, description, knowsAbout and hasCredential come from params.author
+  when it is written as a map.
 */ -}}
 {{- $jobTitle := "" -}}
 {{- $personDescription := "" -}}
@@ -46,12 +41,9 @@
     {{- with .knowsAbout -}}
       {{- $knowsAbout = . -}}
     {{- end -}}
-    {{- /*
-      A credential is an object because schema.org models it as one. url is the
-      credential itself — the badge, the certificate — since that is what url
-      means on any Thing; the body that awarded it goes in recognizedBy. An
-      entry with no name is dropped rather than emitted empty.
-    */ -}}
+    {{- /* url is the credential itself -- the badge, the certificate -- since
+           that is what url means on any Thing; the body that awarded it goes in
+           recognizedBy. An entry with no name is dropped. */ -}}
     {{- range .credentials -}}
       {{- $name := .name -}}
       {{- $category := .category -}}
@@ -110,13 +102,10 @@
 {{- with $credentials -}}
   {{- $person = merge $person (dict "hasCredential" .) -}}
 {{- end -}}
-{{- /*
-  The portrait as a URL that exists. Resolving it as a resource is what
-  publishes it: home.html renders a resized copy, and the original is emitted
-  only if something asks for it. Taking the path as a string instead would
-  name a file Hugo never wrote. A portrait outside assets/ is not a resource,
-  and is published by Hugo as an ordinary static file, so the path stands.
-*/ -}}
+{{- /* Resolving the portrait as a resource is what publishes it: home.html
+       renders a resized copy, and the original is emitted only if something
+       asks. Taking the path as a string would name a file Hugo never wrote. One
+       outside assets/ is a static file, so the path stands. */ -}}
 {{- with site.Params.portrait.path -}}
   {{- $portrait := . | absURL -}}
   {{- with or (resources.Get (printf "_static%s" .)) (resources.Get .) -}}
@@ -128,11 +117,9 @@
   {{- $person = merge $person (dict "sameAs" .) -}}
 {{- end -}}
 
-{{- /*
-  A page naming its own author is a different person from whoever owns the
-  site, so it gets a name and nothing else: the site's profiles and job title
-  are not theirs to claim.
-*/ -}}
+{{- /* A page naming its own author is a different person from whoever owns the
+       site: a name and nothing else, since the site's profiles are not theirs
+       to claim. */ -}}
 {{- $authorNode := dict -}}
 {{- with $author -}}
   {{- $authorNode = cond (isset $.Params "author") (dict "@type" "Person" "name" .) $person -}}
@@ -155,15 +142,10 @@
     {{- $data = merge $data (dict "author" $authorNode) -}}
   {{- end -}}
 {{- else if in (slice "section" "taxonomy" "term") .Kind -}}
-  {{- /*
-    A section or a taxonomy page is a list of things, which is what a
-    CollectionPage is. It used to get nothing, so the one page a search engine
-    is most likely to reach a whole topic through said nothing about itself.
-
-    Only the first pager is described. Page two of the same list is the same
-    collection seen further down, and describing each as its own would claim
-    several collections where there is one.
-  */ -}}
+  {{- /* A section or taxonomy page is a list of things, which is what a
+         CollectionPage is. Only the first pager is described: page two is the
+         same collection seen further down, and describing each as its own would
+         claim several where there is one. */ -}}
   {{- $first := eq (partial "canonical.html" .).pager 1 -}}
   {{- if $first -}}
     {{- $data = dict
@@ -177,11 +159,9 @@
     {{- with partial "description.html" . -}}
       {{- $data = merge $data (dict "description" .) -}}
     {{- end -}}
-    {{- /* The same pages, in the same order, as list.html puts on the screen:
-           it sorts a taxonomy page by title and leaves the rest by date, and it
-           shows one pager at a time. Describing a different set, or the same
-           set differently ordered, would name positions nobody can see.
-           numberOfItems still counts the whole collection. */ -}}
+    {{- /* The same pages in the same order as list.html puts on the screen, or
+           the positions name nothing anybody can see. numberOfItems still
+           counts the whole collection. */ -}}
     {{- $listed := partial "list-pages.html" . -}}
     {{- with .Paginate $listed -}}{{- $listed = .Pages -}}{{- end -}}
     {{- with $listed -}}
@@ -193,16 +173,10 @@
     {{- end -}}
   {{- end -}}
 {{- else if and .IsPage (eq .Params.schema "ProfilePage") -}}
-  {{- /*
-    An about page is not an article. It has no date on most sites, and when it
-    does have one that is a publication date for the page rather than a claim
-    that it is a post, so this is tested before the date below: asking for a
-    ProfilePage is explicit, and having a date is a guess.
-
-    ProfilePage is what Google documents for it, and mainEntity is the Person
-    the page is about, the same node under the same @id that the home page and
-    every article already carry.
-  */ -}}
+  {{- /* An about page is not an article, so this is tested before the date
+         below: asking for a ProfilePage is explicit, and having a date is a
+         guess. mainEntity is the Person the page is about, under the same @id
+         the home page and every article already carry. */ -}}
   {{- $data = dict
     "@context" "https://schema.org"
     "@type" "ProfilePage"
@@ -279,14 +253,12 @@
     {{- $publisher = cond (isset $.Params "author") $person (dict "@id" (printf "%s#person" site.Home.Permalink)) -}}
   {{- end -}}
   {{- $data = merge $data (dict "publisher" $publisher) -}}
-{{- else if .IsPage -}}
-  {{- /*
-    A page with no date and no schema of its own fell off the end of this chain
-    and got nothing. The rule above -- skipped rather than described badly -- is
-    about BlogPosting, which would have to invent a date and an author. A
-    WebPage invents nothing: a URL, a name, a language, and the sentence the
-    page already carries in its own head.
-  */ -}}
+{{- else if and .IsPage (not (partial "noindex.html" .)) -}}
+  {{- /* A page with no date and no schema of its own fell off the end of this
+         chain and got nothing. "Skipped rather than described badly" is about
+         BlogPosting, which would invent a date and an author; a WebPage invents
+         nothing. A noindex page is still skipped -- describing one the theme
+         asks nobody to index says nothing worth saying. */ -}}
   {{- $data = dict
     "@context" "https://schema.org"
     "@type" "WebPage"
@@ -303,30 +275,21 @@
   {{- end -}}
 {{- end -}}
 
-{{- /*
-  safeJS is required: inside a script element html/template treats the value as
-  JavaScript and would emit the object as a quoted string literal, which is not
-  structured data any crawler would read. It is safe because jsonify escapes
-  <, > and & to <, > and &, so no payload can close the element.
-*/ -}}
+{{- /* safeJS is required: inside a script element html/template would emit the
+       object as a quoted string literal. It is safe because jsonify escapes
+       <, > and &, so no payload can close the element. */ -}}
 {{- with $data -}}
 <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
 {{- end -}}
 
 {{- /*
-  The trail to the page, as its own block. A search result shows it in place of
-  the bare URL, so posts/2025/04/aws-sso-with-auth0-for-free reads as
-  Home › Blog › AWS SSO with Auth0 for Free.
+  The trail to the page. A search result shows it in place of the bare URL, so
+  posts/2025/04/aws-sso-with-auth0-for-free reads as Home › Blog › AWS SSO.
 
-  Only single pages get one, and only when they sit in a section: the home page
-  is the root of the trail rather than a step on it, and a list page is already
-  named by the trail of everything under it.
-
-  The section is named by its linkTitle: a section title that works in a
-  search result is too long to read as one step of a trail.
-
-  The last item carries no url. Google asks for the current page to be named
-  and not linked, since a breadcrumb pointing at itself is not a step.
+  Only single pages in a section get one: the home page is the root of the trail
+  rather than a step on it. The section is named by its linkTitle, since a title
+  that works in a search result is too long for one step. The last item carries
+  no url -- Google asks for the current page to be named and not linked.
 */ -}}
 {{- $section := "" -}}
 {{- if .IsPage -}}

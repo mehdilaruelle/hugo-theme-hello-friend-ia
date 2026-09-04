@@ -1,15 +1,12 @@
 {{- /*
   Whether this page is kept out of a search engine's index. Returns a boolean.
 
-  The front matter is the site's decision and every template knew about it. A
-  search page is the theme's, and none did: searchable: false only keeps a page
-  out of the theme's own JSON index, so four languages' worth of empty results
-  list went into the sitemap. Google's guidance is to keep internal search
-  results out -- thin content, and crawlable without end.
+  noindex in the front matter is the site's decision; a search page is the
+  theme's. searchable: false only keeps a page out of the theme's own JSON
+  index, so four languages' worth of empty results list went into the sitemap.
 
-  Here rather than in each of head.html and sitemap.xml, which need the same
-  answer for the robots tag, the hreflang set and the entry. By layout rather
-  than by path, because a page becomes a search page by asking for one.
+  By layout rather than by path, because a page becomes a search page by asking
+  for one.
 */ -}}
 {{- $noindex := false -}}
 {{- if .Params.noindex -}}{{- $noindex = true -}}{{- end -}}

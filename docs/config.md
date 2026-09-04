@@ -428,9 +428,11 @@ owns that partial now and writes exactly one `og:image`, from the same source
 `twitter:image` uses, so the dimensions always belong to the picture beside
 them whichever way the image was configured.
 
-An SVG cover is passed over rather than announced, since no platform renders
-one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and
-an article illustrated with a diagram still shares with a picture on it.
+An SVG is passed over wherever it appears in that chain — `images` and `cover`,
+at page or site level, alike — since no platform renders one on a card. The
+chain simply continues to the next candidate. Give the site an `ogImage` in PNG
+or JPEG and an article illustrated with a diagram still shares with a picture on
+it.
 
 A card with a picture is announced as `summary_large_image` rather than the
 small square, and carries an `og:image:alt` / `twitter:image:alt` — but only
