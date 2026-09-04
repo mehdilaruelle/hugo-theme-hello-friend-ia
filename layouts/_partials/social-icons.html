@@ -1,7 +1,22 @@
-{{- /* The guard from json-ld.html: a map-shaped params.social yields strings
-       here, and .url on a string ends the build. */ -}}
+{{- /* A map-shaped params.social yields strings here, and .url on a string ends
+       the build. twitter_cards still reads the handle out of it, so warn. */ -}}
+{{- if and . (reflect.IsMap .) -}}
+  {{- warnidf "social-map-shape" "params.social is a map, so no social icons are rendered. The theme draws icons from the list form: a [[params.social]] entry per network, each with name and url." -}}
+{{- end -}}
 {{ range . -}}
 {{- if reflect.IsMap . -}}
-    &nbsp; <a href="{{ .url }}" {{if eq .nonewpage 0}} target="_blank" {{end}} rel="me noopener {{ .rel }}" title="{{ .name | humanize }}">{{ partial "svg.html" . }}</a> &nbsp;
+{{- /* Over the keys, not by name: Hugo keeps the case a nested param was
+       written in, and a quoted value is a string eq will not match. */ -}}
+{{- $newTab := false -}}
+{{- $legacy := false -}}
+{{- range $k, $v := . -}}
+  {{- if eq (lower $k) "newtab" -}}{{- $newTab = not (in (slice false "false" 0 "0" "") $v) -}}{{- end -}}
+  {{- if and (eq (lower $k) "nonewpage") (in (slice 0 "0" false "false") $v) -}}{{- $legacy = true -}}{{- end -}}
+{{- end -}}
+{{- if $legacy -}}
+  {{- warnidf "social-nonewpage-deprecated" "params.social: nonewpage = 0 is deprecated, write newTab = true instead. See docs/config.md." -}}
+  {{- $newTab = true -}}
+{{- end -}}
+    &nbsp; <a href="{{ .url }}"{{ if $newTab }} target="_blank"{{ end }} rel="me noopener{{ with .rel }} {{ . }}{{ end }}" title="{{ .name | humanize }}">{{ partial "svg.html" . }}</a> &nbsp;
 {{- end -}}
 {{- end -}}

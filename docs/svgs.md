@@ -1,5 +1,10 @@
 # Available Social Icons:
 
+The `name` in a `[[params.social]]` entry is matched against this list, ignoring
+case and surrounding spaces. A name that is not here draws a generic link glyph,
+and the build warns and names the value — it used to render an anchor with
+nothing inside it, which no visitor could see or click.
+
 - [amazon](https://simpleicons.org/?q=amazon)
 - [anilist](https://simpleicons.org/?q=anilist)
 - [behance](https://simpleicons.org/?q=behance)

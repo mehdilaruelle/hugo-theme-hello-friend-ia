@@ -456,6 +456,38 @@ its own copy of that partial and could correct it, but the copy is deliberately
 Hugo's line for line apart from the two URLs it had to fix, so the next Hugo
 release stays a readable diff; the correction belongs in a change of its own.
 
+### Social links
+
+The icons in the header and footer come from `params.social`, a list with one
+entry per network:
+
+```toml
+[[params.social]]
+  name   = "github"
+  url    = "https://github.com/janedoe"
+  newTab = true
+```
+
+| key | what it does |
+| --- | --- |
+| `name` | which icon to draw, matched case-insensitively and trimmed. See [docs/svgs.md](svgs.md) for the names the theme has |
+| `url` | where the link goes |
+| `newTab` | open the link in a new tab. **Default `false`**: the link replaces the page, and the visitor's back button still works. Quoted values count — `"false"` is off, like the boolean |
+| `rel` | extra `rel` tokens, added after the `me noopener` the theme always writes |
+
+A `name` the theme has no icon for draws a generic link glyph and warns during
+the build, naming the value. It used to render an anchor with nothing inside it:
+a link with no size, which no visitor could see or click.
+
+`nonewpage = 0` is the deprecated spelling of `newTab = true`. It still works and
+warns, quoted (`"0"`) as well as bare. The name said the opposite of what it did, and because an unset value is
+nil rather than `0`, the only way to get a new tab was to write the "no new
+page" key explicitly.
+
+Write `params.social` as a **list**, not a map. The map form — `[params.social]`
+with `twitter = "janedoe"` — is read for the Twitter card handle but draws no
+icons, and the build warns when it sees one.
+
 ### Front matter
 
 | key | what it does |
