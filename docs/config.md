@@ -509,11 +509,23 @@ and `og:image:height` go out with it. Facebook and LinkedIn hold the first
 render back until they have fetched and measured the file otherwise, which is
 why a freshly shared link so often appears without its picture.
 
-Two cases carry no dimensions. A remote URL, because there is nothing to measure
-at build time. And an SVG, because asking one for its size is a build error —
-the same fact that keeps it off a card at all.
+Three cases carry no dimensions. A remote URL, because there is nothing to
+measure at build time. An SVG, because asking one for its size is a build error
+— the same fact that keeps it off a card at all. And a picture under `static/`,
+because Hugo does not make those files resources and a file it cannot open is a
+file it cannot measure.
 
-Setting `images` used to be a third case: Hugo's own Open Graph partial wrote
+The card still works in that last case; only the size hint is missing. Move the
+picture to `assets/` — or into the page bundle beside the article — and the
+dimensions come back:
+
+| where the cover lives | `og:image:width` |
+| --- | --- |
+| `assets/img/cover.png` | yes |
+| page bundle, next to `index.md` | yes |
+| `static/img/cover.png` | no |
+
+Setting `images` used to be one of these too: Hugo's own Open Graph partial wrote
 the `og:image` tags then, and could write several where the theme resolved one,
 so a single pair of dimensions risked describing the wrong picture. The theme
 owns that partial now and writes exactly one `og:image`, from the same source
