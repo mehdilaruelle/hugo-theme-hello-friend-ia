@@ -172,13 +172,103 @@ Set only the ones you use — an unset entry emits nothing, and with no
 `[params.verification]` at all nothing changes. The tags go on the home page
 only, which is where each console looks, rather than on all of them.
 
-## Footer copyright year
+## The logo
+
+`params.logo` is either a picture or a line of text, not both: set `path` and
+the image replaces the text logo entirely.
+
+```toml
+[params.logo]
+  logoMark     = ">"
+  logoText     = "$ cd /home/"
+  logoHomeLink = "/"
+```
+
+| key | what it does |
+| --- | --- |
+| `path` | an image to use instead of the text logo. `alt` describes it |
+| `logoMark` | the character before the text, `>` when unset |
+| `logoText` | the text itself, `hello` when unset |
+| `logoHomeLink` | where the logo links. A URL starting with `http://` or `https://` is used as given; anything else is joined to the site's home, so a site under a subpath keeps its prefix. A protocol-relative `//host/` counts as "anything else" and is joined too. Defaults to the home page |
+
+### The cursor
+
+The block after the text is a blinking cursor. It is drawn unless you turn it
+off, and each key is emitted only when set:
+
+| key | what it does |
+| --- | --- |
+| `logoCursorDisabled` | hides the cursor |
+| `logoCursorColor` | any CSS colour |
+| `logoCursorAnimate` | any CSS time, as the blink duration. `"0s"` stops it |
+| `logoCursorPathname` | appends the current section to `logoText`, so `/posts/` reads `$ cd /home/posts`. The home page appends nothing |
+
+`logoCursorPathname` is filled in by the browser after the page loads, since
+the section comes from the URL being visited. The cursor stops animating on its
+own for a visitor who asks for reduced motion.
+
+## Comments
+
+Three providers, each independent, each off until configured. A page opts out of
+Disqus with `comments` in its front matter — see [Front matter](#front-matter).
+
+```toml
+[services.disqus]
+  shortname = "your-disqus-shortname"
+
+[params.commento]
+  url = "https://commento.example.com/js/commento.js"
+
+[params.utterances]
+  repository = "owner/repo"
+  issueTerm  = "pathname"
+  theme      = "preferred-color-scheme"
+```
+
+Only `label` is guarded in the template: leave `issueTerm` or `theme` unset and
+utterances is handed `issue-term=""` or `theme=""`, and renders its own error box
+where the comments should be. Set all three whenever you set `repository`.
+
+| key | what it does |
+| --- | --- |
+| `services.disqus.shortname` | the Disqus site name |
+| `params.commento.url` | the script URL of your Commento or [Comentario](https://comentario.app) instance |
+| `params.utterances.repository` | the public `owner/repo` holding the issues |
+| `params.utterances.issueTerm` | **required with `repository`** — how a page maps to its issue: `pathname`, `url`, `title`, `og:title`, an issue number, or a specific term |
+| `params.utterances.label` | a label put on the issues utterances opens. Optional: the attribute is omitted when unset |
+| `params.utterances.theme` | **required with `repository`** — `github-light`, `github-dark`, `preferred-color-scheme`, `github-dark-orange`, `icy-dark` and the rest utterances offers |
+
+## Footer
 
 `params.footer.trademark` accepts either:
 
 - `true` — renders the current year, so it never goes stale
 - any value — rendered as given, for a fixed year or a range such as
   `"2019–2026"`
+
+The rest of the block:
+
+| key | what it does |
+| --- | --- |
+| `author` | the site author's name, linking to the home page |
+| `copyright` | the site's `copyright` string, rendered as HTML |
+| `rss` | a feed icon pointing at the first of `mainSections` |
+| `topText` | extra entries on the first row, after the four above |
+| `bottomText` | entries on a second row of their own |
+
+`topText` and `bottomText` are **lists**, even for one entry, and each entry is
+rendered as HTML so it can carry a link:
+
+```toml
+[params.footer]
+  bottomText = [
+    "Powered by <a href=\"https://gohugo.io\">Hugo</a>",
+  ]
+```
+
+The first row is omitted entirely when none of `trademark`, `author`,
+`copyright`, `rss` or `topText` is set, and the second when `bottomText` is
+empty — an empty bar is not a neutral default.
 
 ## Mermaid diagrams
 
