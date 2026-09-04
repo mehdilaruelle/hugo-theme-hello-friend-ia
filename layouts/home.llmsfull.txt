@@ -10,7 +10,7 @@
 {{- /* Posts first, then everything else — llms.txt order, not site-wide date
        order, which is why the notice below claims no recency. */ -}}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
-{{- $posts := where $all "Section" "posts" -}}
+{{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}
 {{- $ordered := slice -}}
 {{- range $posts -}}{{- $ordered = $ordered | append . -}}{{- end -}}
