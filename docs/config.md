@@ -439,7 +439,7 @@ templates.
 | --- | --- |
 | `enableThemeToggle` | shows the light/dark button in the menu |
 | `enableReadingTime` | shows an estimated reading time on articles |
-| `enableSharingButtons` | shows the sharing row under an article. Every http(s) link in it is `rel="noopener nofollow"` — the `mailto:` and `whatsapp:` ones carry `noopener` alone, since there is no link equity to withhold on a scheme no crawler follows — and the Pinterest one sends the page's social picture as its `media` |
+| `enableSharingButtons` | shows the sharing row under an article. Every http(s) link in it is `rel="noopener nofollow"`; the `mailto:` and `whatsapp:` ones are written with `noopener` alone, since there is no link equity to withhold on a scheme no crawler follows — and `--minify` drops even that, as redundant on a scheme that opens no window and on a `_blank` every current browser already treats as `noopener`. The Pinterest link sends the page's social picture as its `media` |
 | `disableReadOtherPosts` | hides the previous/next links |
 | `backgroundImage` | an image behind the front page, `cover`-sized and fixed. Used in dark mode |
 | `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
