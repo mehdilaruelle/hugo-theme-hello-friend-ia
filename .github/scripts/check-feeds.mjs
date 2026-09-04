@@ -133,6 +133,14 @@ for (const file of walk(root)) {
   for (const p of problems.slice(0, 5)) failures.push([file, p]);
 }
 
+// A directory that exists and holds no XML is the shape a wrong
+// working-directory takes, and every assertion above is vacuously true over
+// nothing: the run reads as a pass with nothing looking wrong.
+if (files === 0) {
+  console.error(`no XML found under ${root}: nothing was checked`);
+  process.exit(1);
+}
+
 console.log(`checked ${files} XML files`);
 if (failures.length) {
   console.error(`\n${failures.length} problem(s):\n`);
