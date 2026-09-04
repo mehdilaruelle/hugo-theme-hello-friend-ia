@@ -1,17 +1,15 @@
 {{- /*
-  Hugo's built-in sitemap, kept line for line apart from two corrections, so
-  the next Hugo release is a readable diff.
+  Hugo's built-in sitemap, kept line for line apart from two corrections, so the
+  next Hugo release is a readable diff.
 
-  A page kept out of the index was still submitted, which Search Console reports
-  as "Submitted URL marked 'noindex'". Which pages those are is the theme's own
-  answer, so the built-in template cannot know it: noindex.html holds the rule
-  and head.html asks the same partial, so the tag and the entry cannot disagree.
+  A noindex page was still submitted -- Search Console calls that "Submitted URL
+  marked 'noindex'". noindex.html holds the rule and head.html asks the same
+  partial, so the tag and the entry cannot disagree.
 
-  Alternates were named by .Language.Locale where head.html uses
-  .Language.Lang, and there was no x-default: two annotation sets for one URL.
-  A noindex translation is dropped from the set here and in head.html alike,
-  because a variant advertised in a sitemap has to have a <url> entry of its
-  own, and a noindex page does not get one.
+  Alternates were named by .Language.Locale where head.html uses .Language.Lang,
+  with no x-default: two annotation sets for one URL. A noindex translation is
+  dropped from the set, since a variant advertised here needs a <url> entry of
+  its own and does not get one.
 */ -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 {{- $primary := (index hugo.Sites 0).Language.Lang }}

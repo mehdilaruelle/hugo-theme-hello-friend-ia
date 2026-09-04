@@ -1,53 +1,28 @@
-// Asserts the six invariants the theme's head and structured data rest on.
+// Asserts the eight invariants the theme's head and structured data rest on.
 //
-// Every one of them is a thing a build reports nothing about. A page can name
-// two different URLs as its own, announce a card picture no platform renders,
-// or carry two contradictory robots directives, and Hugo will call that a
-// successful build -- which is how each of the six got in.
-//
-// The four the theme has actually shipped:
-//
-//   og:url was .Permalink on every pager of a list, while the canonical link
-//   beside it named the pager, so page two claimed to be two URLs at once.
-//
-//   an SVG cover became the og:image and the twitter:image, and the card was
-//   announced as summary_large_image and then arrived empty, because no
-//   platform renders one.
-//
-//   the search page carried no robots tag and sat in every sitemap: an empty
-//   results list and a form, in four languages.
-//
-//   a post with a cover had it in its card and nothing in its BlogPosting,
-//   where Google's Article guidance asks for it.
-//
-// The other two have never failed, which is the point of a regression test.
+// Each is something a build reports nothing about: a page can name two URLs as
+// its own, announce a card picture no platform renders, or carry two
+// contradictory robots directives, and Hugo calls that a successful build --
+// which is how most of these got in. The rest have never failed, which is what
+// a regression test is for.
 //
 //   node .github/scripts/check-seo.mjs <public-dir>
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-// Quoted, single-quoted or bare. The demo deploys with --minify, which drops
-// the quotes around any attribute value that does not need them, so a pattern
-// that required them would silently check a subset. The lookbehind is the name
-// test \b is not: a word boundary sits between "-" and a letter too, so \brel
-// reads the rel inside data-rel. Same shape as HREF in check-sharing.mjs, which
-// is where both were learned.
+// Quoted, single-quoted or bare, because --minify drops the quotes it can. The
+// lookbehind is the name test \b is not; check-sharing.mjs says why.
 const attr = (name) => String.raw`(?<![-\w])${name}\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`;
 const pick = (m) => (m ? (m[1] ?? m[2] ?? m[3] ?? "") : null);
 
-// Every occurrence, not the last one. Open Graph allows a property to repeat,
-// and a map keyed by property kept only the final value, so an SVG card picture
-// followed by a usable one passed. The theme's own partial writes one og:image
-// now, which is why the assertion below is a regression test rather than a
-// finding -- a page can still carry more from a shortcode or a custom head.
+// Every occurrence, not the last one: Open Graph allows a property to repeat,
+// and a map keyed by property hid an SVG followed by a usable picture.
 const add = (map, key, value) => map.set(key, [...(map.get(key) ?? []), value]);
 const all = (map, key) => map.get(key) ?? [];
 const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg");
 
-// A Hugo alias is a redirect stub: a meta refresh and a canonical, with no head
-// of its own. It is not a page these invariants describe, and requiring an
-// og:url of one would fail on markup Hugo writes.
+// A Hugo alias is a redirect stub, not a page these invariants describe.
 const ALIAS = /http-equiv\s*=\s*["']?refresh/i;
 
 const LINK = /<link\b[^>]*>/gi;
@@ -120,10 +95,8 @@ for (const file of walk(root)) {
   }
   checked++;
 
-  // 1. The page names one URL as its own, in both places. og:url is the
-  //    canonical Facebook and LinkedIn read; disagreeing with the link element
-  //    asserts two. Presence is asserted as well as agreement -- comparing only
-  //    when both are there made deleting either of them a way to pass.
+  // 1. One URL, named in both places. Presence as well as agreement: comparing
+  //    only when both are there made deleting either a way to pass.
   const ogUrls = all(og, "og:url");
   if (canonicals.length !== 1 || ogUrls.length !== 1) {
     failures.push([file, `${canonicals.length} canonical, ${ogUrls.length} og:url`, "a page names its own URL once in each"]);
@@ -146,35 +119,31 @@ for (const file of walk(root)) {
   }
 
   // 4. An article whose picture is its own says so in its structured data.
-  //    og:image:alt is the marker: head.html offers it only for a picture that
-  //    belongs to the page, which is exactly the case json-ld.html takes.
+  //    og:image:alt is the marker: it is offered only for an owned picture,
+  //    which is exactly the case json-ld.html takes.
   const article = blocks.find((b) => b && b["@type"] === "BlogPosting");
   if (article && all(og, "og:image").length && all(og, "og:image:alt").length && !article.image) {
     failures.push([file, "a BlogPosting with the page's own og:image", "carries no image of its own"]);
   }
 
-  // 5. Structured data that parses, and says what it is. Cheap, and it has
-  //    never caught anything, which is what a regression test is for.
+  // 5. Structured data that parses, and says what it is.
   for (const b of blocks) {
     if (!b || !b["@context"] || !b["@type"]) {
       failures.push([file, "a JSON-LD block", "has no @context or no @type"]);
     }
   }
 
-  // 6. A search page is not for an index. Thin by construction, and a crawler
-  //    can generate URLs from one without end. Split into directives rather
-  //    than searched as a substring, which "noindexing" would have satisfied.
+  // 6. A search page is not for an index: thin, and endlessly generable. Split
+  //    into directives, not searched as a substring -- "noindexing" passed.
   const directives = robots.flatMap((r) => r.toLowerCase().split(/[\s,]+/)).filter(Boolean);
   if (SEARCH_FORM.test(html) && !directives.includes("noindex")) {
     failures.push([file, "a search page", "is not marked noindex"]);
   }
 
-  // 7. An entity that survived into the text. plainify strips tags and leaves
-  //    entities behind, and Goldmark makes them out of ordinary punctuation, so
-  //    an apostrophe reached the attribute as &rsquo; and was escaped a second
-  //    time: the tag shipped "site&rsquo;s" for a search engine to read as text.
-  //    The parser has already decoded the value once, so anything still shaped
-  //    like an entity here was escaped twice over.
+  // 7. An entity that survived into the text. plainify leaves the entities
+  //    Goldmark makes, so an apostrophe was escaped a second time and the tag
+  //    shipped "site&rsquo;s" as words. The value is decoded once above, so
+  //    anything still shaped like an entity was escaped twice.
   for (const [key, values] of [...og, ...named]) {
     if (!DESCRIBES.test(key)) continue;
     for (const value of values) {
@@ -183,12 +152,9 @@ for (const file of walk(root)) {
     }
   }
 
-  // 8. One sentence per page, not three. head.html, opengraph.html and
-  //    twitter_cards.html publish the same description; opengraph.html used
-  //    Hugo's own .Description-then-.Summary chain instead, so 45 of the
-  //    showcase's 87 described pages said one thing in the meta tag and
-  //    another in the card -- a tag page announced itself with the site's
-  //    description. They all ask description-meta.html now.
+  // 8. One sentence per page, not three. opengraph.html used Hugo's own chain,
+  //    so 45 of the showcase's 87 described pages said one thing in the meta
+  //    tag and another in the card. All three ask description-meta.html now.
   const said = [all(named, "description"), all(og, "og:description"), all(named, "twitter:description")];
   if (said.every((v) => v.length === 1)) {
     const [meta, ogDesc, twitter] = said.map((v) => v[0]);

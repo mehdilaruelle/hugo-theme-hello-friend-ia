@@ -1,14 +1,11 @@
 {{- /*
   The sentence a meta tag publishes: the page's own, the site's when it has
-  none, and named as a pager when it is one.
+  none, named as a pager when it is one. head.html, opengraph.html and
+  twitter_cards.html worked that out three ways, so one page described itself
+  twice.
 
-  head.html, opengraph.html and twitter_cards.html all need this exact answer
-  and worked it out three ways -- opengraph.html through Hugo's own chain, so
-  one page described itself twice: an unflattened summary in og:description
-  against the 160 characters the other two carried.
-
-  The site-wide fallback and the pager suffix belong here rather than in
-  description.html, which json-ld.html asks and must see neither.
+  The fallback and the suffix belong here rather than in description.html, which
+  json-ld.html asks and must see neither.
 */ -}}
 {{- $description := partial "description.html" . -}}
 {{- if not $description -}}

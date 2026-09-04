@@ -1,19 +1,13 @@
 {{- /*
-  Renders one content image, and is the single place that decides how.
+  Renders one content image: the image shortcode and the article cover both call
+  it. Plain markdown ![]() is left to Hugo.
 
-  Both entry points call it: the image shortcode, and the cover on an article
-  page. Plain markdown ![]() is left to Hugo.
+  Resizing needs the file to resolve as a resource -- a page bundle, or assets/.
+  A site keeping images in static/ can mount it into assets to opt in; without
+  that the image is still emitted, just unprocessed.
 
-  Resizing only happens when the file resolves as a resource — a page bundle,
-  or assets/. A site whose images sit in static/ can mount that directory into
-  assets to opt in; without it the image is still emitted, just unprocessed.
-
-  Accepts: src, alt, position, style, page, and five options: loading, to say
-  eager where lazy would delay the largest paint; fetchpriority, to put that
-  picture ahead of the requests queued beside it; maxWidth, to cap a picture
-  that is never shown at the width articles get; sizes, to say how wide it will
-  be shown when that is not the measure of an article; and fill, for a picture
-  shown at a fixed shape.
+  Takes src, alt, position, style, page, plus loading, fetchpriority, maxWidth,
+  sizes and fill.
 */ -}}
 
 {{- $src := .src -}}
@@ -22,9 +16,8 @@
 {{- $loading := .loading | default "lazy" -}}
 {{- /* No default: marking every picture high priority prioritises none. */ -}}
 {{- $fetchpriority := .fetchpriority -}}
-{{- /* How wide the picture will be shown. The default is the measure of an
-       article, and anything narrower than that fills the viewport. A caller
-       showing a picture at a fixed size passes its own. */ -}}
+{{- /* The default is the measure of an article; anything narrower fills the
+       viewport. A caller showing a fixed size passes its own. */ -}}
 {{- $sizes := .sizes | default site.Params.imageSizes | default "(max-width: 800px) 100vw, 800px" -}}
 {{- $remote := partial "is-remote.html" $src -}}
 
@@ -57,11 +50,9 @@
        box of a fixed shape, where the animation is a few dozen pixels wide and
        the untouched file is the whole download. */ -}}
 {{- $processable := and $img (reflect.IsImageResourceProcessable $img) (or $wantsFill (ne $img.MediaType.SubType "gif")) -}}
-{{- /* A caller showing the picture in a box of its own shape gets one copy cut
-       to it. Capping the width fixes one axis only: a 900x600 cover capped at
-       156 is 156x104, and a square box stretches those 104 rows to fill it.
-       Fill crops from the centre, which is what object-fit: cover was doing to
-       the oversized file anyway. */ -}}
+{{- /* Capping the width fixes one axis only: a 900x600 cover capped at 156 is
+       156x104, and a square box stretches those 104 rows. Fill crops from the
+       centre, which is what object-fit: cover was doing anyway. */ -}}
 {{- if and $processable $wantsFill -}}
   {{- $rendered = $img.Fill (printf "%s q85 webp" .fill) -}}
 {{- else if $processable -}}
@@ -71,10 +62,8 @@
     {{- if lt . $ceiling -}}{{- $offered = $offered | append . -}}{{- end -}}
   {{- end -}}
   {{- $offered = $offered | append $ceiling -}}
-  {{- /* One width, and it is the source width: there is nothing to choose
-         between and nothing to shrink, so the file is left alone. Resizing it
-         anyway would re-encode a picture nobody asked to change, for a srcset
-         that would then be dropped as saying nothing. */ -}}
+  {{- /* One width, and it is the source width: nothing to choose between and
+         nothing to shrink, so the file is left alone rather than re-encoded. */ -}}
   {{- if and (eq (len $offered) 1) (eq $ceiling $img.Width) -}}
     {{- $srcset = slice -}}
   {{- else -}}

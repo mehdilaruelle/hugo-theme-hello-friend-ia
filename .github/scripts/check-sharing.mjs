@@ -1,16 +1,11 @@
 // Asserts two things about the sharing links.
 //
-// One, that each parses into the parameters it means. The values themselves are
-// escaped by Go's contextual auto-escaping inside an href, so encoding is not
-// the risk. The risk is a separator that is not one: a literal ";" between
-// parameters swallows everything after it into the preceding value, and the
-// build says nothing.
+// One, that each parses into the parameters it means. Encoding is not the risk
+// -- Go escapes the values inside an href -- but a literal ";" between
+// parameters is a separator that is not one, and swallows everything after it.
 //
-// Two, that each http(s) anchor carries rel="nofollow". The row is a block of
-// eleven near-identical anchors, which is exactly the shape a twelfth gets
-// added to by copying a neighbour, so the assertion lives here rather than in a
-// reviewer's head. mailto: and whatsapp: are exempt: there is no link equity to
-// withhold on a scheme no crawler follows.
+// Two, that each http(s) anchor carries rel="nofollow". mailto: and whatsapp:
+// are exempt: no link equity to withhold on a scheme no crawler follows.
 //
 //   node .github/scripts/check-sharing.mjs <public-dir>
 
@@ -25,15 +20,12 @@ const PROVIDERS = /facebook|twitter|tumblr|pinterest|linkedin|reddit|xing|telegr
 // been read as carrying the real one and passed.
 const NAME = "(?<![-\\w])";
 
-// Quoted, single-quoted or bare. The demo deploys with --minify, which drops
-// the quotes around any attribute value that does not need them, so a pattern
-// that required them checked 128 of the showcase's 136 sharing links and said
-// nothing about the eight it never saw. Same shape as ATTR in check-links.mjs.
+// Quoted, single-quoted or bare: --minify drops the quotes it can, and a
+// pattern requiring them checked 128 of the showcase's 136 links in silence.
 const HREF = new RegExp(`${NAME}href\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "gi");
 
-// The opening tag of a sharing anchor, whole, so its rel can be read beside its
-// href. Matched on the class the theme puts on every one of them, which is also
-// what the stylesheet hangs the button off, so the two cannot drift apart.
+// The opening tag whole, so rel can be read beside href. Matched on the class
+// the stylesheet also hangs the button off, so the two cannot drift apart.
 const ANCHOR = new RegExp(`<a\\b[^>]*${NAME}class\\s*=\\s*(?:"[^"]*resp-sharing-button__link[^"]*"|'[^']*resp-sharing-button__link[^']*'|[^\\s>]*resp-sharing-button__link[^\\s>]*)[^>]*>`, "gi");
 const REL = new RegExp(`${NAME}rel\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");
 

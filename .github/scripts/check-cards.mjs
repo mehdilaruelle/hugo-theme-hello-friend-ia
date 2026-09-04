@@ -1,20 +1,15 @@
-// Asserts that the two halves of a social card name the same picture.
-//
-// Open Graph and Twitter tags are written by two partials, and used to take
-// their picture from two different sources: a site setting params.images showed
-// one image and named another on every page with a cover, and nothing failed.
+// Asserts that the two halves of a social card name the same picture. They are
+// written by two partials, and used to read two different sources: a site
+// setting params.images showed one image and named another on every page with
+// a cover, and nothing failed.
 //
 //   node .github/scripts/check-cards.mjs <public-dir>
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-// Quoted, single-quoted or bare: --minify drops the quotes around any value
-// that does not need them, so a pattern requiring them matches nothing.
-//
-// An attribute name starts where no name character precedes it. \b is not that
-// test -- there is a boundary between "-" and "c" too, so \bcontent matched the
-// content inside data-content. Same prefix as check-sharing.mjs.
+// Quoted, single-quoted or bare, because --minify drops the quotes it can. The
+// lookbehind is the name test \b is not; check-sharing.mjs says why.
 const META = /<meta\b[^>]*>/gi;
 const ATTR = (name) =>
   new RegExp(`(?<![-\\w])${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i");

@@ -1,16 +1,12 @@
 {{- /*
-  What a page says about itself, in one place. head.html and json-ld.html used
-  to work it out separately, so a term page with nothing written on it got a
-  description in its meta tag and none in its CollectionPage.
+  What a page says about itself, in one place. Returns the empty string when it
+  has nothing of its own: the site-wide fallback belongs in
+  description-meta.html, since repeating one sentence in the structured data of
+  every page is the duplication this chain exists to avoid.
 
-  Returns the empty string when the page has nothing of its own. The site-wide
-  fallback belongs in description-meta.html, not here: repeating it in the
-  structured data of every page is the duplication this chain exists to avoid.
-
-  A taxonomy or term page with no summary is described by naming its term. A
-  site with many tags has as many term pages, and the site description on every
-  one makes each look like a copy of the next, which is the one thing they are
-  not -- each holds a different set of posts.
+  A taxonomy or term page with no summary is described by naming its term,
+  rather than by the site description that would make each look like a copy of
+  the next when each holds a different set of posts.
 */ -}}
 {{- $description := "" -}}
 {{- if and .IsHome (not .Description) -}}
@@ -37,14 +33,11 @@
     {{- $description = partial "i18n.html" (dict "key" "termDescription" "args" (dict "Term" .Data.Term) "fallback" "") -}}
   {{- end -}}
 {{- else -}}
-  {{- /* Google shows about 155 characters and reads none of the rest, so the
-         summary is flattened to one line and cut to a length a result holds. A
-         description written by hand is left as written.
-
-         htmlUnescape before truncate: plainify strips tags and leaves the
-         entities Goldmark made, so an apostrophe shipped as a literal
-         "&rsquo;", and a cut could land inside one. TrimSpace rather than
-         chomp, which takes newlines and not the space the flattening made. */ -}}
+  {{- /* Google shows about 155 characters, so the summary is flattened and cut.
+         One written by hand is left as written. htmlUnescape before truncate:
+         plainify leaves the entities Goldmark made, and a cut could land inside
+         one. TrimSpace, not chomp, which takes newlines and not the space the
+         flattening made. */ -}}
   {{- $description = .Summary | plainify | htmlUnescape | replaceRE "\\s+" " " | strings.TrimSpace | truncate 160 "" -}}
 {{- end -}}
 {{- return $description -}}

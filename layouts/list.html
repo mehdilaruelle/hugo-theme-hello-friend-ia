@@ -3,10 +3,8 @@
 
     <div class="content">
         <main id="main" class="posts">
-            {{- /* Named as a pager from page two on, for the reason the
-                   <title> already is: each pager is its own canonical, so each
-                   arrives at a reader on its own, headed until now by the same
-                   word as every other. */ -}}
+            {{- /* Named as a pager from page two on, like the <title>: each is
+                   its own canonical, so each arrives on its own. */ -}}
             {{- $heading := partial "pager-suffix.html" (dict "text" (partial "title.html" .) "pager" $paginator.PageNumber) }}
             <h1>{{ $heading }}</h1>
 
@@ -46,15 +44,11 @@
                                 <li class="post-item">
                                     <a href="{{.Permalink}}" class="post-item-inner{{ if $thumbnail }} post-item-inner--thumbnail{{ end }}{{ if $excerpt }} post-item-inner--excerpt{{ end }}">
                                         {{- if $thumbnail }}
-                                            {{- /* Through image.html, like every other picture here.
-                                                   thumbnail.html shipped the cover whole -- a 900 px
-                                                   file into a 52 px box -- and looked in assets/ but
-                                                   not under _static, so a cover mounted from static/
-                                                   arrived with no dimensions and shifted the row.
-
-                                                   156 square is that box at 3x, cut to the shape the
-                                                   stylesheet shows it in. alt is empty: the post title
-                                                   beside it already names the link. */ -}}
+                                            {{- /* Through image.html, like every other picture here:
+                                                   thumbnail.html shipped a 900 px file into a 52 px box
+                                                   and missed _static, so a cover mounted from static/
+                                                   shifted the row. 156 square is that box at 3x. alt is
+                                                   empty -- the title beside it names the link. */ -}}
                                             {{ partial "image.html" (dict "src" .Params.cover "alt" "" "page" . "position" "post-thumbnail" "fill" "156x156") }}
                                         {{- end }}
                                         <span class="post-title">{{ partial "title.html" . }}</span>
