@@ -189,7 +189,7 @@ the image replaces the text logo entirely.
 | `path` | an image to use instead of the text logo. `alt` describes it |
 | `logoMark` | the character before the text, `>` when unset |
 | `logoText` | the text itself, `hello` when unset |
-| `logoHomeLink` | where the logo links. An absolute URL is used as given; anything else is joined to the site's home, so a site under a subpath keeps its prefix. Defaults to the home page |
+| `logoHomeLink` | where the logo links. A URL starting with `http://` or `https://` is used as given; anything else is joined to the site's home, so a site under a subpath keeps its prefix. A protocol-relative `//host/` counts as "anything else" and is joined too. Defaults to the home page |
 
 ### The cursor
 
@@ -225,14 +225,18 @@ Disqus with `comments` in its front matter — see [Front matter](#front-matter)
   theme      = "preferred-color-scheme"
 ```
 
+Only `label` is guarded in the template: leave `issueTerm` or `theme` unset and
+utterances is handed `issue-term=""` or `theme=""`, and renders its own error box
+where the comments should be. Set all three whenever you set `repository`.
+
 | key | what it does |
 | --- | --- |
 | `services.disqus.shortname` | the Disqus site name |
 | `params.commento.url` | the script URL of your Commento or [Comentario](https://comentario.app) instance |
 | `params.utterances.repository` | the public `owner/repo` holding the issues |
-| `params.utterances.issueTerm` | how a page maps to its issue: `pathname`, `url`, `title`, `og:title`, an issue number, or a specific term |
-| `params.utterances.label` | a label put on the issues utterances opens |
-| `params.utterances.theme` | `github-light`, `github-dark`, `preferred-color-scheme`, `github-dark-orange`, `icy-dark` and the rest utterances offers |
+| `params.utterances.issueTerm` | **required with `repository`** — how a page maps to its issue: `pathname`, `url`, `title`, `og:title`, an issue number, or a specific term |
+| `params.utterances.label` | a label put on the issues utterances opens. Optional: the attribute is omitted when unset |
+| `params.utterances.theme` | **required with `repository`** — `github-light`, `github-dark`, `preferred-color-scheme`, `github-dark-orange`, `icy-dark` and the rest utterances offers |
 
 ## Footer
 
