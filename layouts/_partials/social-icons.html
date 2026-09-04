@@ -1,24 +1,15 @@
-{{- /* The guard from json-ld.html: a map-shaped params.social yields strings
-       here, and .url on a string ends the build. twitter_cards reads the handle
-       out of that same shape, so support is half-present rather than absent —
-       the warning is the missing half. */ -}}
+{{- /* A map-shaped params.social yields strings here, and .url on a string ends
+       the build. twitter_cards still reads the handle out of it, so warn. */ -}}
 {{- if and . (reflect.IsMap .) -}}
   {{- warnidf "social-map-shape" "params.social is a map, so no social icons are rendered. The theme draws icons from the list form: a [[params.social]] entry per network, each with name and url." -}}
 {{- end -}}
 {{ range . -}}
 {{- if reflect.IsMap . -}}
-{{- /* Same tab by default, which is what every site already has: nonewpage was
-       nil unless written, and eq nil 0 is false, so target="_blank" was never
-       emitted. newTab says what it does; nonewpage = 0 still works, deprecated.
-
-       Read over the keys rather than by name: Hugo keeps the case a nested
-       param was written in, so index . "newtab" would miss newTab. */ -}}
+{{- /* Over the keys, not by name: Hugo keeps the case a nested param was
+       written in, and a quoted value is a string eq will not match. */ -}}
 {{- $newTab := false -}}
 {{- $legacy := false -}}
 {{- range $k, $v := . -}}
-  {{- /* Written either way: a quoted TOML value is a string, and eq compares
-         types without complaining, so "0" matched nothing and newTab = "false"
-         was truthy -- each the opposite of what it says. */ -}}
   {{- if eq (lower $k) "newtab" -}}{{- $newTab = not (in (slice false "false" 0 "0" "") $v) -}}{{- end -}}
   {{- if and (eq (lower $k) "nonewpage") (in (slice 0 "0" false "false") $v) -}}{{- $legacy = true -}}{{- end -}}
 {{- end -}}
