@@ -100,6 +100,18 @@ jobs:
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-cards.mjs public
 
+      # Nothing else parses the XML the build writes, so a feed could stop
+      # being XML and still ship — which is what an unescaped "]]>" in an
+      # article did: it closed the CDATA section early and took the whole
+      # document with it, not just the one item.
+      - name: Check the XML outputs parse
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-feeds.mjs public
+
+      - name: Check the example site's XML outputs parse
+        working-directory: hello-friend-ng/exampleSite
+        run: node ../.github/scripts/check-feeds.mjs public
+
       # A broken llms.txt is still a valid text file.
       - name: Check llms.txt and the Markdown copies
         working-directory: hello-friend-ng/showcaseSite

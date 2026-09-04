@@ -146,7 +146,9 @@
       {{ partial "pagination-single.html" . }}
 
       {{ if .Site.Config.Services.Disqus.Shortname }}
-        {{ if not (eq .Params.Comments "false") }}
+        {{- /* Both spellings: the test compared against the string alone, so
+               the boolean a writer reaches for did not match it. */}}
+        {{ if not (in (slice false "false") .Params.Comments) }}
           <div id="comments">
             {{ partial "disqus.html" . }}
           </div>

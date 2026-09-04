@@ -464,7 +464,7 @@ release stays a readable diff; the correction belongs in a change of its own.
 | `toc` | table of contents above the article. `notoc` on a heading keeps it out |
 | `audio` | an audio player above the article. **A list**, see below |
 | `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things). A page with `layout: search` is already treated this way and does not need it |
-| `comments` | set to `"false"` to hide Disqus on that page |
+| `comments` | set to `false` to hide Disqus on that page. The string `"false"` is accepted too, which is what older versions required |
 | `description` | overrides the summary in `<meta name="description">` and Open Graph |
 | `author` | overrides the site author for that page |
 | `twitter` | that page's author's handle, as `twitter:creator` on the card. The site's own account is `params.social`, above |

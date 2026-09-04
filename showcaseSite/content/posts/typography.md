@@ -61,6 +61,10 @@ $$
 \int_0^\infty e^{-x}\,dx = 1
 $$
 
+Nested indices put a `]]>` in the source — \(A[i[j]]>0\) — and passthrough
+emits it raw. That sequence ends a CDATA section, which is why the feed has to
+escape it rather than pass it on.
+
 It is opt-in rather than detected from the content, because `$$` is ordinary
 text in a shell snippet and a false positive would fetch 300 KB for nothing.
 
