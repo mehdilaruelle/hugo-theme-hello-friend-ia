@@ -22,13 +22,7 @@
 {{- with partial "title.html" . | plainify }}
 <meta name="twitter:title" content="{{ . }}">
 {{- end }}
-{{- /* The chain description.html settled on, not the embedded partial's own
-       .Description-then-.Summary one. */ -}}
-{{- $description := partial "description.html" . -}}
-{{- if not $description -}}
-  {{- $description = site.Params.description | plainify -}}
-{{- end -}}
-{{- $description = partial "pager-suffix.html" (dict "text" $description "pager" (partial "canonical.html" .).pager) -}}
+{{- $description := partial "description-meta.html" . -}}
 {{- with $description }}
 <meta name="twitter:description" content="{{ . }}">
 {{- end }}

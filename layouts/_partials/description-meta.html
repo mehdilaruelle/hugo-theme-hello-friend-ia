@@ -1,0 +1,21 @@
+{{- /*
+  The sentence a meta tag publishes: the page's own, the site's when it has
+  none, and named as a pager when it is one.
+
+  head.html, twitter_cards.html and opengraph.html all need this exact answer.
+  The first two worked it out in the same four lines; opengraph.html used Hugo's
+  own .Description-then-.Summary chain instead, so the same page described
+  itself two ways -- an untruncated, unflattened summary in og:description
+  against the 160 characters the other two carry, and none of the descriptions
+  description.html generates for a taxonomy or a term.
+
+  The site-wide fallback and the pager suffix belong here rather than in
+  description.html, which json-ld.html asks and must see neither: repeating one
+  sentence in the structured data of every page without its own is the
+  duplication that chain exists to avoid.
+*/ -}}
+{{- $description := partial "description.html" . -}}
+{{- if not $description -}}
+  {{- $description = site.Params.description | plainify | htmlUnescape -}}
+{{- end -}}
+{{- return partial "pager-suffix.html" (dict "text" $description "pager" (partial "canonical.html" .).pager) -}}

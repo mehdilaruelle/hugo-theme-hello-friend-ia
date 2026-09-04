@@ -417,13 +417,16 @@ and `og:image:height` go out with it. Facebook and LinkedIn hold the first
 render back until they have fetched and measured the file otherwise, which is
 why a freshly shared link so often appears without its picture.
 
-Three cases carry no dimensions. A remote URL, because there is nothing to
-measure at build time. An SVG, because asking one for its size is a build error
-— the same fact that keeps it off a card at all. And any site setting `images`,
-at page or site level: Hugo's own Open Graph partial writes the `og:image` tags
-in that case and may write several, while the theme resolves only the first, so
-a single pair of dimensions could end up describing the wrong picture. Use
-`cover` and `ogImage` to get them.
+Two cases carry no dimensions. A remote URL, because there is nothing to measure
+at build time. And an SVG, because asking one for its size is a build error —
+the same fact that keeps it off a card at all.
+
+Setting `images` used to be a third case: Hugo's own Open Graph partial wrote
+the `og:image` tags then, and could write several where the theme resolved one,
+so a single pair of dimensions risked describing the wrong picture. The theme
+owns that partial now and writes exactly one `og:image`, from the same source
+`twitter:image` uses, so the dimensions always belong to the picture beside
+them whichever way the image was configured.
 
 An SVG cover is passed over rather than announced, since no platform renders
 one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and

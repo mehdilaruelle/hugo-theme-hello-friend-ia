@@ -180,6 +180,25 @@ for (const file of walk(root)) {
       if (m) failures.push([file, key + " carries " + m[0], "an entity escaped twice, read as text"]);
     }
   }
+
+  // 8. One sentence per page, not three. head.html, opengraph.html and
+  //    twitter_cards.html publish the same description; opengraph.html used
+  //    Hugo's own .Description-then-.Summary chain instead, so 45 of the
+  //    showcase's 87 described pages said one thing in the meta tag and
+  //    another in the card -- a tag page announced itself with the site's
+  //    description. They all ask description-meta.html now.
+  const said = [all(named, "description"), all(og, "og:description"), all(named, "twitter:description")];
+  if (said.every((v) => v.length === 1)) {
+    const [meta, ogDesc, twitter] = said.map((v) => v[0]);
+    if (meta !== ogDesc || meta !== twitter) {
+      failures.push([file, `description "${meta}"
+    og:description "${ogDesc}"
+    twitter:description "${twitter}"`,
+        "one page, three different sentences"]);
+    }
+  } else if (said.some((v) => v.length > 1)) {
+    failures.push([file, "a description tag is repeated", "a page describes itself once in each"]);
+  }
 }
 
 // A directory that exists and holds no pages is the shape a wrong path takes,
@@ -198,3 +217,4 @@ if (failures.length) {
 console.log("canonical and og:url agree, one robots tag each, no SVG on a card");
 console.log("every JSON-LD block parses, an owned picture is in its BlogPosting, search is noindex");
 console.log("no description or alt carries an entity that was escaped twice");
+console.log("the meta, Open Graph and Twitter descriptions are the same sentence");

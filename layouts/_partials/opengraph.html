@@ -27,8 +27,8 @@
 	<meta property="og:title" content="{{ partial "pager-suffix.html" (dict "text" . "pager" $canonical.pager) }}">
 {{- end }}
 
-{{- with or .Description .Summary site.Params.description | plainify | htmlUnescape }}
-	<meta property="og:description" content="{{ partial "pager-suffix.html" (dict "text" (trim . "\n\r\t ") "pager" $canonical.pager) }}">
+{{- with partial "description-meta.html" . }}
+	<meta property="og:description" content="{{ . }}">
 {{- end }}
 
 {{- with or .Params.locale site.Language.Locale }}

@@ -23,26 +23,11 @@
 {{- with partial "author.html" . }}
 <meta name="author" content="{{ . }}" />
 {{- end }}
-{{- /* The page's own description, and the site's when it has none. The chain
-       lives in a partial because json-ld.html needs the same answer, and two
-       templates working it out separately is two templates that will disagree
-       one day. The site-wide fallback stays here: it is the right thing to put
-       in a meta tag, and the wrong thing to repeat in structured data on every
-       page that lacks one of its own. */ -}}
-{{- $description := partial "description.html" . -}}
-{{- if not $description -}}
-  {{- $description = .Site.Params.description | plainify -}}
-{{- end -}}
-{{- /* Named as a pager, like the title and the heading: each is its own
-       canonical and reaches an index alone, and they used to arrive carrying
-       one sentence between them.
-
-       Suffixed here and not in description.html, because the sentence a pager
-       ends up with is often the site-wide fallback, which is applied here and
-       not there -- json-ld.html asks that partial and must see neither. */ -}}
-{{- $page := (partial "canonical.html" .).pager -}}
-{{- $description = partial "pager-suffix.html" (dict "text" $description "pager" $page) -}}
-{{- with $description }}
+{{- /* One partial, because opengraph.html and twitter_cards.html publish the
+       same sentence and used to work it out apart. json-ld.html asks
+       description.html directly instead: it must see neither the site-wide
+       fallback nor the pager suffix. */ -}}
+{{- with partial "description-meta.html" . }}
 <meta name="description" content="{{ . }}" />
 {{- end }}
 {{- /* There is no meta keywords tag. No major search engine has read one since
