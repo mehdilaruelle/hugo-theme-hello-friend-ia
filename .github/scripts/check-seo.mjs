@@ -36,9 +36,11 @@ import { join } from "node:path";
 const attr = (name) => String.raw`(?<![-\w])${name}\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`;
 const pick = (m) => (m ? (m[1] ?? m[2] ?? m[3] ?? "") : null);
 
-// Every occurrence, not the last one. Open Graph allows a property to repeat --
-// Hugo's partial writes up to six og:image -- and a map keyed by property kept
-// only the final value, so an SVG card picture followed by a usable one passed.
+// Every occurrence, not the last one. Open Graph allows a property to repeat,
+// and a map keyed by property kept only the final value, so an SVG card picture
+// followed by a usable one passed. The theme's own partial writes one og:image
+// now, which is why the assertion below is a regression test rather than a
+// finding -- a page can still carry more from a shortcode or a custom head.
 const add = (map, key, value) => map.set(key, [...(map.get(key) ?? []), value]);
 const all = (map, key) => map.get(key) ?? [];
 const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase().endsWith(".svg");
