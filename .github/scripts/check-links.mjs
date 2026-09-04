@@ -1,20 +1,14 @@
 // Resolve every internal link and asset of a built Hugo site against the files
-// on disk.
-//
-// The site is built under a subpath, because a URL that silently drops the
-// baseURL path — how several bugs reached production here — resolves outside
-// the published tree and shows up as a failure.
-//
-// External URLs are never requested: the check has to be fast, offline, and
-// free of failures caused by somebody else's rate limit.
+// on disk. Built under a subpath, because a URL that drops the baseURL path --
+// how several bugs reached production here -- then resolves outside the tree.
+// External URLs are never requested: fast, offline, nobody else's rate limit.
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, dirname, resolve, relative, posix } from "node:path";
 
-// poster carries a URL like src does, and is built the same way, so it belongs
-// in the same net. The boundary keeps the names from matching inside a longer
-// attribute.
-const ATTR = /\b(?:href|src|poster)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+// poster carries a URL like src does, so it belongs in the same net. The
+// lookbehind is the name test \b is not; check-sharing.mjs says why.
+const ATTR = /(?<![-\w])(?:href|src|poster)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
 const CSS_URL = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]+))\s*\)/gi;
 const SKIP = /^(?:https?:|mailto:|tel:|data:|javascript:|\/\/|#)/i;
 

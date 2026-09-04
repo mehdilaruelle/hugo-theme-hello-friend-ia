@@ -1,67 +1,78 @@
 {{- /*
-  The picture a social card should show, and how to describe it. Returns a map
-  with url, alt and svg; url is empty when there is nothing to show.
+  The picture a social card shows, and how to describe it. Returns url, alt,
+  owned and the picture's size; url is empty when there is nothing to show.
 
-  One place, because head.html writes the Open Graph tags and
-  twitter_cards.html the Twitter ones, and a card whose two halves disagree
-  shows one picture and names another.
+  One place, because opengraph.html and twitter_cards.html both ask, and a card
+  whose halves disagree shows one picture and names another.
 
-  Order: the page's images, its cover, the site's images, then ogImage. The
-  site pair is in that order because Hugo's own Open Graph partial reads
-  site images and knows nothing of ogImage, and it is the one emitting og:image
-  when they are set.
+  Order: the page's images, its cover, the site's images, then ogImage. An SVG
+  is skipped at every step, so the chain falls through to one that will render.
 
-  An SVG is passed over: no platform renders one on a card, so a cover in that
-  format falls through to a fallback that will show. The two keys Hugo also
-  reads are not skipped, because it emits og:image from them whatever the
-  theme decides and the two halves have to name the same file -- svg reports
-  that case so the card is not announced as one with a picture in it.
-
-  alt describes the picture, so it is only offered for one belonging to this
-  page: the site-wide fallback is the same image everywhere, and this page's
-  title would be true of the article and false of the picture. coverCaption
-  belongs to the cover alone, not to an images[0] that overrode it.
+  alt and owned are set only for a picture belonging to this page: json-ld.html
+  takes it only then, since one file asserted as the subject of two hundred
+  articles is worse data than none. They are set from $img rather than beside
+  it, because images = [""] -- the README's own sample -- passes `with` and
+  then falls through.
 */ -}}
 {{- $img := "" -}}
 {{- $alt := "" -}}
+{{- $owned := false -}}
 {{- with .Params.images -}}
-  {{- $img = index . 0 -}}
+  {{- if not (partial "is-svg.html" (index . 0)) -}}{{- $img = index . 0 -}}{{- end -}}
+{{- end -}}
+{{- with $img -}}
   {{- $alt = partial "title.html" $ -}}
+  {{- $owned = true -}}
 {{- end -}}
 {{- if not $img -}}
   {{- with .Params.cover -}}
-    {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
+    {{- if not (partial "is-svg.html" .) -}}
       {{- $img = . -}}
       {{- $alt = or $.Params.coverCaption (partial "title.html" $) -}}
+      {{- $owned = true -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- if not $img -}}
-  {{- with site.Params.images -}}{{- $img = index . 0 -}}{{- end -}}
+  {{- with site.Params.images -}}
+    {{- if not (partial "is-svg.html" (index . 0)) -}}{{- $img = index . 0 -}}{{- end -}}
+  {{- end -}}
 {{- end -}}
 {{- if not $img -}}
   {{- with site.Params.ogImage -}}
-    {{- if ne (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}{{- $img = . -}}{{- end -}}
+    {{- if not (partial "is-svg.html" .) -}}{{- $img = . -}}{{- end -}}
   {{- end -}}
 {{- end -}}
 
-{{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one
-       is left alone. */ -}}
+{{- /* Resolved as a resource so the URL names a file Hugo wrote; a remote one is
+       left alone. The size comes off that same resource, for og:image:width and
+       og:image:height: without them Facebook and LinkedIn hold the first render
+       back until they have fetched and measured the file. A format that will not
+       give its dimensions up answers 0, which is worse asserted than omitted. */ -}}
 {{- $url := "" -}}
-{{- $svg := false -}}
+{{- $width := 0 -}}
+{{- $height := 0 -}}
 {{- with $img -}}
-  {{- $svg = eq (lower (path.Ext (urls.Parse .).Path)) ".svg" -}}
   {{- $url = . -}}
   {{- if not (partial "is-remote.html" $url) -}}
     {{- with or ($.Resources.GetMatch $url) (resources.Get (printf "_static%s" $url)) (resources.Get $url) -}}
       {{- $url = .Permalink -}}
+      {{- if reflect.IsImageResourceWithMeta . -}}
+        {{- if gt .Width 0 -}}
+          {{- $width = .Width -}}
+          {{- $height = .Height -}}
+        {{- end -}}
+      {{- end -}}
     {{- else -}}
       {{- $url = urls.JoinPath site.BaseURL $url -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
-{{- /* coverCaption is Markdown, and an attribute is text. */ -}}
 {{- with $alt -}}
-  {{- $alt = . | markdownify | plainify | replaceRE "\\s+" " " | chomp -}}
+  {{- /* coverCaption is Markdown and an attribute is text. htmlUnescape because
+         plainify strips tags but leaves the entities markdownify made, so an
+         apostrophe reached the reader as a literal "&rsquo;". TrimSpace because
+         chomp takes newlines, and the flattening turns one into a space. */ -}}
+  {{- $alt = . | markdownify | plainify | htmlUnescape | replaceRE "\\s+" " " | strings.TrimSpace -}}
 {{- end -}}
-{{- return dict "url" $url "alt" $alt "svg" $svg -}}
+{{- return dict "url" $url "alt" $alt "owned" $owned "width" $width "height" $height -}}

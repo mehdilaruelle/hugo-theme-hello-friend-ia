@@ -1,0 +1,23 @@
+{{- /*
+  The sentence a meta tag publishes: the page's own, the site's when it has
+  none, named as a pager when it is one. head.html, opengraph.html and
+  twitter_cards.html worked that out three ways, so one page described itself
+  twice.
+
+  The fallback and the suffix belong here rather than in description.html, which
+  json-ld.html asks and must see neither.
+*/ -}}
+{{- $description := partial "description.html" . -}}
+{{- if not $description -}}
+  {{- $description = site.Params.description | plainify | htmlUnescape -}}
+{{- end -}}
+{{- $pager := (partial "canonical.html" .).pager -}}
+{{- $out := partial "pager-suffix.html" (dict "text" $description "pager" $pager) -}}
+{{- /* The suffix is appended after description.html has truncated to 160, so a
+       pager shipped a longer tag than any other page. Cut the sentence to make
+       room for the suffix, rather than the suffix that says which pager. */ -}}
+{{- if gt (strings.RuneCount $out) 160 -}}
+  {{- $room := sub (strings.RuneCount $description) (sub (strings.RuneCount $out) 160) -}}
+  {{- $out = partial "pager-suffix.html" (dict "text" (truncate $room "" $description) "pager" $pager) -}}
+{{- end -}}
+{{- return $out -}}

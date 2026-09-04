@@ -141,6 +141,20 @@ as the theme does. What the theme contributes is the part it controls:
 Nothing to configure. Every page already carries a canonical link, Open Graph
 and Twitter Card tags. On top of that:
 
+**One URL per page.** A paginated list gives each pager its own canonical, since
+each is a distinct set of posts rather than a copy of page one — and `og:url`,
+which is the canonical Facebook and LinkedIn read, names the same URL as the
+`<link rel="canonical">` beside it. `og:title` and the `<title>` both say which
+pager it is.
+
+**`max-image-preview:large`**, so Google can show a full-width picture beside
+the page in Search and in Discover instead of a thumbnail — except on a page
+that is kept out of the index, where the directive would say nothing. There is
+one `robots` tag either way. A search page is kept out without being asked: it
+is thin by construction, and Google's guidance is to keep internal search
+results unindexed. See
+[Keeping a page out of things](docs/config.md#keeping-a-page-out-of-things).
+
 **JSON-LD**, and only JSON-LD. Google reads it in preference to microdata, and
 the theme no longer emits any: Hugo's embedded `schema.html` wrote six
 `itemprop` attributes with no `itemscope` to hold them, which parses to nothing.
@@ -148,12 +162,18 @@ Structured data of your own goes in
 [`layouts/_partials/extra-head.html`](#how-to-edit-the-theme). The home page is
 described as a `WebSite`, and any dated single page
 as a `BlogPosting` carrying its headline, description, dates, author, publisher,
-language, word count, and its image and tags when it has them. Pages that are
-neither are left alone rather than described badly.
+language, word count, and its image and tags when it has them. A page with no
+date is a `WebPage`: its URL, name, language and its own description, and
+nothing the theme would have to invent to say.
 
 The values come from what you already set: `author` (a string or a map with a
 `name`, in the page or in the site params), `description` — falling back to a
-trimmed summary — and `images`, falling back to the site-wide list.
+trimmed summary — and the picture, which is the one the social card shows: the
+page's `images` or its `cover`, resolved by the same partial so the two can
+never disagree. The site-wide fallback is not borrowed here. It is the right
+picture for a card, which shows whatever it is handed, and the wrong one for
+structured data, where it would assert one file as the subject of every article
+on the site.
 
 **`Person`.** A name on its own is a string. What makes it an entity a search
 engine can recognise is the evidence tying it to the same person elsewhere, so
@@ -351,7 +371,6 @@ pagination.pagerSize     = 10
 
   # Metadata mostly used in document's head
   description = "My new homepage or blog"
-  keywords = "homepage, blog"
   images = [""]
 
 [taxonomies]
@@ -362,7 +381,6 @@ pagination.pagerSize     = 10
 [languages]
   [languages.en]
     title = "Hello Friend NG"
-    keywords = ""
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
     readOtherPosts = "Read other posts"
 

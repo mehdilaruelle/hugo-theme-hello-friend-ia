@@ -92,7 +92,29 @@ jobs:
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-image-sizing.mjs public
 
+      # Open Graph and Twitter tags are written by two partials. They used to
+      # take their picture from two different sources, so a site setting
+      # params.images showed one image and named another on every page with a
+      # cover — and nothing failed.
+      - name: Check both halves of a social card name one picture
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-cards.mjs public
+
       # A broken llms.txt is still a valid text file.
       - name: Check llms.txt and the Markdown copies
         working-directory: hello-friend-ng/showcaseSite
         run: node ../.github/scripts/check-llms.mjs public https://example.com/subpath/showcase/
+
+      # Every one of these is a thing the build reports nothing about. A page
+      # can name two different URLs as its own, announce a card picture no
+      # platform renders, or carry two contradictory robots directives, and
+      # Hugo calls that a successful build — which is how four of the six got
+      # in. Run against both demos: the showcase is the one with covers, four
+      # languages, pagers and a search page.
+      - name: Check the SEO invariants (showcase)
+        working-directory: hello-friend-ng/showcaseSite
+        run: node ../.github/scripts/check-seo.mjs public
+
+      - name: Check the SEO invariants (demo)
+        working-directory: hello-friend-ng/exampleSite
+        run: node ../.github/scripts/check-seo.mjs public
