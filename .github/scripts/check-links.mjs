@@ -55,11 +55,13 @@ if (!prefix.endsWith("/")) prefix += "/";
 
 const failures = [];
 let checked = 0;
+let files = 0;
 
 for (const file of walk(root)) {
   // Feeds are skipped: their descriptions carry escaped markup from article
   // bodies, which is content rather than anything the theme emits.
   if (!/\.(html|css)$/i.test(file)) continue;
+  files++;
 
   const page = "/" + relative(root, file).split(/[\\/]/).join("/");
   const text = readFileSync(file, "utf8");
@@ -111,6 +113,13 @@ for (const file of walk(root)) {
     checked++;
     if (!published(root, resolved)) failures.push([page, raw, "no such file"]);
   }
+}
+
+// A wrong working-directory reads as a pass otherwise: nothing walked, nothing
+// broken, "all resolve".
+if (files === 0) {
+  console.error(`no HTML or CSS under ${root}: nothing was checked`);
+  process.exit(1);
 }
 
 console.log(`checked ${checked} internal references`);

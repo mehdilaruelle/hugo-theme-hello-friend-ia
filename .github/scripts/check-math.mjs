@@ -17,6 +17,13 @@ const langs = { en: "", fr: "fr/", ja: "ja/", ar: "ar/" };
 let bad = 0;
 for (const [lang, prefix] of Object.entries(langs)) {
   const dir = join(root, prefix, "posts/2026/01");
+  // Missing rather than empty: readdirSync throws, and a stack trace says less
+  // about a wrong working-directory than the line below.
+  if (!existsSync(dir)) {
+    console.log(`  ${lang.padEnd(3)} BAD  no ${dir} to read`);
+    bad++;
+    continue;
+  }
   const file = readdirSync(dir)
     .map(d => join(dir, d, "index.html"))
     .filter(f => existsSync(f))
