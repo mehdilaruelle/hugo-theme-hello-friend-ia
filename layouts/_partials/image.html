@@ -54,7 +54,18 @@
        156x104, and a square box stretches those 104 rows. Fill crops from the
        centre, which is what object-fit: cover was doing anyway. */ -}}
 {{- if and $processable $wantsFill -}}
-  {{- $rendered = $img.Fill (printf "%s q85 webp" .fill) -}}
+  {{- /* Inside try, because "can be processed" is not "will decode". Hugo reads
+         the size from the header and answers Processable on that, but the pixels
+         are only read here -- and a GIF Go's decoder rejects then aborts the
+         whole build. A cover the theme cannot crop is a thumbnail that is too
+         big, which is what this branch is for; it is not a reason to publish no
+         site at all, so the original stands in. */ -}}
+  {{- $cut := try ($img.Fill (printf "%s q85 webp" .fill)) -}}
+  {{- with $cut.Err -}}
+    {{- warnidf "image-fill-failed" "image.html: %s could not be cropped to %s and is served whole (%s)" $src $.fill . -}}
+  {{- else -}}
+    {{- $rendered = $cut.Value -}}
+  {{- end -}}
 {{- else if $processable -}}
   {{- $ceiling := cond (gt $img.Width $maxWidth) $maxWidth $img.Width -}}
   {{- $offered := slice -}}
