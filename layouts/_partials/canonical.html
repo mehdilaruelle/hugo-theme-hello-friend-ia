@@ -1,0 +1,23 @@
+{{- /*
+  The URL this page names as its own, and which pager of a list it is. Returns
+  a map with url and pager.
+
+  Every pager shares one .Permalink, so page 2 and beyond used to name page 1
+  as their canonical -- telling a search engine they are duplicates of it, which
+  is the opposite of what pagination is for.
+
+  The paginator is built only on the kinds list.html paginates: building it
+  elsewhere would write the /page/2/ output files for nothing.
+
+  Here rather than in head.html, opengraph.html and json-ld.html, which all need
+  the same answer and used to work it out apart.
+*/ -}}
+{{- $canonical := .Permalink -}}
+{{- $pager := 1 -}}
+{{- if in (slice "section" "taxonomy" "term") .Kind -}}
+  {{- with .Paginate (partial "list-pages.html" .) -}}
+    {{- $canonical = .URL | absURL -}}
+    {{- $pager = .PageNumber -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "url" $canonical "pager" $pager -}}

@@ -2,6 +2,8 @@
 title = "Tout ce dont un article est fait"
 description = "Titres, code, tableaux, citations et images sur une page, pour que rien ne reste sans style"
 date = "2026-01-10"
+cover = "/img/cover.png"
+coverCaption = "Une couverture matricielle : c'est la paire images + cover qui faisait diverger les deux moitiés de la carte."
 type = ["posts","post"]
 toc = true
 math = true

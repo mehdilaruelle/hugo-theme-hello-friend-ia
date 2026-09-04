@@ -300,9 +300,21 @@ a list with no thumbnails renders exactly as it did before.
 ```
 
 The image is taken from the page's `cover` front matter, the same value the
-article page already uses. When it resolves to a page resource or an asset,
-Hugo's dimensions are emitted so the row reserves its space before the image
-arrives; a path under `static/` or a remote URL is used as given.
+article page already uses, and goes through the same partial: it is cropped to
+156×156 — the 52 px box at 3× — and re-encoded as WebP, so a list of twenty
+posts with full-size covers costs a few kilobytes rather than a few megabytes.
+The crop is centred, and is the one `object-fit: cover` was already making at
+display time. The dimensions are emitted with it, so the row reserves its space
+before the image arrives.
+
+A cover mounted from `static/` is resolved the same way as one in `assets/`.
+Two kinds are passed through at full size instead, because neither can be
+cropped: a remote URL, and an SVG.
+
+A GIF cover is cropped here and left alone everywhere else. Resizing one loses
+its animation, which is worth keeping on an article cover shown at full width
+and not worth a multi-megabyte download in a 52 px box — so the thumbnail takes
+the first frame and the cover on the article page still moves.
 
 ## Post excerpts
 
@@ -337,12 +349,11 @@ templates.
 | --- | --- |
 | `enableThemeToggle` | shows the light/dark button in the menu |
 | `enableReadingTime` | shows an estimated reading time on articles |
-| `enableSharingButtons` | shows the sharing row under an article |
+| `enableSharingButtons` | shows the sharing row under an article. Every http(s) link in it is `rel="noopener nofollow"` — the `mailto:` and `whatsapp:` ones carry `noopener` alone, since there is no link equity to withhold on a scheme no crawler follows — and the Pinterest one sends the page's social picture as its `media` |
 | `disableReadOtherPosts` | hides the previous/next links |
 | `backgroundImage` | an image behind the front page, `cover`-sized and fixed. Used in dark mode |
 | `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
 | `themeColor` | `<meta name="theme-color">`, the browser UI tint on mobile |
-| `keywords` | site-wide `<meta name="keywords">`, joined with each page's tags |
 | `ogImage` | the picture a social card falls back to when a page has no `cover`. Use PNG or JPEG — no platform renders an SVG card |
 | `mainSections` | which section the footer's RSS icon and the 404 page point at. Defaults to `posts`. It does **not** decide which template renders an article: those resolve by section name, so articles belong in `content/posts/` |
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
@@ -360,7 +371,7 @@ templates.
   customJS     = ["js/extra.js"]
 ```
 
-`themeColor` and `keywords` are only emitted when set. An empty `content` is not
+`themeColor` is only emitted when set. An empty `content` is not
 a neutral default — it is a tag asserting the value is blank.
 
 #### Responsive images
@@ -397,9 +408,33 @@ A page's `cover` becomes its `og:image` and `twitter:image`, falling back to
 the Open Graph tags and the Twitter ones alike, so a card cannot name one
 picture and show another.
 
-An SVG cover is passed over rather than announced, since no platform renders
-one, and the card falls back to `ogImage`. Give the site one in PNG or JPEG and
-an article illustrated with a diagram still shares with a picture on it.
+The same picture becomes the `image` of the page's `BlogPosting`, which is where
+Google's Article guidance asks for one — but only when it came from the page's
+own `cover` or `images`. A site-wide `ogImage` still shows on the card and is
+left out of the structured data, because it would claim one file as the subject
+of every article on the site.
+
+Where the picture resolves to a local file Hugo can measure, `og:image:width`
+and `og:image:height` go out with it. Facebook and LinkedIn hold the first
+render back until they have fetched and measured the file otherwise, which is
+why a freshly shared link so often appears without its picture.
+
+Two cases carry no dimensions. A remote URL, because there is nothing to measure
+at build time. And an SVG, because asking one for its size is a build error —
+the same fact that keeps it off a card at all.
+
+Setting `images` used to be a third case: Hugo's own Open Graph partial wrote
+the `og:image` tags then, and could write several where the theme resolved one,
+so a single pair of dimensions risked describing the wrong picture. The theme
+owns that partial now and writes exactly one `og:image`, from the same source
+`twitter:image` uses, so the dimensions always belong to the picture beside
+them whichever way the image was configured.
+
+An SVG is passed over wherever it appears in that chain — `images` and `cover`,
+at page or site level, alike — since no platform renders one on a card. The
+chain simply continues to the next candidate. Give the site an `ogImage` in PNG
+or JPEG and an article illustrated with a diagram still shares with a picture on
+it.
 
 A card with a picture is announced as `summary_large_image` rather than the
 small square, and carries an `og:image:alt` / `twitter:image:alt` — but only
@@ -413,10 +448,13 @@ URL, so `url = "https://twitter.com/janedoe"` is enough and there is nothing
 extra to configure. A URL with no handle in it — the bare
 `https://twitter.com/` — emits no tag.
 
-One trap in that partial, which the theme cannot reach: it absolutises `audio`
-and `videos` with `absURL`, and a leading slash there resolves against the host
-rather than the base URL. On a site served from a subpath, write them without
-one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
+One trap remains in the Open Graph partial: it absolutises `audio` and `videos`
+with `absURL`, and a leading slash there resolves against the host rather than
+the base URL. On a site served from a subpath, write them without one —
+`audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`. The theme now carries
+its own copy of that partial and could correct it, but the copy is deliberately
+Hugo's line for line apart from the two URLs it had to fix, so the next Hugo
+release stays a readable diff; the correction belongs in a change of its own.
 
 ### Front matter
 
@@ -425,7 +463,7 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 | `cover` / `coverCaption` | image above the article, caption takes Markdown |
 | `toc` | table of contents above the article. `notoc` on a heading keeps it out |
 | `audio` | an audio player above the article. **A list**, see below |
-| `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things) |
+| `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things). A page with `layout: search` is already treated this way and does not need it |
 | `comments` | set to `false` to hide Disqus on that page. The string `"false"` is accepted too, which is what older versions required |
 | `description` | overrides the summary in `<meta name="description">` and Open Graph |
 | `author` | overrides the site author for that page |
@@ -437,9 +475,9 @@ one — `audio = ["video/demo.mp4"]`, not `["/video/demo.mp4"]`.
 audio: ["audio/episode-01.mp3"]
 ```
 
-Hugo's own Open Graph partial ranges over this key, so a bare string stops the
-build before the theme is reached — and it absolutises what it finds with
-`absURL`, which is why there is no leading slash above. See
+The Open Graph partial ranges over this key, so a bare string stops the build —
+and it absolutises what it finds with `absURL`, which is why there is no leading
+slash above. See
 [Everything else the theme reads](#everything-else-the-theme-reads).
 
 ### Keeping a page out of things
@@ -451,7 +489,22 @@ tells the crawler not to index what it finds is contradicting itself — a
 contradiction search consoles report, and crawl budget spent on nothing. Its
 translations stop pointing at it with `hreflang` for the same reason.
 
-It does not touch this site's search, which is a separate switch:
+The search page is kept out the same way, without being asked. A page with
+`layout: search` is thin by construction — an empty results list and a form —
+and Google's guidance is to keep internal search results out of the index, since
+there is no end to the URLs a crawler can generate from one. So the tag, the
+sitemap entry and the `hreflang` set all follow the layout, in every language,
+and there is nothing to write in the front matter. `searchable: false` does not
+do this: it only keeps a page out of *this* site's search index, and says
+nothing to a crawler.
+
+Every page that is not kept out carries `max-image-preview:large` in the same
+tag instead. It is what lets Google show a full-width picture beside the page in
+Search and in Discover rather than a thumbnail. There is only ever one
+`robots` tag: the directive is meaningless on a page that is not indexed, so
+`noindex` replaces it rather than joining it.
+
+`noindex` does not touch this site's search, which is a separate switch:
 
 ```yaml
 ---
@@ -462,8 +515,8 @@ searchable: false      # keep it out of this site's search
 ```
 
 `sitemap.disable` is Hugo's own switch and still works on its own, for a page
-that should stay out of the sitemap while remaining indexable — a thin page
-that is fine to land on but not worth submitting, such as `/search/`.
+that should stay out of the sitemap while remaining indexable — a thin page that
+is fine to land on but not worth submitting.
 
 `_build.list: never` is the blunt version: it removes the page from the sitemap,
 the lists, the feeds and the search index in one line, while still rendering it.

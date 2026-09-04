@@ -1,44 +1,23 @@
 {{- /*
-  What a page says about itself, in one place.
+  What a page says about itself, in one place. Returns the empty string when it
+  has nothing of its own: the site-wide fallback belongs in
+  description-meta.html, since repeating one sentence in the structured data of
+  every page is the duplication this chain exists to avoid.
 
-  head.html puts it in a meta tag and json-ld.html puts it in structured data,
-  and they used to work it out separately: the JSON-LD read .Description alone,
-  so a term page with nothing written on it got a description in its meta tag
-  and none in its CollectionPage.
-
-  Returns the empty string when the page has nothing of its own. The site-wide
-  fallback is deliberately not applied here: it belongs in a meta tag, and
-  repeating it in the structured data of every page without a description of
-  its own is the duplication this chain exists to avoid.
-*/ -}}
-{{- /*
-  A list or taxonomy page has no summary, so the chain used to end in an empty
-  string and the tag shipped as content="". The site description is the same
-  fallback og:description already uses; the tag is dropped entirely when even
-  that is unset, since an empty one says less than none at all.
-
-  A term page with nothing written on it is given a description naming its term
-  instead. A site with many tags has as many term pages, and the site
-  description on every one of them makes each look like a copy of the next to a
-  search engine, which is the one thing they are not: each holds a different set
-  of posts. A term page that does have a _index.md with a body keeps its own
-  summary, which says more than any sentence generated from the term.
+  A taxonomy or term page with no summary is described by naming its term,
+  rather than by the site description that would make each look like a copy of
+  the next when each holds a different set of posts.
 */ -}}
 {{- $description := "" -}}
 {{- if and .IsHome (not .Description) -}}
-  {{- /* homeSubtitle is the line under the title, written to be read on the
-         page. A front page with a description of its own says what the site is
-         for at the length a search result gives it, so that wins. */ -}}
-  {{- $description = .Site.Params.homeSubtitle | plainify -}}
+  {{- /* homeSubtitle is the line under the title. A front page with a
+         description of its own says what the site is for at the length a search
+         result gives it, so that wins. */ -}}
+  {{- $description = .Site.Params.homeSubtitle | plainify | htmlUnescape -}}
 {{- else if .Description -}}
   {{- $description = .Description -}}
 {{- else if and (eq .Kind "taxonomy") (not .Summary) -}}
-  {{- /* The index of a taxonomy had nothing of its own, so it fell through to
-         the site description and read as a copy of the front page. Same shape
-         as the term branch below: a string per taxonomy, and a generic one for
-         taxonomies the theme does not know.
-
-         Through i18n.html rather than i18n: with
+  {{- /* Through i18n.html rather than i18n: with
          enableMissingTranslationPlaceholders on, a missing key renders
          "[i18n] key" rather than the empty string, so the test below never
          fires and the placeholder is what gets published. */ -}}
@@ -48,19 +27,17 @@
   {{- end -}}
 {{- else if and (eq .Kind "term") (not .Summary) -}}
   {{- /* .Data.Singular is Hugo's own word for the taxonomy, so it is English
-         whatever the page is written in. One string per taxonomy instead, and
-         a term-only one for taxonomies the theme does not know. */ -}}
+         whatever the page is written in. One string per taxonomy instead. */ -}}
   {{- $description = partial "i18n.html" (dict "key" (printf "termDescription%s" (title .Data.Singular)) "args" (dict "Term" .Data.Term) "fallback" "") -}}
   {{- if not $description -}}
     {{- $description = partial "i18n.html" (dict "key" "termDescription" "args" (dict "Term" .Data.Term) "fallback" "") -}}
   {{- end -}}
 {{- else -}}
-  {{- /* The summary runs to whatever Hugo decided, newlines and all, and went
-         out whole: 549 characters on the exampleSite, six of its twenty
-         descriptions carrying a line break. Google shows about 155 and reads
-         none of the rest, so it is trimmed to a length a result can hold and
-         flattened to one line. A description written by hand is left exactly
-         as written. */ -}}
-  {{- $description = .Summary | plainify | replaceRE "\\s+" " " | chomp | truncate 160 "" -}}
+  {{- /* Google shows about 155 characters, so the summary is flattened and cut.
+         One written by hand is left as written. htmlUnescape before truncate:
+         plainify leaves the entities Goldmark made, and a cut could land inside
+         one. TrimSpace, not chomp, which takes newlines and not the space the
+         flattening made. */ -}}
+  {{- $description = .Summary | plainify | htmlUnescape | replaceRE "\\s+" " " | strings.TrimSpace | truncate 160 "" -}}
 {{- end -}}
 {{- return $description -}}
