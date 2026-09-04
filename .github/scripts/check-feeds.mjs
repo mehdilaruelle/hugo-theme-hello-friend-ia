@@ -1,12 +1,7 @@
-// Asserts that every XML output is well-formed.
+// Asserts that every XML output is well-formed. Nothing else parses the XML the
+// build writes, so a feed could stop being XML and still ship.
 //
-// Nothing else parses the XML the build writes, so a feed could stop being XML
-// and still ship: an unescaped "]]>" closed a CDATA section early and took the
-// whole document with it.
-//
-// A scanner, not a validator — it checks what a template can get wrong: a "]]>"
-// loose in character data, unbalanced or crossed tags, an unterminated section,
-// an ampersand that starts nothing.
+// A scanner, not a validator: it checks what a template can get wrong.
 //
 //   node .github/scripts/check-feeds.mjs <public-dir>
 
@@ -14,10 +9,10 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const NAME = "[A-Za-z_:][-A-Za-z0-9_:.]*";
-// XML predefines five entity names and nothing else. Anything further needs
-// a DTD, and these documents declare none, so &nbsp; is as fatal as a bare &.
+// The five XML predefines. Anything else needs a DTD these documents lack, so
+// &nbsp; is as fatal as a bare &.
 const ENTITY = /^&(?:#[0-9]+|#[xX][0-9a-fA-F]+|lt|gt|amp|quot|apos);/;
-// Every attribute needs a quoted value, and no value may hold a raw <.
+
 const ATTRS = new RegExp(`^(?:\\s+${NAME}\\s*=\\s*("[^"<]*"|'[^'<]*'))*\\s*$`);
 const ONE_ATTR = new RegExp(`${NAME}\\s*=\\s*("[^"<]*"|'[^'<]*')`, "g");
 
@@ -29,7 +24,6 @@ function* walk(dir) {
   }
 }
 
-// Returns a list of problems; empty means well-formed as far as this checks.
 function scan(s) {
   const bad = [];
   const stack = [];
@@ -43,8 +37,7 @@ function scan(s) {
     const lt = s.indexOf("<", i);
     const text = s.slice(i, lt === -1 ? s.length : lt);
 
-    // Character data. "]]>" must not appear here: it is how a CDATA section
-    // ends, so finding one loose means a section ended somewhere it should not.
+    // "]]>" here means a CDATA section ended where it should not have.
     const stray = text.indexOf("]]>");
     if (stray !== -1) bad.push(`${at(i + stray)}: "]]>" in character data — a CDATA section closed early`);
     for (let k = text.indexOf("&"); k !== -1; k = text.indexOf("&", k + 1)) {
@@ -74,7 +67,7 @@ function scan(s) {
       i = end + 1; continue;
     }
 
-    // A tag. Scan to its ">", skipping any inside a quoted attribute value.
+    // Scan to ">", skipping any inside a quoted value.
     let j = i + 1, quote = null, end = -1;
     for (; j < s.length; j++) {
       const c = s[j];
@@ -89,8 +82,7 @@ function scan(s) {
     const selfClosing = raw.endsWith("/");
     const name = (raw.replace(/^\//, "").match(new RegExp(`^${NAME}`)) || [])[0];
     if (name) {
-      // What follows the name has to be a well-formed attribute list: an
-      // unquoted value is not XML, however happily a browser reads it.
+      // An unquoted value is not XML, however happily a browser reads it.
       const rest = raw.slice((closing ? 1 : 0) + name.length).replace(/\/$/, "");
       if (!ATTRS.test(rest)) {
         bad.push(`${at(i)}: <${name}> has an attribute with no quoted value`);
@@ -129,13 +121,12 @@ let files = 0;
 for (const file of walk(root)) {
   files++;
   const problems = scan(readFileSync(file, "utf8"));
-  // One broken item breaks the document, so a handful of lines is enough to act on.
+  // One broken item breaks the document; a handful of lines is enough.
   for (const p of problems.slice(0, 5)) failures.push([file, p]);
 }
 
-// A directory that exists and holds no XML is the shape a wrong
-// working-directory takes, and every assertion above is vacuously true over
-// nothing: the run reads as a pass with nothing looking wrong.
+// A wrong working-directory: every assertion above is vacuously true over
+// nothing, and the run reads as a pass.
 if (files === 0) {
   console.error(`no XML found under ${root}: nothing was checked`);
   process.exit(1);
