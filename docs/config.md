@@ -434,7 +434,7 @@ entry per network:
 | --- | --- |
 | `name` | which icon to draw, matched case-insensitively and trimmed. See [docs/svgs.md](svgs.md) for the names the theme has |
 | `url` | where the link goes |
-| `newTab` | open the link in a new tab. **Default `false`**: the link replaces the page, and the visitor's back button still works |
+| `newTab` | open the link in a new tab. **Default `false`**: the link replaces the page, and the visitor's back button still works. Quoted values count — `"false"` is off, like the boolean |
 | `rel` | extra `rel` tokens, added after the `me noopener` the theme always writes |
 
 A `name` the theme has no icon for draws a generic link glyph and warns during
@@ -442,7 +442,7 @@ the build, naming the value. It used to render an anchor with nothing inside it:
 a link with no size, which no visitor could see or click.
 
 `nonewpage = 0` is the deprecated spelling of `newTab = true`. It still works and
-warns. The name said the opposite of what it did, and because an unset value is
+warns, quoted (`"0"`) as well as bare. The name said the opposite of what it did, and because an unset value is
 nil rather than `0`, the only way to get a new tab was to write the "no new
 page" key explicitly.
 
