@@ -34,11 +34,8 @@
             {{- /* description is the summary, content:encoded the whole
                    article: the split every reader expects. */}}
             <description>{{ .Summary | html }}</description>
-            {{- /* A "]]>" in the article closes the CDATA section early and the
-                   whole feed stops parsing, not just this item. Splitting the
-                   sequence across two sections is the standard escape; readers
-                   join them back. Passthrough and unsafe raw HTML both carry
-                   one through to .Content unescaped. */}}
+            {{- /* A "]]>" in the article ends the section early and the whole
+                   feed stops parsing. Passthrough carries one through. */}}
             <content:encoded>{{ printf `<![CDATA[%s]]>` (replace .Content "]]>" "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
         </item>
         {{ end }}
