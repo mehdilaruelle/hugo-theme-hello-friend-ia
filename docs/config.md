@@ -308,11 +308,13 @@ display time. The dimensions are emitted with it, so the row reserves its space
 before the image arrives.
 
 A cover mounted from `static/` is resolved the same way as one in `assets/`.
-Three kinds are passed through at full size instead, because none of them can
-be cropped: a remote URL, an SVG, and a GIF — the last deliberately, since
-resizing one loses its animation everywhere else in the theme and a thumbnail is
-not worth a second rule. A GIF cover on a long list is the one case where the
-old cost remains; use a still image as the `cover` if that matters.
+Two kinds are passed through at full size instead, because neither can be
+cropped: a remote URL, and an SVG.
+
+A GIF cover is cropped here and left alone everywhere else. Resizing one loses
+its animation, which is worth keeping on an article cover shown at full width
+and not worth a multi-megabyte download in a 52 px box — so the thumbnail takes
+the first frame and the cover on the article page still moves.
 
 ## Post excerpts
 
@@ -347,7 +349,7 @@ templates.
 | --- | --- |
 | `enableThemeToggle` | shows the light/dark button in the menu |
 | `enableReadingTime` | shows an estimated reading time on articles |
-| `enableSharingButtons` | shows the sharing row under an article. Every link in it is `rel="noopener nofollow"`, and the Pinterest one sends the page's social picture as its `media` |
+| `enableSharingButtons` | shows the sharing row under an article. Every http(s) link in it is `rel="noopener nofollow"` — the `mailto:` and `whatsapp:` ones carry `noopener` alone, since there is no link equity to withhold on a scheme no crawler follows — and the Pinterest one sends the page's social picture as its `media` |
 | `disableReadOtherPosts` | hides the previous/next links |
 | `backgroundImage` | an image behind the front page, `cover`-sized and fixed. Used in dark mode |
 | `backgroundImageLight` | the same for light mode. Without it light mode shows no image, rather than putting dark text over a dark picture |
