@@ -1,19 +1,16 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-{{- /* One tag with two possible values, not a directive list: without
-       max-image-preview:large Google may show a thumbnail where the theme's
-       covers would fill the width, and the directive says nothing about a page
-       nobody is indexing. */ -}}
+{{- /* Without max-image-preview:large Google may show a thumbnail where the
+       theme's covers would fill the width. */ -}}
 {{ if partial "noindex.html" . }}
 <meta name="robots" content="noindex" />
 {{ else }}
 <meta name="robots" content="max-image-preview:large" />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{{- /* Blocking, and before the stylesheet: it has to run before first paint.
-       Only where the toggle exists — without it main.js discards any stored
-       choice, and restoring one would leave the page in a scheme the site no
-       longer offers. */ -}}
+{{- /* Blocking and before the stylesheet: it has to run before first paint.
+       Only where the toggle exists, or a stored choice would restore a scheme
+       the site no longer offers. */ -}}
 {{- if .Site.Params.EnableThemeToggle }}
 {{- with resources.Get "js/theme-init.js" }}
 {{- $init := . | resources.Minify | resources.Fingerprint "sha512" }}
@@ -23,27 +20,21 @@
 {{- with partial "author.html" . }}
 <meta name="author" content="{{ . }}" />
 {{- end }}
-{{- /* One partial, because opengraph.html and twitter_cards.html publish the
-       same sentence and used to work it out apart. json-ld.html asks
-       description.html directly instead: it must see neither the site-wide
-       fallback nor the pager suffix. */ -}}
+{{- /* json-ld.html asks description.html directly instead: it must see neither
+       the site-wide fallback nor the pager suffix. */ -}}
 {{- with partial "description-meta.html" . }}
 <meta name="description" content="{{ . }}" />
 {{- end }}
-{{- /* There is no meta keywords tag. No major search engine has read one since
-       around 2009, and what it did instead was disagree with the microdata twin
-       beside it: one read .Params.tags as written, the other through GetTerms,
-       so a page shipped both "hugo" and "Hugo". The tags are still in the
-       keywords of its BlogPosting.
-
-       params.keywords is read by nothing now. Left undocumented rather than
-       made an error, so a site that still sets it builds unchanged. */ -}}
+{{- /* No meta keywords tag: unread since about 2009, and it disagreed with the
+       microdata twin beside it -- one read .Params.tags as written, the other
+       through GetTerms, so a page shipped both "hugo" and "Hugo". The tags are
+       still in the keywords of its BlogPosting. params.keywords is now read by
+       nothing, left undocumented rather than made an error. */ -}}
 {{- with .Site.Params.themeColor }}
 <meta name="theme-color" content="{{ . }}" />
 {{- end }}
-{{- /* Which URL this page names as its own, and which pager of a list it is.
-       Both come from canonical.html, because opengraph.html and json-ld.html
-       need the same two answers and used to work them out for themselves. */ -}}
+{{- /* From canonical.html, because opengraph.html and json-ld.html need the
+       same two answers and used to work them out for themselves. */ -}}
 {{- $self := partial "canonical.html" . -}}
 {{- $canonical := $self.url -}}
 {{- $pager := $self.pager -}}
@@ -51,10 +42,8 @@
 {{- with .OutputFormats.Get "md" }}
 <link rel="alternate" type="text/markdown" href="{{ .Permalink }}" />
 {{- end }}
-{{- /* Search engine ownership verification. Each console gives you a token and
-       accepts a meta tag as proof; this saves uploading their file to the site
-       root. Only emitted on the home page, which is where every one of them
-       looks. */ -}}
+{{- /* Ownership verification: each console accepts a meta tag instead of a file
+       at the site root, and every one of them looks on the home page. */ -}}
 {{- if .IsHome }}
 {{- with .Site.Params.verification }}
 {{- with .google }}
@@ -74,26 +63,14 @@
 {{- end }}
 {{- end }}
 {{- end }}
-{{- /*
-  Only the first pager carries the set. From page two on this page names itself
-  as its canonical, while every .Permalink below is the first page of its
-  language: the set neither contains the page carrying it, which Google
-  requires, nor points at canonical URLs. Whether the same-numbered pager even
-  exists in another language depends on that language's own post count, which
-  is not knowable from here, so the honest answer is to say nothing.
-*/ -}}
+{{- /* Only the first pager carries the set: beyond it every .Permalink below is
+       the first page of its language, so the set would neither contain the page
+       carrying it -- which Google requires -- nor name canonical URLs. */ -}}
 {{- if and .IsTranslated (eq $pager 1) (not (partial "noindex.html" .)) }}
-{{- /*
-  x-default names the version to serve when no hreflang matches the visitor.
-  hugo.Sites is ordered by language weight, so its first entry is the site's
-  primary language: give that one the x-default alongside its own hreflang.
-
-  A noindex translation is left out, here and in sitemap.xml alike: the sitemap
-  can only advertise a variant it also carries a <url> entry for, and a page
-  kept out of the index does not get one, and a set naming only this page says
-  nothing worth saying. Ranged rather than filtered with where, because the rule
-  is now noindex.html's and a where clause can only read a param.
-*/ -}}
+{{- /* hugo.Sites is ordered by language weight, so its first entry takes the
+       x-default alongside its own hreflang. A noindex translation is left out,
+       here and in sitemap.xml alike. Ranged rather than filtered with where,
+       which cannot call a partial. */ -}}
 {{- $primary := (index hugo.Sites 0).Language.Lang }}
 {{- $alternates := slice }}
 {{- range .AllTranslations }}
@@ -109,26 +86,14 @@
 {{- end }}
 {{- end }}
 
-{{- /*
-  The title has one job: say which page this is, in the width a search result
-  gives it, which is around 70 characters.
-
-  The subtitle describes the site, so it belongs on the front page, where the
-  site is what the page is about. Everywhere else it was 37 characters spent
-  after the part that identifies the page, and it pushed the page's own words
-  past the cut: on one real site 49 of 127 titles ran over, the longest at 143
-  characters. Without it, 12 do, and those are long article titles rather than
-  anything the theme added.
-
-  A pager is named as one from page two onward. Each pager is its own canonical
-  since the pagination fix, so each arrives at an index on its own, and they
-  used to arrive with nothing at all to tell them apart: six pages here were
-  called "Blog".
-*/ -}}
+{{- /* A search result gives the title about 70 characters. The subtitle
+       describes the site, so it stays on the front page: elsewhere it spent 37
+       of them before the page's own words, and pushed 49 of one site's 127
+       titles past the cut. A pager is named from page two on, or six of them
+       are all called "Blog". */ -}}
 {{ block "title" . }}
-    {{- /* A block is its own template, so the pager number above is out of
-           scope here and canonical.html is asked again rather than the
-           paginator being built a second time by hand. */ -}}
+    {{- /* A block is its own template, so the pager above is out of scope and
+           canonical.html is asked again rather than the paginator rebuilt. */ -}}
     {{- $page := (partial "canonical.html" .).pager -}}
     {{- $title := printf "%s :: %s" (partial "pager-suffix.html" (dict "text" (partial "title.html" .) "pager" $page)) site.Title -}}
     {{- if .IsHome -}}
@@ -142,29 +107,21 @@
 {{- $scss := resources.Get "scss/main.scss" -}}
 {{- $opts := dict "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" hugo.IsDevelopment "transpiler" "dartsass" -}}
 {{- with $scss -}}
-  {{- /*
-    Dart Sass only. The stylesheet is written in the module system, and libsass
-    does not implement @use: it passed the rules through as unknown at-rules
-    and emitted a stylesheet with no CSS in it, reporting no error — an
-    unstyled site that looked like a successful build.
-
-    .Content is read inside try so a missing Dart Sass is reported here, and
-    nothing downstream runs on that path.
-  */ -}}
+  {{- /* Dart Sass only: libsass does not implement @use and passed the rules
+         through as unknown at-rules -- an unstyled site reported as a successful
+         build. .Content is read inside try so a missing Dart Sass is reported
+         here. */ -}}
   {{- $res := try (($scss | toCSS $opts).Content) -}}
   {{- with $res.Err -}}
     {{- errorf "Dart Sass is required to build this theme and is not available. Install it: https://gohugo.io/functions/css/sass/#dart-sass — %s" . -}}
   {{- else -}}
     {{- $css := $scss | toCSS $opts -}}
-    {{- /* The metric-matched fallback, concatenated into the same stylesheet
-           rather than written into a style element. An inline style forces
-           style-src 'unsafe-inline' on a site with a strict policy, which is
-           why the mermaid initialiser is a file too. It also keeps this to one
-           request and one fingerprint. */ -}}
+    {{- /* Concatenated rather than inlined: a style element forces style-src
+           'unsafe-inline' on a site with a strict policy. */ -}}
     {{- with partial "font-fallback.html" . }}
-      {{- /* The target path is the cache key for Concat, so it carries a digest
-             of the face: two languages configuring different metrics would
-             otherwise be handed whichever bundle was built first. */ -}}
+      {{- /* The target path is Concat's cache key, so it carries a digest of the
+             face: two languages with different metrics would otherwise share
+             whichever bundle was built first. */ -}}
       {{- $key := printf "main-%s.css" (substr (sha256 .) 0 8) -}}
       {{- $css = slice $css (resources.FromString "css/font-fallback.css" .) | resources.Concat $key -}}
     {{- end -}}
@@ -177,9 +134,8 @@
 {{- end }}
 
 
-{{- /* A path under static/ is joined to the site's base URL. Emitted as written
-       it is relative to whatever page is being served, so it resolves only on
-       the home page and 404s everywhere else. A remote URL is left alone. */ -}}
+{{- /* Joined to the base URL: as written, the path is relative to whatever page
+       is being served and 404s off the home page. */ -}}
 {{ range $val := $.Site.Params.customCSS }}
     {{- with $val }}
         {{- $href := . }}
@@ -188,25 +144,16 @@
     {{- end }}
 {{ end }}
 
-{{- /* KaTeX, on pages that ask for it.
-
-       math = true in the front matter, or params.math for a whole site. It is
-       opt-in rather than detected from the content because "$" is ordinary
-       text in a shell snippet, and a false positive would fetch 300 KB for
-       nothing.
-
-       Pinned to an exact version with an integrity hash, so neither a new
-       release nor a compromised CDN can change what runs for visitors. */ -}}
+{{- /* KaTeX, opt-in through math in the front matter or params: "$" is ordinary
+       text in a shell snippet, and a false positive fetches 300 KB for nothing.
+       Pinned with an integrity hash. */ -}}
 {{- if or .Params.math .Site.Params.math }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css"
       integrity="sha384-1vdNCNel6Tx/NQa8IR1mGOGKsbGreCkOPfbtPPnUURJ5Tu2PRVfQ/7KLZC+Pi1p1"
       crossorigin="anonymous">
 {{- end }}
 
-{{- /* The regular weight, which is the body text and therefore the first
-       thing the swap would repaint. Preloading it shortens the window in
-       which the fallback is on screen; the metric-matched fallback is what
-       makes that window cost nothing. */ -}}
+{{- /* The body weight, and so the first thing a swap repaints. */ -}}
 <link rel="preload" href="{{ "fonts/Inter-Regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
 
 <!-- Icons -->
@@ -216,30 +163,12 @@
 {{ partial "json-ld.html" . }}
 {{ partial "twitter_cards.html" . }}
 
-{{- /* The theme owns opengraph.html, so the picture and its alt are written
-       there with the rest of the Open Graph tags. */ -}}
 {{ partial "opengraph.html" . }}
-
-{{- /* No article:section here. It is single-valued and the opengraph partial
-       already emits one from the section, so ranging over the categories
-       published a second, contradictory value. */ -}}
 
 <!-- RSS -->
 {{ with .OutputFormats.Get "rss" -}}
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 {{ end -}}
-
-{{- /* There is no JSON Feed here.
-
-       This used to advertise one at feed.json whenever a page had a JSON
-       output format. The theme has never carried a template for it, and Hugo
-       names the home page's JSON output index.json, so the link pointed at a
-       file that does not exist. It stayed hidden only because no site turned
-       the JSON output on — enabling it for search made four pages of the
-       showcase link to a 404.
-
-       The JSON output is the search index, which is not a feed and is not
-       something to announce with rel="alternate". */ -}}
 
 <!-- Custom head tags -->
 {{- if templates.Exists "_partials/extra-head.html" -}}
