@@ -906,7 +906,12 @@ Disallow: /
 ```
 
 That text is emitted verbatim in place of the generated groups.
-`Content-Signal` still follows `train`, `cite` and `search`.
+`Content-Signal` still follows `train`, `cite` and `search`, so the two halves
+can now disagree — the theme is stating an intention next to a list it did not
+write, and only you know whether they match. Nothing checks it for you: the
+theme's own CI builds this configuration, but it runs
+`check-robots.mjs --custom-groups`, which drops exactly the assertions that
+compare the groups with the signal.
 
 ### What this is and is not
 

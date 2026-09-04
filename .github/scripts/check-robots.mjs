@@ -1,13 +1,21 @@
 // robots.txt states the AI policy twice — the groups it refuses, and the
 // Content-Signal line — so the thing to assert is that they agree.
 //
-//   node check-robots.mjs <theme-root> <public-dir>
+//   node check-robots.mjs <theme-root> <public-dir> [--custom-groups]
+//
+// params.ai.crawlers hands the groups to the site, and then most of what is
+// below is asking the wrong question: the theme did not write those groups and
+// cannot be held to them. --custom-groups says so, and keeps the checks that
+// still mean something — the file parses, the sitemap is named, the signal is
+// syntactically a signal.
 
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const root = process.argv[2] || '.';
-const pub = process.argv[3] || 'public';
+const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const custom = process.argv.includes('--custom-groups');
+const root = args[0] || '.';
+const pub = args[1] || 'public';
 
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
@@ -61,7 +69,11 @@ for (const raw of text.split(/\r?\n/)) {
 if (sitemaps.length !== 1) fail(`robots.txt: ${sitemaps.length} Sitemap lines, expected 1`);
 if (sitemaps[0] && !sitemaps[0].endsWith('/sitemap.xml')) fail(`robots.txt: ${sitemaps[0]} is not a sitemap URL`);
 if (!existsSync(join(pub, 'sitemap.xml'))) fail('robots.txt names a sitemap that was not written');
+// A named agent with no rule under it is a group that says nothing. The
+// wildcard is the exception: with no policy configured that group is the whole
+// file, and it has had nothing to say since long before this feature.
 for (const g of groups) {
+  if (g.agents.includes('*')) continue;
   if (!g.rules.length) fail(`robots.txt: ${g.agents.join(', ')} is named with no rule under it`);
 }
 
@@ -71,25 +83,30 @@ if (wildcard && wildcard.rules.some(([f, v]) => f === 'disallow' && v === '/')) 
   fail('robots.txt: User-agent: * is disallowed everything, which takes the site out of search');
 }
 
-// params.ai.crawlers can put any token here, so this holds only for a site
-// using the generated groups — which the showcase does.
 const refused = new Set();
 for (const g of groups) {
   if (g.agents.includes('*')) continue;
   if (g.rules.some(([f, v]) => f === 'disallow' && v === '/')) g.agents.forEach((a) => refused.add(a));
 }
-for (const agent of refused) {
-  if (!(known.train || []).includes(agent) && !(known.cite || []).includes(agent)) {
-    fail(`robots.txt: ${agent} is refused but is in neither list in data/aiCrawlers.yaml`);
+// A refused agent the data file has never heard of is a typo, unless the site
+// wrote the groups itself, in which case naming an agent the theme does not
+// know is the whole point of the escape hatch.
+if (!custom) {
+  for (const agent of refused) {
+    if (!(known.train || []).includes(agent) && !(known.cite || []).includes(agent)) {
+      fail(`robots.txt: ${agent} is refused but is in neither list in data/aiCrawlers.yaml`);
+    }
   }
 }
 
-// One switch per group, so a group is refused whole or not at all. Half of
-// one is a policy nobody wrote.
+// One switch per group, so a generated group is refused whole or not at all.
+// Half of one is a policy nobody wrote — but half of one is exactly what a
+// hand-written list looks like from here, so this is the theme's groups only.
 const state = {};
 for (const group of ['train', 'cite']) {
   const listed = (known[group] || []).filter((a) => refused.has(a));
   state[group] = listed.length === (known[group] || []).length && listed.length > 0;
+  if (custom) continue;
   if (listed.length && !state[group]) {
     const missing = (known[group] || []).filter((a) => !refused.has(a));
     fail(`robots.txt: the ${group} group is only half refused, ${missing.join(', ')} is still allowed`);
@@ -110,8 +127,11 @@ if (signal) {
     if (!m) { fail(`robots.txt: cannot read this Content-Signal pair: ${pair.trim()}`); continue; }
     parsed[m[1]] = m[2] === 'yes';
   }
+  // The signal still has to name all three uses whoever wrote the groups; only
+  // the comparison with those groups is the theme's to make.
   for (const [name, group] of [['ai-train', 'train'], ['ai-input', 'cite']]) {
     if (!(name in parsed)) { fail(`robots.txt: Content-Signal has no ${name}`); continue; }
+    if (custom) continue;
     if (parsed[name] === state[group]) {
       fail(`robots.txt: Content-Signal says ${name}=${parsed[name] ? 'yes' : 'no'} while the ${group} group is ${state[group] ? 'refused' : 'allowed'}`);
     }
@@ -122,6 +142,8 @@ if (signal) {
 if (bad) { console.log(`\n${bad} problem(s)`); process.exit(1); }
 const said = ['train', 'cite'].map((g) => `${g}=${state[g] ? 'no' : 'yes'}`).join(', ');
 console.log(`  ${groups.length} group(s), ${refused.size} AI crawler(s) refused`);
-console.log(signal
-  ? `\n  robots.txt says ${said} in its groups and in Content-Signal alike`
-  : '\n  robots.txt is well formed and names a sitemap that exists');
+console.log(custom
+  ? '\n  robots.txt parses, names a sitemap and states a readable Content-Signal; the groups are the site\'s own'
+  : signal
+    ? `\n  robots.txt says ${said} in its groups and in Content-Signal alike`
+    : '\n  robots.txt is well formed and names a sitemap that exists');

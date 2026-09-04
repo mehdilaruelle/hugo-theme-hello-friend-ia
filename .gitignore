@@ -39,6 +39,8 @@ layouts/_partials/extra-head.html
 
 # Hugo build output and caches
 public/
+# The CI build of the params.ai.crawlers override, beside the ordinary one.
+public-ai/
 **/resources/_gen/
 .hugo_build.lock
 hugo_stats.json

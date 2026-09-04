@@ -31,14 +31,17 @@
   {{- end -}}
 {{- end -}}
 User-agent: *
-{{- /* Empty value, so: everything is allowed. Nothing a crawler had not
-       already concluded from a group with no rule in it, but a group that
-       states its rule is one a validator — and check-robots.mjs — can
-       read. */}}
-Disallow:
-{{- /* The same intention for whatever reads intentions rather than matching
-       itself against a group. A Cloudflare proposal, not a standard. */}}
+{{- /* Both lines only once the site has asked for a policy. An empty Disallow
+       allows everything, which is what a group with no rule in it already
+       meant, but it gives the group a rule to read; emitting it unconditionally
+       would have changed the file for every site that configured nothing, and
+       this feature is supposed to change nothing until it is switched on.
+
+       Content-Signal states the same intention for whatever reads intentions
+       rather than matching itself against a group. A Cloudflare proposal, not
+       a standard. */}}
 {{- if $on }}
+Disallow:
 Content-Signal: search={{ cond $search "yes" "no" }}, ai-input={{ cond $cite "yes" "no" }}, ai-train={{ cond $train "yes" "no" }}
 {{- end }}
 {{- with $custom }}
