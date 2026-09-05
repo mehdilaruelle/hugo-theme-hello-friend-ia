@@ -13,7 +13,9 @@ if (!root) {
 }
 
 const artifacts = [
-  [/%![a-z]?\(/g, 'a printf format error'],
+  // A verb is not always lowercase: %X, %U, %T and %G are Go verbs too, and
+  // %!(NOVERB) carries none at all.
+  [/%![a-zA-Z]?\(/g, 'a printf format error'],
   [/ZgotmplZ/g, 'a URL html/template refused'],
   [/(?:<|&lt;)no value(?:>|&gt;)/g, 'a nil the template printed'],
 ];
