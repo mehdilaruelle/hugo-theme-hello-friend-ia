@@ -1,6 +1,51 @@
-User-agent: *
+{{- /* params.ai.train and .cite both default to true, so a site that sets
+       neither gets the file it always got. Agents in data/aiCrawlers.yaml;
+       params.ai.crawlers replaces the generated groups wholesale.
 
-{{/* Crawlers find a sitemap far sooner when robots.txt names it, and Hugo's
-     built-in robots.txt does not. On a multilingual site this is the index,
-     which points at one sitemap per language. */ -}}
+       This file is a request. The rest is a matter for the CDN. */ -}}
+{{- $ai := site.Params.ai -}}
+{{- $on := and $ai (reflect.IsMap $ai) -}}
+{{- $train := true -}}
+{{- $cite := true -}}
+{{- $search := true -}}
+{{- $custom := "" -}}
+{{- if $on -}}
+  {{- if isset $ai "train" -}}{{- $train = $ai.train -}}{{- end -}}
+  {{- if isset $ai "cite" -}}{{- $cite = $ai.cite -}}{{- end -}}
+  {{- if isset $ai "search" -}}{{- $search = $ai.search -}}{{- end -}}
+  {{- $custom = $ai.crawlers | default "" | strings.TrimSpace -}}
+{{- end -}}
+{{- /* Only what is refused gets a group: silence is permission. */ -}}
+{{- $groups := slice -}}
+{{- if not $custom -}}
+  {{- if not $train -}}
+    {{- $groups = $groups | append (dict "note" "Declined: fetched to train a model, with no link back." "agents" hugo.Data.aiCrawlers.train) -}}
+  {{- end -}}
+  {{- if not $cite -}}
+    {{- $groups = $groups | append (dict "note" "Declined: fetched to answer a question and cite the site." "agents" hugo.Data.aiCrawlers.cite) -}}
+  {{- end -}}
+{{- end -}}
+User-agent: *
+{{- /* Both only once a policy exists: emitting them unconditionally changed
+       the file for sites that had configured nothing. An empty Disallow allows
+       everything, but gives the group a rule to read; Content-Signal says the
+       same for whatever reads intentions. A Cloudflare proposal, not a
+       standard. */}}
+{{- if $on }}
+Disallow:
+Content-Signal: search={{ cond $search "yes" "no" }}, ai-input={{ cond $cite "yes" "no" }}, ai-train={{ cond $train "yes" "no" }}
+{{- end }}
+{{- with $custom }}
+
+{{ . | safeHTML }}
+{{- end }}
+{{- range $groups }}
+
+# {{ .note }}
+{{ range .agents }}User-agent: {{ . }}
+{{ end }}Disallow: /
+{{- end }}
+
+{{/* Hugo's built-in robots.txt names no sitemap. On a multilingual site this
+     is the index, pointing at one per language. */ -}}
 Sitemap: {{ "sitemap.xml" | absURL }}

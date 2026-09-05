@@ -38,6 +38,10 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - Fixes two selectors that made inline code lose its styling entirely.
 - Emits JSON-LD structured data, and completes the `hreflang` set with
   `x-default`. See [SEO](#seo).
+- Writes a `robots.txt` that names the sitemap Hugo leaves out, and — when a
+  site asks for one — an AI policy split the way the fetches differ: training
+  on one side, answering with a link on the other. See
+  [AI crawlers](docs/config.md#ai-crawlers).
 - Renders `content/_index.md` on the front page, which upstream ignores. See
   [Front page content](#front-page-content).
 - CI builds the exampleSite on every change and fails on any new deprecation.
@@ -96,6 +100,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - JSON-LD structured data, breadcrumbs and a complete `hreflang` set, see [SEO](#seo)
 - 100 on accessibility, best practices and SEO on both demo sites, see [Speed](#speed)
 - Optional `llms.txt`, `llms-full.txt` and a Markdown copy of every page, list pages included, see [llms.txt](docs/config.md#llmstxt)
+- A declarative AI crawler policy: refuse training without refusing citation, see [AI crawlers](docs/config.md#ai-crawlers)
 
 ### Speed
 

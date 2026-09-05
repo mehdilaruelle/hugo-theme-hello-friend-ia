@@ -54,6 +54,11 @@
   customCSS = ["css/custom.css"]
   customJS  = ["js/custom.js"]
 
+  # The AI policy, set the way most people who want one want it.
+  [params.ai]
+    train = false
+    cite  = true
+
   # The author as an entity rather than a name. knowsAbout says what she works
   # in and hasCredential what backs it up; both land in the Person node that the
   # home page, every article and the about page already share under one @id.

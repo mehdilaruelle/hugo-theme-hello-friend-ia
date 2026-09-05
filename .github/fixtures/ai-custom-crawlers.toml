@@ -1,0 +1,9 @@
+# The params.ai.crawlers override, exactly as docs/config.md prints it, layered
+# over the exampleSite configuration, so CI walks the escape hatch instead of
+# only documenting it and --custom-groups is not a flag nothing exercises.
+[params.ai]
+  train = false
+  crawlers = """
+User-agent: GPTBot
+Disallow: /
+"""
