@@ -54,8 +54,7 @@
   customCSS = ["css/custom.css"]
   customJS  = ["js/custom.js"]
 
-  # The AI policy, set the way most people who want one want it. robots.txt
-  # grows the groups and the Content-Signal line.
+  # The AI policy, set the way most people who want one want it.
   [params.ai]
     train = false
     cite  = true

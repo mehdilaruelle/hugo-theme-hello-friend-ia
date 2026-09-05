@@ -1,13 +1,8 @@
-{{- /*
-  robots.txt: the sitemap, and which AI crawlers the site would rather not
-  have. params.ai.train and .cite split the question the way the fetches
-  differ; both default to true, so a site that sets neither gets the file it
-  always got. The agents are in data/aiCrawlers.yaml; params.ai.crawlers
-  replaces the generated groups with text of your own.
+{{- /* params.ai.train and .cite both default to true, so a site that sets
+       neither gets the file it always got. Agents in data/aiCrawlers.yaml;
+       params.ai.crawlers replaces the generated groups wholesale.
 
-  Worth saying here as well as in the documentation: this file is a request.
-  What honours it, honours it; the rest is a matter for the CDN.
-*/ -}}
+       This file is a request. The rest is a matter for the CDN. */ -}}
 {{- $ai := site.Params.ai -}}
 {{- $on := and $ai (reflect.IsMap $ai) -}}
 {{- $train := true -}}
@@ -20,7 +15,7 @@
   {{- if isset $ai "search" -}}{{- $search = $ai.search -}}{{- end -}}
   {{- $custom = $ai.crawlers | default "" | strings.TrimSpace -}}
 {{- end -}}
-{{- /* Only what is refused gets a group: silence is permission here. */ -}}
+{{- /* Only what is refused gets a group: silence is permission. */ -}}
 {{- $groups := slice -}}
 {{- if not $custom -}}
   {{- if not $train -}}
@@ -31,15 +26,11 @@
   {{- end -}}
 {{- end -}}
 User-agent: *
-{{- /* Both lines only once the site has asked for a policy. An empty Disallow
-       allows everything, which is what a group with no rule in it already
-       meant, but it gives the group a rule to read; emitting it unconditionally
-       would have changed the file for every site that configured nothing, and
-       this feature is supposed to change nothing until it is switched on.
-
-       Content-Signal states the same intention for whatever reads intentions
-       rather than matching itself against a group. A Cloudflare proposal, not
-       a standard. */}}
+{{- /* Both only once a policy exists: emitting them unconditionally changed
+       the file for sites that had configured nothing. An empty Disallow allows
+       everything, but gives the group a rule to read; Content-Signal says the
+       same for whatever reads intentions. A Cloudflare proposal, not a
+       standard. */}}
 {{- if $on }}
 Disallow:
 Content-Signal: search={{ cond $search "yes" "no" }}, ai-input={{ cond $cite "yes" "no" }}, ai-train={{ cond $train "yes" "no" }}
@@ -55,6 +46,6 @@ Content-Signal: search={{ cond $search "yes" "no" }}, ai-input={{ cond $cite "ye
 {{ end }}Disallow: /
 {{- end }}
 
-{{/* Hugo's built-in robots.txt does not name the sitemap. On a multilingual
-     site this is the index, which points at one per language. */ -}}
+{{/* Hugo's built-in robots.txt names no sitemap. On a multilingual site this
+     is the index, pointing at one per language. */ -}}
 Sitemap: {{ "sitemap.xml" | absURL }}

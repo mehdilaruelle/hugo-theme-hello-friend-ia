@@ -1,13 +1,10 @@
-// robots.txt states the AI policy twice — the groups it refuses, and the
-// Content-Signal line — so the thing to assert is that they agree.
+// robots.txt states the AI policy twice — the groups and the Content-Signal
+// line — so the thing to assert is that they agree.
 //
 //   node check-robots.mjs <theme-root> <public-dir> [--custom-groups]
 //
-// params.ai.crawlers hands the groups to the site, and then most of what is
-// below is asking the wrong question: the theme did not write those groups and
-// cannot be held to them. --custom-groups says so, and keeps the checks that
-// still mean something — the file parses, the sitemap is named, the signal is
-// syntactically a signal.
+// With params.ai.crawlers the site wrote the groups, so most of what is below
+// asks the wrong question. --custom-groups drops those and keeps the rest.
 
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -20,8 +17,7 @@ const pub = args[1] || 'public';
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
-// Only the shape data/aiCrawlers.yaml has. A line this cannot read is
-// reported rather than skipped, because Hugo still reads it.
+// A line this cannot read is reported, not skipped: Hugo still reads it.
 const known = {};
 let key = null;
 readFileSync(join(root, 'data/aiCrawlers.yaml'), 'utf8').split(/\r?\n/).forEach((line, i) => {
@@ -35,8 +31,7 @@ readFileSync(join(root, 'data/aiCrawlers.yaml'), 'utf8').split(/\r?\n/).forEach(
 for (const group of ['train', 'cite']) {
   if (!known[group] || !known[group].length) fail(`data/aiCrawlers.yaml: the ${group} list is empty`);
 }
-// An agent in both groups gets whichever answer the file happens to state
-// first.
+// An agent in both groups gets whichever answer comes first in the file.
 const overlap = (known.train || []).filter((a) => (known.cite || []).includes(a));
 if (overlap.length) fail(`data/aiCrawlers.yaml: ${overlap.join(', ')} is in both groups`);
 
@@ -44,8 +39,7 @@ const file = join(pub, 'robots.txt');
 if (!existsSync(file)) { fail('no robots.txt was written'); process.exit(1); }
 const text = readFileSync(file, 'utf8');
 
-// One or more User-agent lines, then the rules for all of them. A rule closes
-// the run, so the next agent line starts a new group.
+// A rule closes the run of agents, so the next agent line starts a group.
 const groups = [];
 const sitemaps = [];
 let current = null;
@@ -69,9 +63,8 @@ for (const raw of text.split(/\r?\n/)) {
 if (sitemaps.length !== 1) fail(`robots.txt: ${sitemaps.length} Sitemap lines, expected 1`);
 if (sitemaps[0] && !sitemaps[0].endsWith('/sitemap.xml')) fail(`robots.txt: ${sitemaps[0]} is not a sitemap URL`);
 if (!existsSync(join(pub, 'sitemap.xml'))) fail('robots.txt names a sitemap that was not written');
-// A named agent with no rule under it is a group that says nothing. The
-// wildcard is the exception: with no policy configured that group is the whole
-// file, and it has had nothing to say since long before this feature.
+// The wildcard is exempt: with no policy configured it is the whole file, and
+// it has had nothing to say since long before this feature.
 for (const g of groups) {
   if (g.agents.includes('*')) continue;
   if (!g.rules.length) fail(`robots.txt: ${g.agents.join(', ')} is named with no rule under it`);
@@ -88,9 +81,8 @@ for (const g of groups) {
   if (g.agents.includes('*')) continue;
   if (g.rules.some(([f, v]) => f === 'disallow' && v === '/')) g.agents.forEach((a) => refused.add(a));
 }
-// A refused agent the data file has never heard of is a typo, unless the site
-// wrote the groups itself, in which case naming an agent the theme does not
-// know is the whole point of the escape hatch.
+// An unknown refused agent is a typo — unless the site wrote the list, where
+// naming one the theme has never heard of is the point.
 if (!custom) {
   for (const agent of refused) {
     if (!(known.train || []).includes(agent) && !(known.cite || []).includes(agent)) {
@@ -99,9 +91,8 @@ if (!custom) {
   }
 }
 
-// One switch per group, so a generated group is refused whole or not at all.
-// Half of one is a policy nobody wrote — but half of one is exactly what a
-// hand-written list looks like from here, so this is the theme's groups only.
+// One switch per group, so a generated group goes whole or not at all. Half of
+// one is also what a hand-written list looks like from here, hence the guard.
 const state = {};
 for (const group of ['train', 'cite']) {
   const listed = (known[group] || []).filter((a) => refused.has(a));
@@ -113,9 +104,8 @@ for (const group of ['train', 'cite']) {
   }
 }
 
-// Both have to agree, and both have to be there: a file that refuses crawlers
-// and states no signal has said it once. A site refusing nothing needs no
-// signal, which is the default demo.
+// Both have to agree and both have to be there. A site refusing nothing needs
+// no signal, which is the default demo.
 const signal = (wildcard ? wildcard.rules : []).find(([f]) => f === 'content-signal');
 if (!signal && refused.size) {
   fail(`robots.txt: ${refused.size} AI crawler(s) refused and no Content-Signal to say so`);
@@ -127,8 +117,8 @@ if (signal) {
     if (!m) { fail(`robots.txt: cannot read this Content-Signal pair: ${pair.trim()}`); continue; }
     parsed[m[1]] = m[2] === 'yes';
   }
-  // The signal still has to name all three uses whoever wrote the groups; only
-  // the comparison with those groups is the theme's to make.
+  // The signal names all three uses whoever wrote the groups; only comparing
+  // it with them is the theme's to do.
   for (const [name, group] of [['ai-train', 'train'], ['ai-input', 'cite']]) {
     if (!(name in parsed)) { fail(`robots.txt: Content-Signal has no ${name}`); continue; }
     if (custom) continue;

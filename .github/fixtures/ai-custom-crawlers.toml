@@ -1,10 +1,6 @@
 # The params.ai.crawlers override, exactly as docs/config.md prints it, layered
-# over the exampleSite configuration.
-#
-# It exists so CI walks the escape hatch rather than only documenting it: with
-# the groups written by hand, most of what check-robots.mjs asserts is no longer
-# the theme's to assert, and --custom-groups is what says so. Without this
-# build, that mode would be a flag nothing exercises.
+# over the exampleSite configuration, so CI walks the escape hatch instead of
+# only documenting it and --custom-groups is not a flag nothing exercises.
 [params.ai]
   train = false
   crawlers = """

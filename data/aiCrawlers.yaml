@@ -1,12 +1,7 @@
-# The AI crawlers robots.txt can name, split by what the fetch does: read to
-# train a model, or read to answer somebody with a link back. That is the
-# distinction params.ai.train and .cite switch on.
-#
-# Product tokens, not user agent strings. Some have no crawler behind them at
-# all — Google-Extended and Applebot-Extended exist only to be named here.
-#
-# Kept up to date the way langFlags.yaml is. A site that disagrees writes its
-# own data/aiCrawlers.yaml, which Hugo merges over this one.
+# Split by what the fetch does, which is what params.ai.train and .cite switch
+# on. Product tokens, not user agent strings; some have no crawler behind them
+# at all. A site that disagrees writes its own data/aiCrawlers.yaml, which Hugo
+# merges over this one.
 
 # Read to train a model. Nothing you write comes back as a link.
 train:
@@ -14,8 +9,7 @@ train:
   - ClaudeBot             # Anthropic
   - CCBot                 # Common Crawl, whose archives train most of the rest
   # Covers training Gemini and grounding its answers, with no second token to
-  # separate them: refusing training here costs the Google answer box too.
-  # docs/config.md says so; it stays here because this is what people mean.
+  # separate them, so refusing training costs the Google answer box too.
   - Google-Extended       # A token only; Googlebot itself is search
   - Applebot-Extended     # Apple Intelligence. A token only; Applebot is search
   - meta-externalagent    # Meta
