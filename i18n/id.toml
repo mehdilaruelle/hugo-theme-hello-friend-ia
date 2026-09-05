@@ -132,3 +132,12 @@ other = "Bagikan lewat email"
 
 [search]
 other = "Cari"
+
+[contents]
+other = "Daftar isi"
+
+[llmsFullAt]
+other = "Teks lengkap semua halaman di bawah ini:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} dari {{ .Total }} halaman, dalam urutan yang tercantum di llms.txt."

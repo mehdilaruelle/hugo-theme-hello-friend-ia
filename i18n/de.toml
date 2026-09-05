@@ -132,3 +132,12 @@ other = "Per E-Mail teilen"
 
 [search]
 other = "Suche"
+
+[contents]
+other = "Inhalt"
+
+[llmsFullAt]
+other = "Der vollständige Text aller Seiten unten:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} von {{ .Total }} Seiten, in der Reihenfolge von llms.txt."

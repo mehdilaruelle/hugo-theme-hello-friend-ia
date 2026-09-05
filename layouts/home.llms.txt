@@ -1,18 +1,5 @@
-{{- define "partials/inline/url" -}}
-{{- $u := .Permalink -}}
-{{- with .OutputFormats.Get "md" }}{{ $u = .Permalink }}{{ end -}}
-{{- $u -}}
-{{- end -}}
-{{- /* [ ] and \ are syntax inside a link label. */ -}}
-{{- define "partials/inline/label" -}}
-  {{- partial "title.html" . | plainify | replaceRE `([\\\[\]])` `\${1}` -}}
-{{- end -}}
-{{- define "partials/inline/note" -}}
-  {{- $n := .Description | default .Summary -}}
-  {{- with $n -}}
-    {{- . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}
-  {{- end -}}
-{{- end -}}
+{{- /* llms.txt, the convention at llmstxt.org. Link resolution, label escaping
+       and note trimming are shared with the mirror, in _partials/md/. */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
 # {{ site.Title }}
 {{ with $desc }}
@@ -24,6 +11,10 @@
 {{- with site.Params.llmsNote }}
 {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}
+{{- /* Not a list item: everything in a list here is a page. */ -}}
+{{- with .OutputFormats.Get "llmsfull" }}
+{{ partial "i18n.html" (dict "key" "llmsFullAt" "fallback" "The full text of every page below:") }} {{ .Permalink }}
+{{ end }}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
 {{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}
@@ -31,13 +22,13 @@
 ## {{ partial "i18n.html" (dict "key" "posts" "fallback" "Posts") }}
 
 {{ range . -}}
-- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "md/label.html" . }}]({{ partial "md/url.html" . }}){{ with (partial "md/note.html" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end }}
 {{- with $other }}
 ## {{ partial "i18n.html" (dict "key" "pages" "fallback" "Pages") }}
 
 {{ range . -}}
-- [{{ partial "inline/label" . }}]({{ partial "inline/url" . }}){{ with (partial "inline/note" .) }}: {{ . }}{{ end }}
+- [{{ partial "md/label.html" . }}]({{ partial "md/url.html" . }}){{ with (partial "md/note.html" .) }}: {{ . }}{{ end }}
 {{ end }}
 {{- end -}}

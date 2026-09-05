@@ -1,0 +1,35 @@
+{{- /* The pages llms.txt maps, carrying their text. params.llmsFullLimit caps
+       them, and the file says so when it bites: a truncated copy presenting
+       itself as the whole site is the thing to avoid. */ -}}
+{{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
+{{- /* llms.txt order, not date order, which is why the notice claims none. */ -}}
+{{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
+{{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
+{{- $other := $all | complement $posts -}}
+{{- $ordered := slice -}}
+{{- range $posts -}}{{- $ordered = $ordered | append . -}}{{- end -}}
+{{- range $other -}}{{- $ordered = $ordered | append . -}}{{- end -}}
+{{- $total := len $ordered -}}
+{{- $limit := int (site.Params.llmsFullLimit | default 0) -}}
+{{- if and (gt $limit 0) (lt $limit $total) -}}
+  {{- $ordered = first $limit $ordered -}}
+{{- end -}}
+# {{ site.Title }}
+{{ with $desc }}
+> {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- with .RenderShortcodes | strings.TrimSpace }}
+{{ . }}
+{{ end }}
+{{- with site.Params.llmsNote }}
+{{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+{{ end }}
+{{- if lt (len $ordered) $total }}
+{{- /* Kept, not Count: a Count key sends i18n looking for a plural form. */ -}}
+{{ partial "i18n.html" (dict "key" "llmsFullTruncated" "args" (dict "Kept" (len $ordered) "Total" $total) "fallback" (printf "%d of %d pages, in the order llms.txt lists them." (len $ordered) $total)) }}
+{{ end }}
+{{- range $ordered }}
+---
+
+{{ partial "md/page.html" . }}
+{{ end -}}

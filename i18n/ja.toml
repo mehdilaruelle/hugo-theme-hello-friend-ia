@@ -133,3 +133,12 @@ other = "メールで共有"
 
 [search]
 other = "検索"
+
+[contents]
+other = "目次"
+
+[llmsFullAt]
+other = "以下のすべてのページの全文:"
+
+[llmsFullTruncated]
+other = "{{ .Total }} ページのうち {{ .Kept }} ページ、llms.txt と同じ順序です。"

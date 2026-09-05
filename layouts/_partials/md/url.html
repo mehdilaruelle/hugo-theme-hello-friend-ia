@@ -1,0 +1,4 @@
+{{- /* Shared, so the map and the mirrors cannot disagree. */ -}}
+{{- $url := .Permalink -}}
+{{- with .OutputFormats.Get "md" -}}{{- $url = .Permalink -}}{{- end -}}
+{{- return $url -}}

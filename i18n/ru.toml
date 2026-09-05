@@ -136,3 +136,12 @@ other = "Поделиться по электронной почте"
 
 [search]
 other = "Поиск"
+
+[contents]
+other = "Содержание"
+
+[llmsFullAt]
+other = "Полный текст всех страниц ниже:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} страниц из {{ .Total }}, в порядке, указанном в llms.txt."

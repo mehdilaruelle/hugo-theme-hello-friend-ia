@@ -1,0 +1,2 @@
+{{- /* [ ] and \ are syntax inside a link label. */ -}}
+{{- return (partial "title.html" . | plainify | replaceRE `([\\\[\]])` `\${1}`) -}}

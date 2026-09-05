@@ -12,3 +12,10 @@
     baseName       = "index"
     isPlainText    = true
     notAlternative = true
+
+  # The same pages llms.txt maps, carrying their text.
+  [outputFormats.llmsfull]
+    mediaType      = "text/plain"
+    baseName       = "llms-full"
+    isPlainText    = true
+    notAlternative = true

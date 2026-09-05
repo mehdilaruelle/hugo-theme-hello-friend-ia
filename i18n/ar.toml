@@ -147,3 +147,12 @@ other = "شارك عبر البريد الإلكتروني"
 
 [search]
 other = "بحث"
+
+[contents]
+other = "المحتويات"
+
+[llmsFullAt]
+other = "النص الكامل لكل الصفحات أدناه:"
+
+[llmsFullTruncated]
+other = "{{ .Kept }} صفحة من أصل {{ .Total }}، بالترتيب الذي يسرده llms.txt."

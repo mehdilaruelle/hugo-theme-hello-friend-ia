@@ -450,6 +450,7 @@ templates.
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
 | `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
+| `llmsFullLimit` | how many pages `llms-full.txt` carries. Unset or `0` publishes every one |
 | `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
 | `imageMaxWidth` | caps the widest copy generated for `srcset`. Defaults to `1400` |
 
@@ -717,8 +718,8 @@ that does nothing.
 ## llms.txt
 
 A model handed a page has to find the prose between a menu, a share row and a
-footer. Two output formats hand it the text directly, and a site pays for
-neither unless it asks.
+footer. Three output formats hand it the text directly, and a site pays for
+none of them unless it asks.
 
 `llms.txt` is a map of the site as plain text — a heading, a one-line summary,
 then every page with a note. The convention is described at
@@ -748,17 +749,72 @@ model did with the text, or what the site is not.
 
 `searchable: false` keeps a page out, the same switch the search index reads.
 
-## The page as Markdown
+## llms-full.txt
 
-The second format publishes each page a second time as Markdown, at
-`index.md` beside its `index.html`:
+`llms.txt` is the map, `llms-full.txt` is the territory: the same pages, in the
+same order, each carrying its text instead of a link to it. A reader that wants
+the site takes it in one request rather than in one per page. It is the second
+file [llmstxt.org](https://llmstxt.org) describes, and it is asked for on the
+home page beside the first:
 
 ```toml
 [outputs]
-  page = ["HTML", "md"]
+  home = ["HTML", "RSS", "JSON", "llms", "llmsfull"]
 ```
 
-The page's own `<head>` then advertises it, so a reader that prefers Markdown
+It appears at `/llms-full.txt`, one per language, and `llms.txt` names it above
+its list, so nobody has to guess the file is there.
+
+Every entry is the page exactly as [the Markdown copy](#the-site-as-markdown)
+publishes it, from the same template, separated by a rule.
+
+A blog of three hundred posts written out this way is several megabytes that
+nobody will read, so there is a cap:
+
+```toml
+[params]
+  llmsFullLimit = 50   # pages. Unset or 0 publishes every one
+```
+
+It keeps the first entries in the order `llms.txt` lists them — posts newest
+first, then the other pages — so an older post still outranks a newer page, and
+the notice says exactly that rather than claiming recency it cannot deliver:
+*50 of 312 pages, in the order llms.txt lists them.* A truncated copy
+presenting itself as the whole site is the one outcome worth avoiding.
+
+## The site as Markdown
+
+The third format publishes a page a second time as Markdown, at `index.md`
+beside its `index.html`. Ask for it on every kind of page, not only on the
+articles:
+
+```toml
+[outputs]
+  page     = ["HTML", "md"]
+  home     = ["HTML", "RSS", "md"]
+  section  = ["HTML", "RSS", "md"]
+  taxonomy = ["HTML", "RSS", "md"]
+  term     = ["HTML", "RSS", "md"]
+```
+
+`page` alone covers the articles, which is where this started, and it leaves
+the mirror holed exactly where its own links point: the front page, `/posts/`,
+`/tags/` and `/tags/hugo/` are the pages a reader navigates *through*, and one
+that followed a link to `/posts/index.md` used to find nothing there and fall
+back to the HTML. With the four other kinds on, every page of the site is
+reachable from `/index.md` without reading a line of HTML.
+
+Each list replaces the whole of Hugo's default for that kind, which is why
+`RSS` is named again above: leaving it out drops the section and taxonomy
+feeds.
+
+A list page's Markdown is its title, its own description, its body, then its
+children as links to their own `.md`. The children are listed whole rather than
+one pager at a time — pagination is a reading aid for a screen, and a file
+fetched in one request has no reason to make the rest of a section a second
+request.
+
+The page's own `<head>` advertises the copy, so a reader that prefers Markdown
 can find it without guessing:
 
 ```html

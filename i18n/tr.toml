@@ -132,3 +132,12 @@ other = "E-posta ile paylaş"
 
 [search]
 other = "Ara"
+
+[contents]
+other = "İçindekiler"
+
+[llmsFullAt]
+other = "Aşağıdaki tüm sayfaların tam metni:"
+
+[llmsFullTruncated]
+other = "{{ .Total }} sayfadan {{ .Kept }} tanesi, llms.txt içindeki sırayla."

@@ -132,3 +132,12 @@ other = "透過電郵分享"
 
 [search]
 other = "搜尋"
+
+[contents]
+other = "目錄"
+
+[llmsFullAt]
+other = "以下所有頁面的全文："
+
+[llmsFullTruncated]
+other = "{{ .Total }} 個頁面中的 {{ .Kept }} 個，順序與 llms.txt 一致。"

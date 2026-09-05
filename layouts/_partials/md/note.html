@@ -1,0 +1,7 @@
+{{- /* One line, because a newline ends a list item. htmlUnescape twice: so
+       truncate counts characters not entities, then to undo its escaping. */ -}}
+{{- $note := "" -}}
+{{- with .Description | default .Summary -}}
+  {{- $note = . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}
+{{- end -}}
+{{- return $note -}}

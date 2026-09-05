@@ -1,0 +1,17 @@
+{{- /* safeHTML on everything printed: a partial that prints rather than
+       returns is an HTML template whatever its extension, and without it the
+       body leaves full of entities. Shared with llms-full.txt. */ -}}
+{{- $body := .RenderShortcodes -}}
+{{- $note := .Description | default .Summary -}}
+# {{ partial "title.html" . | safeHTML }}
+{{ with $note }}
+> {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | safeHTML }}
+{{ end }}
+{{- with .Date }}{{ if not .IsZero }}
+{{ time.Format "2006-01-02" . }}{{ with $.Params.tags }} · {{ delimit . ", " | safeHTML }}{{ end }}
+{{ end }}{{ end }}
+{{ $body | strings.TrimSpace | safeHTML }}
+
+---
+
+{{ partial "i18n.html" (dict "key" "llmsCanonical" "fallback" "Originally published at") | safeHTML }} {{ .Permalink | safeHTML }}
