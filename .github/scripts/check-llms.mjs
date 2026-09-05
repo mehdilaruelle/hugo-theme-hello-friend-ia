@@ -14,9 +14,11 @@ const walk = (d) => readdirSync(d).flatMap((e) => {
   return statSync(p).isDirectory() ? walk(p) : [p];
 });
 
-// Handed nothing, say so rather than dying in walk() further down.
-if (!existsSync(root)) {
-  console.log(`  BAD  no ${root} to read`);
+// Handed nothing, say so rather than dying in walk() further down — and a
+// regular file is nothing too: it passes existsSync, and readdirSync then
+// throws ENOTDIR, which is the stack trace this guard exists to replace.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.log(`  BAD  no ${root} directory to read`);
   process.exit(1);
 }
 
