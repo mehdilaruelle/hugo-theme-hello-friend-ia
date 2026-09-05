@@ -1,5 +1,5 @@
 ---
-title: "Hello Friend NG"
+title: "Hello Friend IA"
 description: "Toutes les options du thème activées d'un coup, en quatre langues, avec un article sur ce que coûte chacune."
 ---
 
@@ -9,7 +9,7 @@ commencer.
 
 Ceci est la vitrine. Toutes les options du thème y sont activées d'un coup, en
 quatre langues, et chaque article dit ce que coûte l'une d'elles. La
-[démo par défaut](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ng-ia/)
+[démo par défaut](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ia/)
 les laisse toutes éteintes, pour qu'un thème ressemble à lui-même dès
 l'installation plutôt qu'à une liste de fonctionnalités.
 
