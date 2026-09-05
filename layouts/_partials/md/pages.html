@@ -1,0 +1,8 @@
+{{- /* A collection minus the pages that asked to stay out. Ranged, not filtered
+       with where, because the rule is in noai.html and where cannot call a
+       partial. */ -}}
+{{- $out := slice -}}
+{{- range . -}}
+  {{- if not (partial "md/noai.html" .) -}}{{- $out = $out | append . -}}{{- end -}}
+{{- end -}}
+{{- return $out -}}

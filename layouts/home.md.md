@@ -4,7 +4,7 @@
 {{- $children := slice -}}
 {{- range .Pages -}}{{- $children = $children | append . -}}{{- end -}}
 {{- range where site.Pages "Kind" "taxonomy" -}}{{- $children = $children | append . -}}{{- end -}}
-{{- $children = where $children "Params.searchable" "!=" false -}}
+{{- $children = partial "md/pages.html" $children -}}
 # {{ site.Title }}
 {{ with $desc }}
 > {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}

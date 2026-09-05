@@ -4,6 +4,9 @@ description = "Headings, code, tables, quotes and images, on one page, so nothin
 date = "2026-01-10"
 type = ["posts","post"]
 toc = true
+# Overrides the site licence; the note goes at the end of the Markdown copy.
+license = "https://creativecommons.org/licenses/by/4.0/"
+llmsNote = "The prose here is a typography specimen. Quote it for what the theme does with text, not for what it says."
 math = true
 tags = ["hugo", "development"]
 categories = ["Development"]

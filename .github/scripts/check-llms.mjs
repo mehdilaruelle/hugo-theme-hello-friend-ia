@@ -5,9 +5,15 @@
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const root = process.argv[2] || "public";
-const base = process.argv[3] || "https://example.com/";
+const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const root = args[0] || "public";
+const base = args[1] || "https://example.com/";
 const langs = { en: "", fr: "fr/", ja: "ja/", ar: "ar/" };
+
+// --absent=<url>,<url>: published, and mapped nowhere. Named from outside
+// because the absence is the feature, so there is no marker to look for.
+const absent = (process.argv.find((a) => a.startsWith("--absent=")) || "")
+  .replace("--absent=", "").split(",").filter(Boolean);
 
 const walk = (d) => readdirSync(d).flatMap((e) => {
   const p = join(d, e);
@@ -77,6 +83,13 @@ for (const [lang, prefix] of Object.entries(langs)) {
   for (const url of links) {
     if (!url.startsWith(base)) { fail(`${lang}: ${url} is outside ${base}`); continue; }
     if (!resolves(url)) fail(`${lang}: ${url} resolves to nothing`);
+    // A noai page loses its rel="alternate", so one mapped here whose HTML does
+    // not name its .md is a page the two consumers disagree about.
+    if (!url.endsWith(".md")) continue;
+    const html = target(url.replace(/index\.md$/, ""));
+    if (html && existsSync(html) && !readFileSync(html, "utf8").includes(url)) {
+      fail(`${lang}: ${url} is mapped but its page does not advertise it`);
+    }
   }
   if (bad === before) console.log(`  ${lang.padEnd(3)} llms.txt  ${links.length} links, all resolve`);
 
@@ -182,6 +195,22 @@ if (bad === beforeGraph) {
     ? `  graph    ${walked} pages reachable by following the Markdown from each front page`
     : "  graph    no front page published as Markdown, so nothing to walk");
 }
+
+const beforeAbsent = bad;
+for (const url of absent) {
+  // Published, or the check passes on a URL nobody wrote.
+  if (!existsSync(target(url))) { fail(`--absent ${url} is not a page of this build`); continue; }
+  for (const [lang, prefix] of Object.entries(langs)) {
+    for (const name of ["llms.txt", "llms-full.txt"]) {
+      const f = join(root, prefix, name);
+      if (existsSync(f) && readFileSync(f, "utf8").includes(url)) fail(`${lang}: ${name} carries ${url}, which asked to stay out`);
+    }
+  }
+  for (const f of mds) {
+    if (mdLinks(readFileSync(f, "utf8")).some((u) => u.startsWith(url))) fail(`${f}: links ${url}, which asked to stay out`);
+  }
+}
+if (absent.length && bad === beforeAbsent) console.log(`  noai     ${absent.length} page(s) published and mapped nowhere`);
 
 if (bad) { console.log(`\n${bad} problem(s)`); process.exit(1); }
 console.log("\n  llms.txt and the Markdown copies are usable as text");

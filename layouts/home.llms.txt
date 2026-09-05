@@ -15,7 +15,7 @@
 {{- with .OutputFormats.Get "llmsfull" }}
 {{ partial "i18n.html" (dict "key" "llmsFullAt" "fallback" "The full text of every page below:") }} {{ .Permalink }}
 {{ end }}
-{{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
+{{- $all := partial "md/pages.html" site.RegularPages -}}
 {{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}
 {{- with $posts }}

@@ -2,7 +2,7 @@
        aid for a screen. Taxonomies by title, as in list.html. */ -}}
 {{- $children := .Pages -}}
 {{- if eq .Kind "taxonomy" -}}{{- $children = .Pages.ByTitle -}}{{- end -}}
-{{- $children = where $children "Params.searchable" "!=" false -}}
+{{- $children = partial "md/pages.html" $children -}}
 # {{ partial "title.html" . }}
 {{ with partial "description.html" . }}
 > {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
