@@ -17,10 +17,20 @@ const pub = args[1] || 'public';
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
+// Handed nothing, say so rather than dying in readFileSync.
+const read = (path) => {
+  const full = join(root, path);
+  if (!existsSync(full)) {
+    console.error(`  no ${full}: is ${root} the theme root?`);
+    process.exit(1);
+  }
+  return readFileSync(full, 'utf8');
+};
+
 // A line this cannot read is reported, not skipped: Hugo still reads it.
 const known = {};
 let key = null;
-readFileSync(join(root, 'data/aiCrawlers.yaml'), 'utf8').split(/\r?\n/).forEach((line, i) => {
+read('data/aiCrawlers.yaml').split(/\r?\n/).forEach((line, i) => {
   if (!line.trim() || line.trim().startsWith('#')) return;
   const heading = line.match(/^([a-z][a-zA-Z]*):\s*(?:#.*)?$/);
   if (heading) { key = heading[1]; known[key] = []; return; }
@@ -36,7 +46,7 @@ const overlap = (known.train || []).filter((a) => (known.cite || []).includes(a)
 if (overlap.length) fail(`data/aiCrawlers.yaml: ${overlap.join(', ')} is in both groups`);
 
 const file = join(pub, 'robots.txt');
-if (!existsSync(file)) { fail('no robots.txt was written'); process.exit(1); }
+if (!existsSync(file)) { fail(`no ${file} to read`); process.exit(1); }
 const text = readFileSync(file, 'utf8');
 
 // A rule closes the run of agents, so the next agent line starts a group.
