@@ -7,9 +7,10 @@
 [![Hello Friend IA](images/screenshot.png)](https://mehdilaruelle.github.io/hugo-theme-hello-friend-ia/)
 
 **100 / 100 / 100 / 100** on PageSpeed Insights — performance, accessibility,
-best practices and SEO — on both demo sites, on mobile and on desktop. The
-second of those is the showcase, with every option in the theme switched on at
-once. [The four reports →](#speed)
+best practices and SEO — on the showcase, on mobile and on desktop, with every
+option in the theme switched on at once. The default demo matches it on desktop,
+and scored 98 on mobile performance in the latest run.
+[The four reports →](#speed)
 
 > **This is a fork.** All the credit for the theme goes to
 > [Djordje Atlialp (@rhazdon)](https://github.com/rhazdon), who wrote
@@ -105,21 +106,31 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 ### Speed
 
 Both demo sites are measured, not a private one, so you can re-run these
-yourself. The theme scores **100 on all four categories, on both form factors**:
+yourself. Accessibility, best practices and SEO are **100 everywhere**, and
+performance is 100 in three of the four runs:
 
 | | performance | accessibility | best practices | SEO |
 | --- | --- | --- | --- | --- |
-| [demo, desktop](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fmehdilaruelle.github.io%2Fhugo-theme-hello-friend-ia%2F&form_factor=desktop) | 100 | 100 | 100 | 100 |
-| [demo, mobile](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fmehdilaruelle.github.io%2Fhugo-theme-hello-friend-ia%2F&form_factor=mobile) | 100 | 100 | 100 | 100 |
-| [showcase, desktop](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fmehdilaruelle.github.io%2Fhugo-theme-hello-friend-ia%2Fshowcase%2F&form_factor=desktop) | 100 | 100 | 100 | 100 |
-| [showcase, mobile](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fmehdilaruelle.github.io%2Fhugo-theme-hello-friend-ia%2Fshowcase%2F&form_factor=mobile) | 100 | 100 | 100 | 100 |
+| [demo, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ia/k5kx11k4x2?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [demo, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ia/k5kx11k4x2?form_factor=mobile) | 98 | 100 | 100 | 100 |
+| [showcase, desktop](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ia-showcase/iwdd7ko6hl?form_factor=desktop) | 100 | 100 | 100 | 100 |
+| [showcase, mobile](https://pagespeed.web.dev/analysis/https-mehdilaruelle-github-io-hugo-theme-hello-friend-ia-showcase/iwdd7ko6hl?form_factor=mobile) | 100 | 100 | 100 | 100 |
 
-Measured on 29 August 2026, replacing a run on the 25th that scored 99 on the
-demo's mobile and 97 on the showcase's.
+Measured on 5 September 2026, on the renamed URLs.
+
+Performance is the category that moves between runs, and the 98 is what that
+looks like rather than a fault in the page. Nothing in that run is red: every
+metric passes — FCP 1.5 s, LCP 2.1 s, TBT 0 ms, CLS 0, Speed Index 2.4 s — and
+98 is simply what the mobile scoring curves return for a paint that is good
+rather than excellent. Two things say it is the run and not the page: the same
+demo scored 100 on mobile on 29 August and 99 on the 25th, and the showcase —
+the heavier of the two pages by some distance — scored 100 on mobile in this
+same batch, one second apart.
 
 The showcase is the one worth looking at: it turns every option in the theme on
 at once — four languages, a background image, thumbnails, excerpts, covers,
-diagrams, maths, search — and still scores what the stripped-back demo does.
+diagrams, maths, search — and still scores 100 in every category, on both form
+factors.
 
 None of it is bought with layout: **Cumulative Layout Shift is 0 on all four**,
 and Total Blocking Time is 0 ms.
