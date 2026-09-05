@@ -1,11 +1,15 @@
 {{- /*
   Overrides Hugo's embedded opengraph.html. Copied from Hugo 0.164, the version
-  CI pins, and kept line for line apart from the three corrections below, so the
+  CI pins, and kept line for line apart from the four corrections below, so the
   next release is a readable diff.
 
   og:url was .Permalink, the same URL on every pager, while the canonical link
   beside it named the pager: the page claimed two URLs at once. og:title and
   og:description carry the pager suffix the title element already had.
+
+  og:title read .Title, empty on a page whose front matter declares none, so
+  the or chain fell through and the card named the site while the title element
+  and twitter:title, which both ask title.html, named the page.
 
   og:image asks social-image.html, which twitter_cards.html asks too. Hugo's own
   _funcs/get-page-images knows nothing of this theme's cover, so a site setting
@@ -18,7 +22,7 @@
 	<meta property="og:site_name" content="{{ . }}">
 {{- end }}
 
-{{- with or .Title site.Title site.Params.title | plainify }}
+{{- with or (partial "title.html" .) site.Title site.Params.title | plainify }}
 	<meta property="og:title" content="{{ partial "pager-suffix.html" (dict "text" . "pager" $canonical.pager) }}">
 {{- end }}
 

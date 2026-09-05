@@ -85,6 +85,46 @@ h4 {
   font-size: 1.125rem;
 }
 
+// A fragment jump lands the heading flush against the top of the window.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  scroll-margin-top: 1rem;
+
+  // opacity, not display: hovering a heading must not reflow it.
+  &:hover .heading-anchor {
+    opacity: 1;
+  }
+}
+
+// The glyph is generated here rather than written into the markup: as text it
+// belonged to the heading, and plainify fed it back into the meta description
+// and the search index.
+.heading-anchor {
+  margin-left: 0.3em;
+  opacity: 0;
+  font-weight: normal;
+  text-decoration: none;
+  color: $light-color-secondary;
+
+  @media (prefers-color-scheme: dark) { color: $dark-color-secondary; }
+  @media (prefers-color-scheme: light) { color: $light-color-secondary; }
+  [data-theme=dark] & { color: $dark-color-secondary; }
+  [data-theme=light] & { color: $light-color-secondary; }
+
+  &::before {
+    content: "#";
+  }
+
+  // Hover alone leaves a tab stop nobody can see.
+  &:focus-visible {
+    opacity: 1;
+  }
+}
+
 @media #{$media-size-phone} {
   h1 {
     font-size: 2rem;

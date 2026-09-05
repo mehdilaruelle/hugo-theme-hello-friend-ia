@@ -156,3 +156,8 @@ other = "النص الكامل لكل الصفحات أدناه:"
 
 [llmsFullTruncated]
 other = "{{ .Kept }} صفحة من أصل {{ .Total }}، بالترتيب الذي يسرده llms.txt."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "رابط إلى هذا القسم"

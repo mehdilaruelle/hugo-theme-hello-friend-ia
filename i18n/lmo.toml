@@ -141,3 +141,8 @@ other = "El test compless de tütt i pagin chì sota:"
 
 [llmsFullTruncated]
 other = "{{ .Kept }} pagin su {{ .Total }}, in de l’órden che llms.txt el dà."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "Ligam a chesta sezion"

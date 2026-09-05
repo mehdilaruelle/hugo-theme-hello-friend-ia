@@ -141,3 +141,8 @@ other = "Aşağıdaki tüm sayfaların tam metni:"
 
 [llmsFullTruncated]
 other = "{{ .Total }} sayfadan {{ .Kept }} tanesi, llms.txt içindeki sırayla."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "Bu bölüme bağlantı"

@@ -141,3 +141,8 @@ other = "以下所有頁面的全文："
 
 [llmsFullTruncated]
 other = "{{ .Total }} 個頁面中的 {{ .Kept }} 個，順序與 llms.txt 一致。"
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "本節連結"

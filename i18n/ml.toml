@@ -141,3 +141,8 @@ other = "താഴെയുള്ള എല്ലാ പേജുകളുടെ
 
 [llmsFullTruncated]
 other = "{{ .Total }}-ൽ {{ .Kept }} പേജുകൾ, llms.txt പട്ടികപ്പെടുത്തുന്ന അതേ ക്രമത്തിൽ."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "ഈ വിഭാഗത്തിലേക്കുള്ള ലിങ്ക്"

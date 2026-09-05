@@ -141,3 +141,8 @@ other = "नीचे दिए गए सभी पृष्ठों का �
 
 [llmsFullTruncated]
 other = "{{ .Total }} में से {{ .Kept }} पृष्ठ, उसी क्रम में जिसमें llms.txt उन्हें सूचीबद्ध करता है।"
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "इस अनुभाग का लिंक"

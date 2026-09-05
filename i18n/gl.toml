@@ -141,3 +141,8 @@ other = "O texto completo de todas as páxinas de embaixo:"
 
 [llmsFullTruncated]
 other = "{{ .Kept }} de {{ .Total }} páxinas, na orde en que llms.txt as lista."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "Ligazón a esta sección"
