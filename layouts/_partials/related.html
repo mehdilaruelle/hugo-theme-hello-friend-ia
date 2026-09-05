@@ -1,0 +1,31 @@
+{{- /*
+  The posts a reader is most likely to want next. Takes the page.
+
+  Tuning belongs to the site: Hugo reads a theme's [related] block and throws
+  it away, and this call takes no threshold or includeNewer. See docs/config.md.
+
+  Own section only -- a tag on the About page put it under "Related posts".
+  noindex goes before the limit, or a hidden page costs a slot; where cannot
+  call a partial, so the loop does it, as in sitemap.xml.
+*/ -}}
+{{- if ne site.Params.related.enable false -}}
+  {{- $limit := 5 -}}
+  {{- with site.Params.related.limit }}{{ $limit = . }}{{ end -}}
+
+  {{- $pages := slice -}}
+  {{- range (where site.RegularPages "Section" .Section).Related . -}}
+    {{- if not (partial "noindex.html" .) }}{{ $pages = $pages | append . }}{{ end -}}
+  {{- end -}}
+
+  {{- /* A heading over an empty list is worse than no section. */ -}}
+  {{- with first $limit $pages }}
+  <aside class="related">
+    <h2 class="related__title">{{ partial "i18n.html" (dict "key" "relatedPosts" "fallback" "Related posts") }}</h2>
+    <ul class="related__list">
+      {{- range . }}
+      <li><a href="{{ .Permalink }}">{{ partial "title.html" . }}</a></li>
+      {{- end }}
+    </ul>
+  </aside>
+  {{- end }}
+{{- end -}}

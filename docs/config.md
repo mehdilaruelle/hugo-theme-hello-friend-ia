@@ -426,6 +426,74 @@ rather than run to the several hundred `.Summary` can reach.
 Excerpts and thumbnails compose. With both on, the excerpt is indented to line
 up with the title rather than with the thumbnail beside it.
 
+## Related posts
+
+Every article ends with a list of the posts closest to it, so a reader has
+somewhere to go and the articles link to each other without anyone writing the
+links. Nothing to switch on: a post with no match renders no section at all,
+not an empty heading.
+
+```toml
+[params]
+  [params.related]
+    enable = false   # removes the section everywhere
+    limit  = 3       # how many entries at most. Defaults to 5
+```
+
+A page kept out of the index never appears in the list — see
+[Keeping a page out of things](#keeping-a-page-out-of-things) — and a post with
+no title in its front matter is listed under its humanized file name rather
+than as an empty link.
+
+### What it matches on
+
+Hugo's related-content index does the matching. Its settings are the site's,
+not the theme's: **Hugo does not merge a theme's `[related]` block into a
+site's configuration**, so the block below has to live in your own config file.
+Copy it from the exampleSite:
+
+```toml
+[related]
+  threshold    = 80
+  includeNewer = true
+  toLower      = true
+
+  [[related.indices]]
+    name   = "tags"
+    weight = 100
+
+  [[related.indices]]
+    name   = "categories"
+    weight = 80
+
+  [[related.indices]]
+    name   = "date"
+    weight = 10
+```
+
+Without it Hugo's own defaults apply, and the list still works — it indexes
+`keywords`, `tags` and `date`. Two things are worth the block anyway:
+
+- **`includeNewer = true`.** Hugo defaults it to `false`, which relates a post
+  only to ones published before it. The newest article on the site then shows
+  nothing, and every list points backwards in time.
+- **`categories`.** Hugo does not index them at all, so two posts filed
+  together with no tag in common never meet.
+
+`threshold` is how close a match has to be, from 0 (everything) to 100
+(near-identical). `toLower` makes `Hugo` and `hugo` the same tag. The full set
+is in [Hugo's related-content documentation](https://gohugo.io/content-management/related/).
+
+**Weigh an index at or above `threshold` if a match on it alone should count.**
+Below it, the index cannot qualify a post by itself — and it does not act as a
+tie-breaker either: `categories` at 60 against a threshold of 80 produced lists
+identical to having no categories index at all, ordering included. That is why
+the block above weighs it 80, so that two posts filed together but tagged
+differently are related. Weigh it lower and only a shared tag will do.
+
+Candidates come from the article's own section, so a tagged About page never
+appears under a heading that says "Related posts".
+
 ## Everything else the theme reads
 
 The options below all work and none of them were written down anywhere. Three of
