@@ -1,14 +1,8 @@
-{{- /*
-  llms-full.txt: the pages llms.txt maps, in the same order, carrying their
-  text instead of a link to it. One request instead of N. Each entry comes
-  through the partial page.md.md uses, so the two cannot disagree.
-
-  params.llmsFullLimit caps the entries, and when it bites the file says so: a
-  truncated copy presenting itself as the whole site is the thing to avoid.
-*/ -}}
+{{- /* The pages llms.txt maps, carrying their text. params.llmsFullLimit caps
+       them, and the file says so when it bites: a truncated copy presenting
+       itself as the whole site is the thing to avoid. */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
-{{- /* Posts first, then everything else — llms.txt order, not site-wide date
-       order, which is why the notice below claims no recency. */ -}}
+{{- /* llms.txt order, not date order, which is why the notice claims none. */ -}}
 {{- $all := where site.RegularPages "Params.searchable" "!=" false -}}
 {{- $posts := where $all "Section" "in" (site.Params.mainSections | default (slice "posts")) -}}
 {{- $other := $all | complement $posts -}}

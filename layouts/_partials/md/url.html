@@ -1,5 +1,4 @@
-{{- /* The page's .md copy when the site publishes one, its HTML when it does
-       not. Shared, so the map and the mirrors cannot disagree. */ -}}
+{{- /* Shared, so the map and the mirrors cannot disagree. */ -}}
 {{- $url := .Permalink -}}
 {{- with .OutputFormats.Get "md" -}}{{- $url = .Permalink -}}{{- end -}}
 {{- return $url -}}

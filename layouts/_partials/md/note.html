@@ -1,7 +1,5 @@
-{{- /* The line after a link: the description, the summary when there is none,
-       the empty string when there is neither. Flattened, because a newline
-       ends a list item. htmlUnescape twice: once so truncate counts characters
-       rather than entities, once to undo truncate's own escaping. */ -}}
+{{- /* One line, because a newline ends a list item. htmlUnescape twice: so
+       truncate counts characters not entities, then to undo its escaping. */ -}}
 {{- $note := "" -}}
 {{- with .Description | default .Summary -}}
   {{- $note = . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 200 "…" | htmlUnescape -}}

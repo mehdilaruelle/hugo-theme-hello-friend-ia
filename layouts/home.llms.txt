@@ -1,10 +1,5 @@
-{{- /*
-  llms.txt: the site as a map — a heading, a summary, then every page as a link
-  with a note. The convention is at llmstxt.org.
-
-  How a link resolves, how a title is escaped and how a note is cut are shared
-  with the Markdown mirror, under _partials/md/.
-*/ -}}
+{{- /* llms.txt, the convention at llmstxt.org. Link resolution, label escaping
+       and note trimming are shared with the mirror, in _partials/md/. */ -}}
 {{- $desc := .Description | default site.Params.homeSubtitle | default site.Params.description -}}
 # {{ site.Title }}
 {{ with $desc }}
@@ -16,7 +11,7 @@
 {{- with site.Params.llmsNote }}
 {{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
 {{ end }}
-{{- /* Not written as a list item: everything in a list here is a page. */ -}}
+{{- /* Not a list item: everything in a list here is a page. */ -}}
 {{- with .OutputFormats.Get "llmsfull" }}
 {{ partial "i18n.html" (dict "key" "llmsFullAt" "fallback" "The full text of every page below:") }} {{ .Permalink }}
 {{ end }}

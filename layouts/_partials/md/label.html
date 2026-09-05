@@ -1,3 +1,2 @@
-{{- /* A title, safe between the brackets of a Markdown link: [ ] and \ are
-       syntax there. */ -}}
+{{- /* [ ] and \ are syntax inside a link label. */ -}}
 {{- return (partial "title.html" . | plainify | replaceRE `([\\\[\]])` `\${1}`) -}}

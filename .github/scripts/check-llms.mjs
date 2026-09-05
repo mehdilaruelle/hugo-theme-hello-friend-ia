@@ -17,14 +17,12 @@ const walk = (d) => readdirSync(d).flatMap((e) => {
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
-// An entity is wrong in prose and right inside a tag, since a shortcode
-// expands to real HTML. A tag, not anything between angle brackets: stripping
-// those took "A < B &amp; C > D" with them, entity and all.
+// Entities are wrong in prose, right inside a tag. A tag, not anything between
+// angle brackets, or "A < B &amp; C > D" takes the entity out with it.
 const prose = (s) => s.replace(/<\/?[A-Za-z][^>]*>/g, "");
 const entities = (s) => prose(s).match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
 
-// A Markdown destination, without the title that may follow it: in
-// [About](/about/ "About") the page is /about/.
+// The destination without the title: [About](/about/ "About") is /about/.
 const destination = (raw) => {
   const d = raw.trim();
   if (d.startsWith("<")) {
@@ -40,8 +38,8 @@ const LINK = /\[(?:\\.|[^\\\]])*\]\(([^)]+)\)/g;
 const LIST_LINK = /^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm;
 const mdLinks = (s) => [...s.matchAll(LINK)].map((m) => destination(m[1]));
 
-// Where a URL under the base lands on disk. The path decides, and nothing
-// else: a fragment joined into a filename looks for a file nobody wrote.
+// The path decides, nothing else: a fragment joined into a filename looks for
+// a file nobody wrote.
 const basePath = new URL(base).pathname;
 const relative = (path) => {
   const p = path.startsWith(basePath) ? path.slice(basePath.length) : path.replace(/^\//, "");
@@ -75,8 +73,8 @@ for (const [lang, prefix] of Object.entries(langs)) {
   }
   if (bad === before) console.log(`  ${lang.padEnd(3)} llms.txt  ${links.length} links, all resolve`);
 
-  // Optional, but a site that publishes one has made llms.txt a promise about
-  // it: the same pages, in the same order, carrying their text.
+  // Optional, but publishing one makes llms.txt a promise: the same pages, in
+  // the same order, carrying their text.
   const fullFile = join(root, prefix, "llms-full.txt");
   if (!existsSync(fullFile)) continue;
   const beforeFull = bad;
@@ -89,9 +87,9 @@ for (const [lang, prefix] of Object.entries(langs)) {
   const fullEntities = entities(full);
   if (fullEntities) fail(`${lang}: llms-full.txt has ${fullEntities.length} HTML entities, e.g. ${fullEntities[0]}`);
 
-  // Read out of the file rather than looked up one URL at a time: looking up
-  // only what the map names can never notice a page it never named. Every
-  // entry closes as page.md.md does — rule, blank line, page URL.
+  // Read out of the file, not looked up one URL at a time: looking up what the
+  // map names can never notice a page it never named. Entries close as
+  // page.md.md does — rule, blank line, page URL.
   const lines = full.split("\n");
   const carried = [];
   for (let i = 2; i < lines.length; i++) {
@@ -101,8 +99,7 @@ for (const [lang, prefix] of Object.entries(langs)) {
   }
   const pages = links.filter((u) => u.startsWith(base)).map((u) => u.replace(/index\.md$/, ""));
   if (!carried.length) fail(`${lang}: llms-full.txt carries none of the ${pages.length} pages llms.txt maps`);
-  // llmsFullLimit may cut the tail and nothing else: no hole in the middle,
-  // no reordering, no page the map never listed.
+  // llmsFullLimit may cut the tail and nothing else.
   const expected = pages.slice(0, carried.length);
   for (let i = 0; i < Math.max(carried.length, expected.length); i++) {
     if (carried[i] !== expected[i]) {
@@ -134,7 +131,7 @@ for (const f of mds) {
   // Anywhere in the file would pass on a page that merely links to the site.
   const last = s.trimEnd().split("\n").pop().trim();
   if (!last.split(/\s+/).pop().startsWith(base)) fail(`${f}: does not end with a canonical URL`);
-  // The mirror is only walkable if its own links land somewhere.
+
   for (const url of mdLinks(s).filter((u) => u.startsWith(base))) {
     edges++;
     if (!resolves(url)) fail(`${f}: ${url} resolves to nothing`);
@@ -142,10 +139,9 @@ for (const f of mds) {
 }
 if (bad === beforeMd) console.log(`  md       ${mds.length} pages, each a heading then prose, ${edges} links between them`);
 
-// Resolving links does not prove reachability. A page with pages under it has
-// to be reachable from its language's front page: /tags/ published itself and
-// its terms, nothing linked it, and every other assertion here passed. A leaf
-// nobody links is exempt — that is what searchable: false looks like on disk.
+// Links resolving does not prove reachability: /tags/ published itself and its
+// terms, nothing linked it, and everything above passed. A page with pages
+// under it must be reachable; a leaf nobody links is searchable: false.
 const beforeGraph = bad;
 const outgoing = (rel) => mdLinks(readFileSync(join(root, rel), "utf8"))
   .filter((u) => u.startsWith(base))

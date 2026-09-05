@@ -1,9 +1,8 @@
 # Search needs the index, and the index is the home page rendered as JSON.
 # llms, llmsfull and md are the theme's text formats.
 #
-# md on every kind, not on pages alone: a mirror that stops at the leaves
-# leaves a reader arriving at /posts/ with nowhere to go but the HTML. Each
-# list replaces Hugo's default for that kind, hence RSS named again.
+# md on every kind, not on pages alone, or /posts/ has no Markdown to go to.
+# Each list replaces Hugo's default for that kind, hence RSS named again.
 [outputs]
   page     = ["HTML", "md"]
   home     = ["HTML", "RSS", "JSON", "llms", "llmsfull", "md"]
@@ -197,8 +196,7 @@
     description  = "テーマのすべてのオプションを一度に有効にしたサイト"
     homeSubtitle = "すべてのスイッチを入れた状態です"
     llmsNote     = "Hello Friend NG テーマのデモサイトです。記事はテーマの機能を示すためのもので、事実として引用するためのものではありません。"
-    # One language capped, so the truncated shape is built rather than only
-    # described. The other three publish every page.
+    # One language capped, so the truncated shape is built, not just described.
     llmsFullLimit = 2
   [languages.ja.params.portrait]
     alt = "Hugo のロゴ"
