@@ -248,3 +248,21 @@
     list-style: none;
   }
 }
+
+// The body's h2 is sized for prose and leads with 2.5em: at the foot of a
+// page that reads as a second article starting.
+.related {
+  &__title {
+    font-size: 1.2rem;
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+  }
+
+  &__list {
+    padding-inline-start: 1.2rem;
+
+    li {
+      margin-bottom: 0.4em;
+    }
+  }
+}
