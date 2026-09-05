@@ -140,3 +140,8 @@ other = "Le texte intégral de toutes les pages ci-dessous :"
 
 [llmsFullTruncated]
 other = "{{ .Kept }} pages sur {{ .Total }}, dans l’ordre où llms.txt les liste."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "Lien vers cette section"

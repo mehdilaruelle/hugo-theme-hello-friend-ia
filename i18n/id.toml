@@ -141,3 +141,8 @@ other = "Teks lengkap semua halaman di bawah ini:"
 
 [llmsFullTruncated]
 other = "{{ .Kept }} dari {{ .Total }} halaman, dalam urutan yang tercantum di llms.txt."
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "Tautan ke bagian ini"

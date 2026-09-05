@@ -142,3 +142,8 @@ other = "以下のすべてのページの全文:"
 
 [llmsFullTruncated]
 other = "{{ .Total }} ページのうち {{ .Kept }} ページ、llms.txt と同じ順序です。"
+
+# _markup/render-heading.html
+#
+[headingAnchor]
+other = "このセクションへのリンク"
