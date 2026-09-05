@@ -597,7 +597,7 @@ icons, and the build warns when it sees one.
 | key | what it does |
 | --- | --- |
 | `cover` / `coverCaption` | image above the article, caption takes Markdown |
-| `toc` | table of contents above the article, built by Hugo from its `h2` and `h3` |
+| `toc` | table of contents above the article, over the heading levels `markup.tableOfContents` selects — `h2` and `h3` until a site changes them |
 | `audio` | an audio player above the article. **A list**, see below |
 | `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things). A page with `layout: search` is already treated this way and does not need it |
 | `comments` | set to `false` to hide Disqus on that page. The string `"false"` is accepted too, which is what older versions required |
