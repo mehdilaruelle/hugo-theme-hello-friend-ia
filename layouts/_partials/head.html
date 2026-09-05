@@ -39,6 +39,15 @@
 {{- $canonical := $self.url -}}
 {{- $pager := $self.pager -}}
 <link rel="canonical" href="{{ $canonical }}" />
+{{- /* Each pager already canonicalises to itself; these say what it is a pager
+       of. Google retired them as an indexing signal in 2019, Bing did not, and
+       a browser can still prefetch the next page. */ -}}
+{{- with $self.prev }}
+<link rel="prev" href="{{ . }}" />
+{{- end }}
+{{- with $self.next }}
+<link rel="next" href="{{ . }}" />
+{{- end }}
 {{- with .OutputFormats.Get "md" }}
 <link rel="alternate" type="text/markdown" href="{{ .Permalink }}" />
 {{- end }}

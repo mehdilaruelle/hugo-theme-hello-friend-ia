@@ -1,7 +1,10 @@
 {{- /*
   Overrides Hugo's embedded opengraph.html. Copied from Hugo 0.164, the version
-  CI pins, and kept line for line apart from the four corrections below, so the
-  next release is a readable diff.
+  CI pins, and kept line for line apart from the corrections below, so the next
+  release is a readable diff.
+
+  Two tags are additions rather than corrections: og:locale:alternate, and
+  article:author, which Hugo's own file lost with the Authors taxonomy.
 
   og:url was .Permalink, the same URL on every pager, while the canonical link
   beside it named the pager: the page claimed two URLs at once. og:title and
@@ -34,10 +37,32 @@
 	<meta property="og:locale" content="{{ replace . `-` `_` }}">
 {{- end }}
 
+{{- /* The locales the same page exists in, which the hreflang set beside it
+       already names as URLs. Same two rules as that set: a noindex translation
+       is left out, and a pager past the first has no translation carrying
+       it. */ -}}
+{{- if eq $canonical.pager 1 }}
+	{{- range .Translations }}
+		{{- if not (partial "noindex.html" .) }}
+			{{- with or .Params.locale .Language.Locale }}
+	<meta property="og:locale:alternate" content="{{ replace . `-` `_` }}">
+			{{- end }}
+		{{- end }}
+	{{- end }}
+{{- end }}
+
 {{- if .IsPage }}
 	<meta property="og:type" content="article">
 	{{- with .Section }}
 		<meta property="article:section" content="{{ . }}">
+	{{- end }}
+	{{- /* A profile URL, which is what article:author takes -- a name there is
+	       the common mistake. site.Home.Permalink is the URL json-ld.html
+	       already gives the Person. Dropped when the page names a guest
+	       author, whose profile this is not. */ -}}
+	{{- $author := partial "author.html" . }}
+	{{- if and $author (eq $author (partial "site-author.html" .).name) }}
+		<meta property="article:author" content="{{ site.Home.Permalink }}">
 	{{- end }}
 	{{- $ISO8601 := "2006-01-02T15:04:05-07:00" }}
 	{{- with .PublishDate }}

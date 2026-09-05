@@ -161,7 +161,13 @@ and Twitter Card tags. On top of that:
 each is a distinct set of posts rather than a copy of page one — and `og:url`,
 which is the canonical Facebook and LinkedIn read, names the same URL as the
 `<link rel="canonical">` beside it. `og:title` and the `<title>` both say which
-pager it is.
+pager it is, and `rel="prev"` and `rel="next"` say what it is a pager of —
+Google retired those as an indexing signal in 2019, Bing did not.
+
+**The same page in another language** is named twice over: as `hreflang`, with
+an `x-default`, and as `og:locale:alternate` for the platforms that read Open
+Graph and nothing else. Both sets follow one rule, so they cannot disagree — a
+translation kept out of the index appears in neither.
 
 **`max-image-preview:large`**, so Google can show a full-width picture beside
 the page in Search and in Discover instead of a thumbnail — except on a page
