@@ -326,9 +326,30 @@ The directory name matters: keep it `hello-friend-ia`, since that is the value `
 Coming from an earlier version, the names changed: the repository moved from
 `hugo-theme-hello-friend-ng-ia` to `hugo-theme-hello-friend-ia`, and the theme
 directory from `hello-friend-ng` to `hello-friend-ia`. GitHub redirects the old
-clone and submodule URLs, but Hugo redirects nothing: rename
-`themes/hello-friend-ng` to `themes/hello-friend-ia` and set
-`theme = "hello-friend-ia"` in your configuration.
+clone and submodule URLs, so fetching still works; Hugo redirects nothing, so
+the directory has to be renamed by hand.
+
+If you cloned the theme, or pasted it in:
+
+``` bash
+mv themes/hello-friend-ng themes/hello-friend-ia
+```
+
+If you added it as a submodule, the old path is recorded in `.gitmodules`, in
+the index and in `.git/config` as well, so moving the directory on its own
+leaves the next `git submodule update` — and any fresh clone of your site —
+pointing at a path that no longer exists:
+
+``` bash
+git mv themes/hello-friend-ng themes/hello-friend-ia
+git submodule set-url themes/hello-friend-ia https://github.com/mehdilaruelle/hugo-theme-hello-friend-ia.git
+git submodule sync themes/hello-friend-ia
+git commit -am "Rename the theme directory"
+```
+
+Either way, finish by setting `theme = "hello-friend-ia"` in your
+configuration. Miss that step and Hugo reports
+`module "hello-friend-ng" not found`.
 
 The section name matters too: articles go in `content/posts/`. Hugo resolves an
 article's template by section name, and the theme's article layouts are
