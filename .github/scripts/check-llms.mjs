@@ -14,6 +14,13 @@ const walk = (d) => readdirSync(d).flatMap((e) => {
   return statSync(p).isDirectory() ? walk(p) : [p];
 });
 
+// isDirectory, not existsSync: a regular file passes that and readdirSync then
+// throws the ENOTDIR trace this replaces.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.log(`  BAD  no ${root} directory to read`);
+  process.exit(1);
+}
+
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
@@ -168,7 +175,13 @@ for (const prefix of Object.values(langs)) {
     if (hasChildren && !seen.has(rel)) fail(`${rel}: has pages under it and nothing links it from ${home}`);
   }
 }
-if (bad === beforeGraph) console.log(`  graph    ${walked} pages reachable by following the Markdown from each front page`);
+// md on pages but not on home leaves no front page to walk from, and zero
+// would read as a result rather than the absence of one.
+if (bad === beforeGraph) {
+  console.log(walked
+    ? `  graph    ${walked} pages reachable by following the Markdown from each front page`
+    : "  graph    no front page published as Markdown, so nothing to walk");
+}
 
 if (bad) { console.log(`\n${bad} problem(s)`); process.exit(1); }
 console.log("\n  llms.txt and the Markdown copies are usable as text");
