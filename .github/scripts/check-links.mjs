@@ -3,7 +3,7 @@
 // how several bugs reached production here -- then resolves outside the tree.
 // External URLs are never requested: fast, offline, nobody else's rate limit.
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, posix } from "node:path";
 
 // poster carries a URL like src does, so it belongs in the same net. The
@@ -49,17 +49,24 @@ if (!publicDir || !baseUrl) {
 }
 
 const root = resolve(publicDir);
+if (!existsSync(root)) {
+  console.error(`no ${root}: nothing was checked`);
+  process.exit(1);
+}
+
 const siteOrigin = new URL(baseUrl).origin;
 let prefix = new URL(baseUrl).pathname || "/";
 if (!prefix.endsWith("/")) prefix += "/";
 
 const failures = [];
 let checked = 0;
+let files = 0;
 
 for (const file of walk(root)) {
   // Feeds are skipped: their descriptions carry escaped markup from article
   // bodies, which is content rather than anything the theme emits.
   if (!/\.(html|css)$/i.test(file)) continue;
+  files++;
 
   const page = "/" + relative(root, file).split(/[\\/]/).join("/");
   const text = readFileSync(file, "utf8");
@@ -111,6 +118,11 @@ for (const file of walk(root)) {
     checked++;
     if (!published(root, resolved)) failures.push([page, raw, "no such file"]);
   }
+}
+
+if (files === 0) {
+  console.error(`no HTML or CSS under ${root}: nothing was checked`);
+  process.exit(1);
 }
 
 console.log(`checked ${checked} internal references`);

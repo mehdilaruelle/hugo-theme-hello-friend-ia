@@ -11,8 +11,18 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.argv[2] || '.';
-const yaml = readFileSync(join(root, 'data/langFlags.yaml'), 'utf8');
-const scss = readFileSync(join(root, 'assets/scss/_flag-icons.scss'), 'utf8');
+
+const read = (path) => {
+  const full = join(root, path);
+  if (!existsSync(full)) {
+    console.error(`  no ${full}: is ${root} the theme root?`);
+    process.exit(1);
+  }
+  return readFileSync(full, 'utf8');
+};
+
+const yaml = read('data/langFlags.yaml');
+const scss = read('assets/scss/_flag-icons.scss');
 
 const problems = [];
 const entries = [];
@@ -39,6 +49,12 @@ for (const { lang, flag } of entries) {
 }
 
 for (const p of problems) console.error('  ' + p);
+
+if (entries.length === 0) {
+  console.error(`  no mappings read from ${join(root, 'data/langFlags.yaml')}`);
+  process.exit(1);
+}
+
 console.log(`checked ${entries.length} language-to-flag mappings`);
 console.log(problems.length ? `${problems.length} problem(s)` : 'every one names a flag the theme can draw');
 process.exit(problems.length ? 1 : 0);
