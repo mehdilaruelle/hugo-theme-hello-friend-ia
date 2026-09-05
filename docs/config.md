@@ -24,9 +24,9 @@ For a single language, `[params]` is all you need:
 
 ```toml
 [params]
-  subtitle     = "Hello Friend NG Theme"
+  subtitle     = "Hello Friend IA Theme"
   description  = "Nice theme for homepages and blogs"
-  homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
+  homeSubtitle = "A Hugo theme powered by <strong>IA</strong>"
 ```
 
 For several, move anything a visitor *reads* under each language, and leave the
@@ -38,18 +38,18 @@ rest — dates, feature switches, colours — at the root where it is written on
   locale = "en-US"
   label  = "English"
 [languages.en.params]
-  subtitle     = "Hello Friend NG Theme"
+  subtitle     = "Hello Friend IA Theme"
   description  = "Nice theme for homepages and blogs"
-  homeSubtitle = "Hello Friend NG powered by <strong>IA</strong>"
+  homeSubtitle = "A Hugo theme powered by <strong>IA</strong>"
 
 [languages.fr]
   weight = 2
   locale = "fr-FR"
   label  = "Français"
 [languages.fr.params]
-  subtitle     = "Thème Hello Friend NG"
+  subtitle     = "Thème Hello Friend IA"
   description  = "Un thème soigné pour pages d'accueil et blogs"
-  homeSubtitle = "Hello Friend NG propulsé par l'<strong>IA</strong>"
+  homeSubtitle = "Un thème Hugo propulsé par l'<strong>IA</strong>"
 ```
 
 The three above are the ones most easily forgotten, because none of them come
