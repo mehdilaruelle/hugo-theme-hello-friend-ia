@@ -33,6 +33,13 @@
 {{ end }}
 
 {{ if .Page.Store.Get "hasMermaid" }}
+{{- /* Not in <head>: hasMermaid is set while .Content renders. It still pays,
+       since the module URL sits in a data attribute the preload scanner never
+       reads. Skipped when the math gate already emitted it -- one origin
+       serves both. crossorigin because import() is always a CORS fetch. */ -}}
+{{- if not (or .Params.math .Site.Params.math) }}
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+{{- end }}
 {{- /* The initialiser is a file, not an inline module, so a site with a strict
        CSP does not have to allow script-src 'unsafe-inline' for the pages that
        carry a diagram. Mermaid itself is imported dynamically, and only from

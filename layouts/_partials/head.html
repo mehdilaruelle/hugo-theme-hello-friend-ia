@@ -148,6 +148,10 @@
        text in a shell snippet, and a false positive fetches 300 KB for nothing.
        Pinned with an integrity hash. */ -}}
 {{- if or .Params.math .Site.Params.math }}
+{{- /* Before the link it warms, or it warms nothing. crossorigin because the
+       fetch below carries it: a connection opened in the other credentials
+       mode cannot be reused, and the handshake is paid twice. */ -}}
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css"
       integrity="sha384-1vdNCNel6Tx/NQa8IR1mGOGKsbGreCkOPfbtPPnUURJ5Tu2PRVfQ/7KLZC+Pi1p1"
       crossorigin="anonymous">
