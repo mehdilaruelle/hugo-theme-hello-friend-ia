@@ -35,7 +35,7 @@ func main() {
 Le `code` en ligne tient dans une phrase sans casser l'interligne — ce que ce
 thème a un jour raté sur deux sélecteurs à la fois.
 
-## Les tableaux
+## Les tableaux {data-columns=3}
 
 | option | défaut | ce qu'elle fait |
 | --- | --- | --- |
