@@ -3,7 +3,7 @@
 // how several bugs reached production here -- then resolves outside the tree.
 // External URLs are never requested: fast, offline, nobody else's rate limit.
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, dirname, resolve, relative, posix } from "node:path";
 
 // poster carries a URL like src does, so it belongs in the same net. The
@@ -49,6 +49,11 @@ if (!publicDir || !baseUrl) {
 }
 
 const root = resolve(publicDir);
+if (!existsSync(root)) {
+  console.error(`no ${root}: nothing was checked`);
+  process.exit(1);
+}
+
 const siteOrigin = new URL(baseUrl).origin;
 let prefix = new URL(baseUrl).pathname || "/";
 if (!prefix.endsWith("/")) prefix += "/";
@@ -115,8 +120,6 @@ for (const file of walk(root)) {
   }
 }
 
-// A wrong working-directory reads as a pass otherwise: nothing walked, nothing
-// broken, "all resolve".
 if (files === 0) {
   console.error(`no HTML or CSS under ${root}: nothing was checked`);
   process.exit(1);

@@ -13,12 +13,15 @@ const INLINE = BS + "(a^2 + b^2 = c^2" + BS + ")";
 const BLOCK  = BS + "int_0^" + BS + "infty e^{-x}" + BS + ",dx = 1";
 
 const root = process.argv[2] || "public";
+if (!existsSync(root)) {
+  console.log(`  BAD  no ${root} to read`);
+  process.exit(1);
+}
+
 const langs = { en: "", fr: "fr/", ja: "ja/", ar: "ar/" };
 let bad = 0;
 for (const [lang, prefix] of Object.entries(langs)) {
   const dir = join(root, prefix, "posts/2026/01");
-  // Missing rather than empty: readdirSync throws, and a stack trace says less
-  // about a wrong working-directory than the line below.
   if (!existsSync(dir)) {
     console.log(`  ${lang.padEnd(3)} BAD  no ${dir} to read`);
     bad++;

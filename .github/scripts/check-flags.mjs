@@ -12,8 +12,6 @@ import { join } from 'node:path';
 
 const root = process.argv[2] || '.';
 
-// Named rather than thrown: a wrong theme root is the common way to get here,
-// and an ENOENT stack trace does not say which path was wrong.
 const read = (path) => {
   const full = join(root, path);
   if (!existsSync(full)) {
@@ -52,8 +50,6 @@ for (const { lang, flag } of entries) {
 
 for (const p of problems) console.error('  ' + p);
 
-// A file that is present and says nothing: every assertion above is vacuously
-// true over no entries, and the run reads as a pass.
 if (entries.length === 0) {
   console.error(`  no mappings read from ${join(root, 'data/langFlags.yaml')}`);
   process.exit(1);
