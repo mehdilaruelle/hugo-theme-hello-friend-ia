@@ -5,9 +5,15 @@
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const root = process.argv[2] || "public";
-const base = process.argv[3] || "https://example.com/";
+const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const root = args[0] || "public";
+const base = args[1] || "https://example.com/";
 const langs = { en: "", fr: "fr/", ja: "ja/", ar: "ar/" };
+
+// --absent=<url>,<url>: published, and mapped nowhere. Named from outside
+// because the absence is the feature, so there is no marker to look for.
+const absent = (process.argv.find((a) => a.startsWith("--absent=")) || "")
+  .replace("--absent=", "").split(",").filter(Boolean);
 
 const walk = (d) => readdirSync(d).flatMap((e) => {
   const p = join(d, e);
@@ -44,6 +50,21 @@ const destination = (raw) => {
 const LINK = /\[(?:\\.|[^\\\]])*\]\(([^)]+)\)/g;
 const LIST_LINK = /^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm;
 const mdLinks = (s) => [...s.matchAll(LINK)].map((m) => destination(m[1]));
+// A listing entry, not any mention: a page kept out of the generated lists is
+// still one an author may link to in prose.
+const bare = (u) => u.replace(/index\.md$/, "");
+const listed = (s) => [...s.matchAll(LIST_LINK)].map((m) => bare(destination(m[1])));
+// llms-full.txt entries close as page.md.md does — rule, blank line, page URL.
+const carriedIn = (full) => {
+  const lines = full.split("\n");
+  const out = [];
+  for (let i = 2; i < lines.length; i++) {
+    if (lines[i - 2].trim() !== "---" || lines[i - 1].trim() !== "") continue;
+    const last = lines[i].trim().split(/\s+/).pop();
+    if (last && last.startsWith(base)) out.push(last);
+  }
+  return out;
+};
 
 // The path decides, nothing else: a fragment joined into a filename looks for
 // a file nobody wrote.
@@ -77,6 +98,13 @@ for (const [lang, prefix] of Object.entries(langs)) {
   for (const url of links) {
     if (!url.startsWith(base)) { fail(`${lang}: ${url} is outside ${base}`); continue; }
     if (!resolves(url)) fail(`${lang}: ${url} resolves to nothing`);
+    // A noai page loses its rel="alternate", so one mapped here whose HTML does
+    // not name its .md is a page the two consumers disagree about.
+    if (!url.endsWith(".md")) continue;
+    const html = target(url.replace(/index\.md$/, ""));
+    if (html && existsSync(html) && !readFileSync(html, "utf8").includes(url)) {
+      fail(`${lang}: ${url} is mapped but its page does not advertise it`);
+    }
   }
   if (bad === before) console.log(`  ${lang.padEnd(3)} llms.txt  ${links.length} links, all resolve`);
 
@@ -95,16 +123,9 @@ for (const [lang, prefix] of Object.entries(langs)) {
   if (fullEntities) fail(`${lang}: llms-full.txt has ${fullEntities.length} HTML entities, e.g. ${fullEntities[0]}`);
 
   // Read out of the file, not looked up one URL at a time: looking up what the
-  // map names can never notice a page it never named. Entries close as
-  // page.md.md does — rule, blank line, page URL.
-  const lines = full.split("\n");
-  const carried = [];
-  for (let i = 2; i < lines.length; i++) {
-    if (lines[i - 2].trim() !== "---" || lines[i - 1].trim() !== "") continue;
-    const last = lines[i].trim().split(/\s+/).pop();
-    if (last && last.startsWith(base)) carried.push(last);
-  }
-  const pages = links.filter((u) => u.startsWith(base)).map((u) => u.replace(/index\.md$/, ""));
+  // map names can never notice a page it never named.
+  const carried = carriedIn(full);
+  const pages = links.filter((u) => u.startsWith(base)).map(bare);
   if (!carried.length) fail(`${lang}: llms-full.txt carries none of the ${pages.length} pages llms.txt maps`);
   // llmsFullLimit may cut the tail and nothing else.
   const expected = pages.slice(0, carried.length);
@@ -182,6 +203,31 @@ if (bad === beforeGraph) {
     ? `  graph    ${walked} pages reachable by following the Markdown from each front page`
     : "  graph    no front page published as Markdown, so nothing to walk");
 }
+
+const beforeAbsent = bad;
+for (const url of absent) {
+  // Published, or the check passes on a URL nobody wrote.
+  const page = target(url);
+  if (!existsSync(page)) { fail(`--absent ${url} is not a page of this build`); continue; }
+  for (const [lang, prefix] of Object.entries(langs)) {
+    const map = join(root, prefix, "llms.txt");
+    if (existsSync(map) && listed(readFileSync(map, "utf8")).includes(url)) {
+      fail(`${lang}: llms.txt maps ${url}, which asked to stay out`);
+    }
+    const full = join(root, prefix, "llms-full.txt");
+    if (existsSync(full) && carriedIn(readFileSync(full, "utf8").split("\r\n").join("\n")).includes(url)) {
+      fail(`${lang}: llms-full.txt carries ${url}, which asked to stay out`);
+    }
+  }
+  for (const f of mds) {
+    if (listed(readFileSync(f, "utf8")).includes(url)) fail(`${f}: lists ${url}, which asked to stay out`);
+  }
+  // The other half of the contract, which nothing else here would notice.
+  if (readFileSync(page, "utf8").includes(`${url}index.md`)) {
+    fail(`${url} still advertises its Markdown copy`);
+  }
+}
+if (absent.length && bad === beforeAbsent) console.log(`  noai     ${absent.length} page(s) published and mapped nowhere`);
 
 if (bad) { console.log(`\n${bad} problem(s)`); process.exit(1); }
 console.log("\n  llms.txt and the Markdown copies are usable as text");

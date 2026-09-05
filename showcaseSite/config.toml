@@ -41,6 +41,10 @@
   enableThumbnails = true
   enableListExcerpts = true
 
+  # The terms of reuse, once for the site. A page overrides either.
+  license    = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  creditText = "Jane Doe"
+
   # The background is a dark image, so the page should arrive dark rather than
   # settle there. The toggle still overrides this, which is the point of having
   # both.

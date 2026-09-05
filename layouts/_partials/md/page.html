@@ -11,7 +11,9 @@
 {{ time.Format "2006-01-02" . }}{{ with $.Params.tags }} · {{ delimit . ", " | safeHTML }}{{ end }}
 {{ end }}{{ end }}
 {{ $body | strings.TrimSpace | safeHTML }}
-
+{{ with .Params.llmsNote }}
+{{ . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | safeHTML }}
+{{ end }}
 ---
 
 {{ partial "i18n.html" (dict "key" "llmsCanonical" "fallback" "Originally published at") | safeHTML }} {{ .Permalink | safeHTML }}
