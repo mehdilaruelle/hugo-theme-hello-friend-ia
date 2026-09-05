@@ -117,6 +117,16 @@ jobs:
         working-directory: hello-friend-ia/showcaseSite
         run: node ../.github/scripts/check-llms.mjs public https://example.com/subpath/showcase/
 
+      # A failed template prints the failure and the build stays green:
+      # %!q(bool=true) went out in a heading, past every checker above.
+      - name: Check no template failed silently (showcase)
+        working-directory: hello-friend-ia/showcaseSite
+        run: node ../.github/scripts/check-markup.mjs public
+
+      - name: Check no template failed silently (demo)
+        working-directory: hello-friend-ia/exampleSite
+        run: node ../.github/scripts/check-markup.mjs public
+
       # Every one of these is a thing the build reports nothing about. A page
       # can name two different URLs as its own, announce a card picture no
       # platform renders, or carry two contradictory robots directives, and

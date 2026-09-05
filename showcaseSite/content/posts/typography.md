@@ -32,7 +32,7 @@ func main() {
 Inline `code` sits inside a sentence without breaking the line height, which is
 a thing this theme once got wrong in two selectors at the same time.
 
-## Tables
+## Tables {data-columns=3}
 
 | option | default | what it does |
 | --- | --- | --- |
