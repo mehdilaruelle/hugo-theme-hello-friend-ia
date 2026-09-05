@@ -50,6 +50,21 @@ const destination = (raw) => {
 const LINK = /\[(?:\\.|[^\\\]])*\]\(([^)]+)\)/g;
 const LIST_LINK = /^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm;
 const mdLinks = (s) => [...s.matchAll(LINK)].map((m) => destination(m[1]));
+// A listing entry, not any mention: a page kept out of the generated lists is
+// still one an author may link to in prose.
+const bare = (u) => u.replace(/index\.md$/, "");
+const listed = (s) => [...s.matchAll(LIST_LINK)].map((m) => bare(destination(m[1])));
+// llms-full.txt entries close as page.md.md does — rule, blank line, page URL.
+const carriedIn = (full) => {
+  const lines = full.split("\n");
+  const out = [];
+  for (let i = 2; i < lines.length; i++) {
+    if (lines[i - 2].trim() !== "---" || lines[i - 1].trim() !== "") continue;
+    const last = lines[i].trim().split(/\s+/).pop();
+    if (last && last.startsWith(base)) out.push(last);
+  }
+  return out;
+};
 
 // The path decides, nothing else: a fragment joined into a filename looks for
 // a file nobody wrote.
@@ -108,16 +123,9 @@ for (const [lang, prefix] of Object.entries(langs)) {
   if (fullEntities) fail(`${lang}: llms-full.txt has ${fullEntities.length} HTML entities, e.g. ${fullEntities[0]}`);
 
   // Read out of the file, not looked up one URL at a time: looking up what the
-  // map names can never notice a page it never named. Entries close as
-  // page.md.md does — rule, blank line, page URL.
-  const lines = full.split("\n");
-  const carried = [];
-  for (let i = 2; i < lines.length; i++) {
-    if (lines[i - 2].trim() !== "---" || lines[i - 1].trim() !== "") continue;
-    const last = lines[i].trim().split(/\s+/).pop();
-    if (last && last.startsWith(base)) carried.push(last);
-  }
-  const pages = links.filter((u) => u.startsWith(base)).map((u) => u.replace(/index\.md$/, ""));
+  // map names can never notice a page it never named.
+  const carried = carriedIn(full);
+  const pages = links.filter((u) => u.startsWith(base)).map(bare);
   if (!carried.length) fail(`${lang}: llms-full.txt carries none of the ${pages.length} pages llms.txt maps`);
   // llmsFullLimit may cut the tail and nothing else.
   const expected = pages.slice(0, carried.length);
@@ -199,15 +207,24 @@ if (bad === beforeGraph) {
 const beforeAbsent = bad;
 for (const url of absent) {
   // Published, or the check passes on a URL nobody wrote.
-  if (!existsSync(target(url))) { fail(`--absent ${url} is not a page of this build`); continue; }
+  const page = target(url);
+  if (!existsSync(page)) { fail(`--absent ${url} is not a page of this build`); continue; }
   for (const [lang, prefix] of Object.entries(langs)) {
-    for (const name of ["llms.txt", "llms-full.txt"]) {
-      const f = join(root, prefix, name);
-      if (existsSync(f) && readFileSync(f, "utf8").includes(url)) fail(`${lang}: ${name} carries ${url}, which asked to stay out`);
+    const map = join(root, prefix, "llms.txt");
+    if (existsSync(map) && listed(readFileSync(map, "utf8")).includes(url)) {
+      fail(`${lang}: llms.txt maps ${url}, which asked to stay out`);
+    }
+    const full = join(root, prefix, "llms-full.txt");
+    if (existsSync(full) && carriedIn(readFileSync(full, "utf8").split("\r\n").join("\n")).includes(url)) {
+      fail(`${lang}: llms-full.txt carries ${url}, which asked to stay out`);
     }
   }
   for (const f of mds) {
-    if (mdLinks(readFileSync(f, "utf8")).some((u) => u.startsWith(url))) fail(`${f}: links ${url}, which asked to stay out`);
+    if (listed(readFileSync(f, "utf8")).includes(url)) fail(`${f}: lists ${url}, which asked to stay out`);
+  }
+  // The other half of the contract, which nothing else here would notice.
+  if (readFileSync(page, "utf8").includes(`${url}index.md`)) {
+    fail(`${url} still advertises its Markdown copy`);
   }
 }
 if (absent.length && bad === beforeAbsent) console.log(`  noai     ${absent.length} page(s) published and mapped nowhere`);
