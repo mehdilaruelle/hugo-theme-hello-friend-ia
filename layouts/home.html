@@ -22,8 +22,17 @@
                   image.html already resolves, measures and resizes, and
                   refuses to do any of it to an SVG or an animated GIF. Two
                   things differ here: the portrait is above the fold, so it
-                  loads eagerly rather than lazily, and it is shown small, so
-                  it is capped well below the width an article image gets.
+                  loads eagerly and at high priority rather than lazily, and
+                  it is shown small, so it is capped well below the width an
+                  article image gets.
+
+                  eager on its own was not enough. The portrait is the largest
+                  thing the front page paints, so it is the LCP element, and
+                  Lighthouse reported the request as discoverable but not
+                  prioritised: eager says fetch it now, fetchpriority says
+                  fetch it before the rest of what is already queued. A cover
+                  on an article page has carried both since it was added; the
+                  front page had only the first.
                 */ -}}
                 {{- /* Twice the width it is shown at, so it is sharp on a
                        dense screen and no larger. Only a value given in px can
@@ -47,6 +56,7 @@
                   "position" "circle"
                   "style" $style
                   "loading" "eager"
+                  "fetchpriority" "high"
                   "maxWidth" $cap
                   "sizes" $.Site.Params.Portrait.MaxWidth
                   "page" $) }}
