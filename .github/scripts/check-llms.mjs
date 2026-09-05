@@ -14,6 +14,12 @@ const walk = (d) => readdirSync(d).flatMap((e) => {
   return statSync(p).isDirectory() ? walk(p) : [p];
 });
 
+// Handed nothing, say so rather than dying in walk() further down.
+if (!existsSync(root)) {
+  console.log(`  BAD  no ${root} to read`);
+  process.exit(1);
+}
+
 let bad = 0;
 const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 
@@ -168,7 +174,14 @@ for (const prefix of Object.values(langs)) {
     if (hasChildren && !seen.has(rel)) fail(`${rel}: has pages under it and nothing links it from ${home}`);
   }
 }
-if (bad === beforeGraph) console.log(`  graph    ${walked} pages reachable by following the Markdown from each front page`);
+// A site can publish md for pages and not for the home page, and then there is
+// no front page to walk from. Saying "0 pages reachable" and passing would read
+// as a result rather than as the absence of one.
+if (bad === beforeGraph) {
+  console.log(walked
+    ? `  graph    ${walked} pages reachable by following the Markdown from each front page`
+    : "  graph    no front page published as Markdown, so nothing to walk");
+}
 
 if (bad) { console.log(`\n${bad} problem(s)`); process.exit(1); }
 console.log("\n  llms.txt and the Markdown copies are usable as text");
