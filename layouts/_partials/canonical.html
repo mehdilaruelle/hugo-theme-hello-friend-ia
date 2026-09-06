@@ -1,6 +1,7 @@
 {{- /*
   The URL this page names as its own, and which pager of a list it is. Returns
-  a map with url and pager.
+  a map with url, pager, and the neighbouring pagers' URLs as prev and next --
+  empty strings off a paginated list, so a caller can drop the tag.
 
   Every pager shares one .Permalink, so page 2 and beyond used to name page 1
   as their canonical -- telling a search engine they are duplicates of it, which
@@ -14,10 +15,14 @@
 */ -}}
 {{- $canonical := .Permalink -}}
 {{- $pager := 1 -}}
+{{- $prev := "" -}}
+{{- $next := "" -}}
 {{- if in (slice "section" "taxonomy" "term") .Kind -}}
   {{- with .Paginate (partial "list-pages.html" .) -}}
     {{- $canonical = .URL | absURL -}}
     {{- $pager = .PageNumber -}}
+    {{- with .Prev }}{{ $prev = .URL | absURL }}{{ end -}}
+    {{- with .Next }}{{ $next = .URL | absURL }}{{ end -}}
   {{- end -}}
 {{- end -}}
-{{- return dict "url" $canonical "pager" $pager -}}
+{{- return dict "url" $canonical "pager" $pager "prev" $prev "next" $next -}}

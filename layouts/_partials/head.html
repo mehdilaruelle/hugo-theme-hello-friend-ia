@@ -39,6 +39,15 @@
 {{- $canonical := $self.url -}}
 {{- $pager := $self.pager -}}
 <link rel="canonical" href="{{ $canonical }}" />
+{{- /* Each pager already canonicalises to itself; these say what it is a pager
+       of. Google retired them as an indexing signal in 2019, Bing did not, and
+       a browser can still prefetch the next page. */ -}}
+{{- with $self.prev }}
+<link rel="prev" href="{{ . }}" />
+{{- end }}
+{{- with $self.next }}
+<link rel="next" href="{{ . }}" />
+{{- end }}
 {{- /* Not advertised for a page that asked to stay out. The file is still
        written: outputs is the site's call, not a per-page one. */ -}}
 {{- if not (partial "md/noai.html" .) }}
