@@ -50,10 +50,13 @@ const destination = (raw) => {
 const LINK = /\[(?:\\.|[^\\\]])*\]\(([^)]+)\)/g;
 const LIST_LINK = /^- \[(?:\\.|[^\\\]])*\]\(([^)]+)\)/gm;
 const mdLinks = (s) => [...s.matchAll(LINK)].map((m) => destination(m[1]));
+// The generated lists start at the first "## ": above it sits the page's own
+// body, whose bullets are prose an author wrote, not entries a map claims.
+const mapSection = (s) => { const i = s.search(/^## /m); return i < 0 ? "" : s.slice(i); };
 // A listing entry, not any mention: a page kept out of the generated lists is
 // still one an author may link to in prose.
 const bare = (u) => u.replace(/index\.md$/, "");
-const listed = (s) => [...s.matchAll(LIST_LINK)].map((m) => bare(destination(m[1])));
+const listed = (s) => [...mapSection(s).matchAll(LIST_LINK)].map((m) => bare(destination(m[1])));
 // llms-full.txt entries close as page.md.md does — rule, blank line, page URL.
 const carriedIn = (full) => {
   const lines = full.split("\n");
@@ -93,7 +96,7 @@ for (const [lang, prefix] of Object.entries(langs)) {
   const found = entities(s);
   if (found) fail(`${lang}: ${found.length} HTML entities, e.g. ${found[0]}`);
 
-  const links = [...s.matchAll(LIST_LINK)].map((m) => destination(m[1]));
+  const links = [...mapSection(s).matchAll(LIST_LINK)].map((m) => destination(m[1]));
   if (!links.length) fail(`${lang}: no links`);
   for (const url of links) {
     if (!url.startsWith(base)) { fail(`${lang}: ${url} is outside ${base}`); continue; }
