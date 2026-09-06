@@ -17,7 +17,7 @@ C'est du Markdown ordinaire, rendu entre le sous-titre et les icônes sociales.
 Un site qui n'en veut pas n'a tout simplement pas de `_index.md`, ce que fait
 la démo.
 
-Par où commencer :
+## Par où commencer
 
 - [Chaque interrupteur et ce qu'il coûte]({{< ref "posts/switches.md" >}})
 - [À propos]({{< ref "about.md" >}})
