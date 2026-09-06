@@ -123,6 +123,12 @@ h6 {
   &:focus-visible {
     opacity: 1;
   }
+
+  // A touch screen has no hover to reveal it, and tapping a link is not focus:
+  // hidden here meant the anchor did not exist on a phone.
+  @media (hover: none) {
+    opacity: 1;
+  }
 }
 
 @media #{$media-size-phone} {
