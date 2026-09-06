@@ -146,9 +146,10 @@ for (const file of walk(root)) {
 
   // 6b. The FAQ pairs reach the head through a store filled while the content
   //     renders, which fails silently when it fails. Counted both ways.
+  //     Decoded, or a question with an & or an apostrophe never matches itself.
   const summaries = [...html.matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gi)]
-    .map((m) => m[1].replace(/<[^>]*>/g, "").trim());
-  const faqs = blocks.filter((b) => b["@type"] === "FAQPage");
+    .map((m) => decode(m[1].replace(/<[^>]*>/g, "")).trim());
+  const faqs = blocks.filter((b) => b && b["@type"] === "FAQPage");
   const asked = faqs.flatMap((b) => (Array.isArray(b.mainEntity) ? b.mainEntity : []).map((q) => q.name));
   if (FAQ_DETAILS.test(html) && !faqs.length) {
     failures.push([file, "a faq shortcode on the page", "and no FAQPage in the head"]);
