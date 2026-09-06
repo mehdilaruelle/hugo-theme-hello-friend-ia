@@ -34,7 +34,7 @@ const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 // where escaping a literal < is the only way to show one. A tag, not anything
 // between angle brackets, or "A < B &amp; C > D" takes the entity with it.
 const prose = (s) => s
-  .replace(/<(code|pre)\b[\s\S]*?<\/\1>/gi, "")
+  .replace(/<(code|pre)(?:\s[^>]*)?>[\s\S]*?<\/\1\s*>/gi, "")
   .replace(/<\/?[A-Za-z][^>]*>/g, "");
 const entities = (s) => prose(s).match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
 
