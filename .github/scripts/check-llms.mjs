@@ -33,7 +33,21 @@ const fail = (msg) => { console.log(`  BAD  ${msg}`); bad++; };
 // Entities are wrong in prose, right inside a tag. A tag, not anything between
 // angle brackets, or "A < B &amp; C > D" takes the entity out with it.
 const prose = (s) => s.replace(/<\/?[A-Za-z][^>]*>/g, "");
-const entities = (s) => prose(s).match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
+// A shortcode rendering its inner content emits an HTML block, where < > & "
+// have to stay written as entities: <code>a &lt; b</code> is a code sample, not
+// a leak. Nothing else is excused there — a &rsquo; inside a block is the same
+// noise it is in prose.
+const MARKUP = /&(?:lt|gt|amp|quot|#(?:34|38|39|60|62));/g;
+const OPENS_HTML = /^ {0,3}<\/?[A-Za-z][A-Za-z0-9-]*(?:[ \t/>]|$)/;
+const entities = (s) => {
+  let block = false;
+  const text = s.split("\n").map((line) => {
+    if (block && !line.trim()) block = false;
+    else if (!block && OPENS_HTML.test(line)) block = true;
+    return block ? line.replace(MARKUP, "") : line;
+  }).join("\n");
+  return prose(text).match(/&(?:[a-zA-Z][a-zA-Z0-9]*|#(?:\d+|x[0-9a-fA-F]+));/g);
+};
 
 // The destination without the title: [About](/about/ "About") is /about/.
 const destination = (raw) => {
