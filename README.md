@@ -72,6 +72,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
   - [Built in shortcodes](#built-in-shortcodes)
     - [image](#image)
     - [video](#video)
+    - [faq](#faq)
   - [Code highlighting](#code-highlighting)
   - [Favicon](#favicon)
   - [Audio Support](#audio-support)
@@ -667,6 +668,26 @@ ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -c:v libvpx-vp9 -crf 34 -b:
 ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -movflags +faststart -an demo.mp4
 ffmpeg -i demo.gif -vf "scale=1600:-2:flags=lanczos" -frames:v 1 demo.jpg
 ```
+
+#### faq
+
+A question and its answer, written once and read twice: a `<details>` element
+for a person, and a `FAQPage` block in the `<head>` for a machine.
+
+```markdown
+{{< faq "Does the theme send anything to a service?" >}}
+No. Everything is produced at build time.
+{{< /faq >}}
+```
+
+The answer takes Markdown. Repeat the shortcode for each pair; they collect into
+one `FAQPage` per page. The `<details>` opens without JavaScript.
+
+Use it where a page really is a list of questions, and nowhere else — it is the
+only shortcode here that asks you to write content in a particular shape, and a
+theme has no business dictating the form of a post. Google restricted the FAQ
+rich result to government and health sites in 2023, so expect the markup to be
+read rather than drawn; answer engines read it either way.
 
 ### Code highlighting
 

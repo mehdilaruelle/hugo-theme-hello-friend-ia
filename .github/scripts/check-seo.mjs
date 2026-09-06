@@ -26,6 +26,8 @@ const isSvg = (v) => new URL(v, "https://example.invalid/").pathname.toLowerCase
 
 // A Hugo alias is a redirect stub, not a page these invariants describe.
 const ALIAS = /http-equiv\s*=\s*["']?refresh/i;
+const FAQ_DETAILS = /<details\b[^>]*\bclass\s*=\s*["']?faq\b/i;
+const FAQ_DETAILS_G = /<details\b[^>]*\bclass\s*=\s*["']?faq\b/gi;
 
 const LINK = /<link\b[^>]*>/gi;
 // The tags whose content is prose a person reads, not a URL or a token.
@@ -140,6 +142,23 @@ for (const file of walk(root)) {
   const directives = robots.flatMap((r) => r.toLowerCase().split(/[\s,]+/)).filter(Boolean);
   if (SEARCH_FORM.test(html) && !directives.includes("noindex")) {
     failures.push([file, "a search page", "is not marked noindex"]);
+  }
+
+  // 6b. The FAQ pairs reach the head through a store filled while the content
+  //     renders, which fails silently when it fails. Counted both ways.
+  const summaries = [...html.matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gi)]
+    .map((m) => m[1].replace(/<[^>]*>/g, "").trim());
+  const faqs = blocks.filter((b) => b["@type"] === "FAQPage");
+  const asked = faqs.flatMap((b) => (Array.isArray(b.mainEntity) ? b.mainEntity : []).map((q) => q.name));
+  if (FAQ_DETAILS.test(html) && !faqs.length) {
+    failures.push([file, "a faq shortcode on the page", "and no FAQPage in the head"]);
+  }
+  for (const name of asked) {
+    if (!summaries.includes(name)) failures.push([file, `FAQPage asks "${name}"`, "no summary on the page says it"]);
+  }
+  const shown = (html.match(FAQ_DETAILS_G) || []).length;
+  if (shown !== asked.length && (shown || asked.length)) {
+    failures.push([file, `${shown} faq details, ${asked.length} questions`, "one is written per pair"]);
   }
 
   // 7. An entity that survived into the text. plainify leaves the entities
