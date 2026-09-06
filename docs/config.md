@@ -517,7 +517,8 @@ templates.
 | `customCSS` / `customJS` | extra files to load, each a path under `static/` or a remote URL |
 | `gitUrl` | prefix for the commit link under an article. Needs `enableGitInfo = true` at the root |
 | `plausibleDataDomain` / `plausibleScriptSource` | [Plausible](https://plausible.io) analytics; both are required |
-| `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary |
+| `llmsNote` | a line addressed to whatever reads `llms.txt`, printed under the summary. A page can set its own, see [Front matter](#front-matter) |
+| `license` / `creditText` | the terms of reuse, carried in every article's `BlogPosting`. A page can override either |
 | `llmsFullLimit` | how many pages `llms-full.txt` carries. Unset or `0` publishes every one |
 | `ai` | which AI crawlers `robots.txt` turns away. **A table**, see [AI crawlers](#ai-crawlers) |
 | `imageSizes` | the `sizes` attribute on every processed image — how wide it will be shown. Defaults to `(max-width: 800px) 100vw, 800px` |
@@ -665,7 +666,10 @@ icons, and the build warns when it sees one.
 | key | what it does |
 | --- | --- |
 | `cover` / `coverCaption` | image above the article, caption takes Markdown |
-| `toc` | table of contents above the article. `notoc` on a heading keeps it out |
+| `noai` | keeps the page out of `llms.txt`, `llms-full.txt` and the Markdown listings, and stops its `<head>` advertising its Markdown copy. Nothing else changes — see [Keeping a page out of things](#keeping-a-page-out-of-things) |
+| `llmsNote` | a line of your own at the end of this page's Markdown copy, and of its entry in `llms-full.txt` |
+| `license` / `creditText` | the terms of reuse for this page, overriding `params.license` and `params.creditText` |
+| `toc` | table of contents above the article, over the heading levels `markup.tableOfContents` selects — `h2` and `h3` until a site changes them |
 | `audio` | an audio player above the article. **A list**, see below |
 | `noindex` | `<meta name="robots" content="noindex">`, and the page is left out of `sitemap.xml` — see [Keeping a page out of things](#keeping-a-page-out-of-things). A page with `layout: search` is already treated this way and does not need it |
 | `comments` | set to `false` to hide Disqus on that page. The string `"false"` is accepted too, which is what older versions required |
@@ -708,15 +712,37 @@ Search and in Discover rather than a thumbnail. There is only ever one
 `robots` tag: the directive is meaningless on a page that is not indexed, so
 `noindex` replaces it rather than joining it.
 
-`noindex` does not touch this site's search, which is a separate switch:
+Three switches, three audiences, and none of them is the others:
 
 ```yaml
 ---
 title: "A page nobody should find"
 noindex: true          # <meta name="robots" content="noindex">, and no sitemap entry
 searchable: false      # keep it out of this site's search
+noai: true             # keep it out of llms.txt, llms-full.txt and the Markdown listings
 ---
 ```
+
+`noai` is the one to reach for when a page should be readable by people and by
+search engines, and absent from what the theme publishes for machines: a draft
+kept at its URL, a page whose canonical version lives elsewhere, an archive you
+would rather not have quoted back at you. It also stops the `<head>` advertising
+the page's Markdown copy.
+
+It does not stop that copy being written. Whether a site publishes `.md` at all
+is decided once in `[outputs]`, not per page, so the file is still there for
+anyone who guesses the URL. A page that should not have one says so itself:
+
+```yaml
+outputs: ["HTML"]
+```
+
+`searchable` used to do this job as well as its own, which meant taking a page
+out of the site's search took it out of the map for models too, and wanting the
+opposite was not expressible. It is back to meaning one thing.
+
+A page with `layout: search` is kept out of all three without being asked, for
+the reason above: there is nothing in an empty results list to hand anybody.
 
 `sitemap.disable` is Hugo's own switch and still works on its own, for a page
 that should stay out of the sitemap while remaining indexable — a thin page that
@@ -816,7 +842,10 @@ twice. Each page's note is its `description`, falling back to its summary.
 `params.llmsNote` adds a line of your own, after both: what you would rather a
 model did with the text, or what the site is not.
 
-`searchable: false` keeps a page out, the same switch the search index reads.
+`noai: true` keeps a page out — of this file, of `llms-full.txt` and of the
+Markdown listings alike. It is not `searchable`, which is about this site's own
+search and nothing else; see
+[Keeping a page out of things](#keeping-a-page-out-of-things).
 
 ## llms-full.txt
 
@@ -901,6 +930,30 @@ passes through and which carries the real URLs rather than a guess at them.
 
 Each file ends with the canonical URL, so a passage quoted out of it can be
 traced back to the page it came from.
+
+## Licence and credit
+
+`llms.txt` says how to read the site and `robots.txt` says who may. This says on
+what terms, and it travels with the text rather than sitting in a footer nobody
+extracts:
+
+```toml
+[params]
+  license    = "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  creditText = "Jane Doe"
+```
+
+Both land in the `BlogPosting` of every article, beside the author and the dates
+that were already there. A page overrides either in its front matter, for the one
+post under different terms:
+
+```yaml
+license: "https://creativecommons.org/licenses/by/4.0/"
+```
+
+`license` is a URL, because that is what schema.org means by it — the licence
+itself, not its name. `creditText` is the string to put on a credit line.
+Neither is emitted when unset, here as everywhere else in the theme.
 
 ## AI crawlers
 

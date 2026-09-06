@@ -48,8 +48,12 @@
 {{- with $self.next }}
 <link rel="next" href="{{ . }}" />
 {{- end }}
+{{- /* Not advertised for a page that asked to stay out. The file is still
+       written: outputs is the site's call, not a per-page one. */ -}}
+{{- if not (partial "md/noai.html" .) }}
 {{- with .OutputFormats.Get "md" }}
 <link rel="alternate" type="text/markdown" href="{{ .Permalink }}" />
+{{- end }}
 {{- end }}
 {{- /* Ownership verification: each console accepts a meta tag instead of a file
        at the site root, and every one of them looks on the home page. */ -}}

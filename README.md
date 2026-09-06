@@ -102,6 +102,7 @@ This theme was highly inspired by the [hello-friend](https://github.com/panr/hug
 - 100 on accessibility, best practices and SEO on both demo sites, see [Speed](#speed)
 - Optional `llms.txt`, `llms-full.txt` and a Markdown copy of every page, list pages included, see [llms.txt](docs/config.md#llmstxt)
 - A declarative AI crawler policy: refuse training without refusing citation, see [AI crawlers](docs/config.md#ai-crawlers)
+- Per-page AI control: `noai` to keep one page out of the text outputs, and a licence that travels with the text, see [Keeping a page out of things](docs/config.md#keeping-a-page-out-of-things)
 
 ### Speed
 
